@@ -1,4 +1,4 @@
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 import Layout from "./components/Layout";
 import WeeklySlider from "./components/WeeklySlider";
 import CardSlider from "./components/CardSlider";
@@ -50,19 +50,16 @@ interface MatchItem {
 //     matchType:  "live" | "upcoming" | "result";
 //   };
 // }
-type Params = Promise<{ matchType: string }>
-
-
+type Params = Promise<{ matchType: string }>;
 
 export default async function Home(props: { params: Params }) {
-
   // const { matchType } = await params;
   const params = await props.params;
   const matchType = params.matchType;
   if (matchType && !["live", "upcoming", "result"].includes(matchType)) {
     notFound();
   }
-  // if ( 
+  // if (
   //   params.matchType &&
   //   !["live", "upcoming", "result"].includes(params.matchType)
   // ) {
@@ -87,7 +84,6 @@ export default async function Home(props: { params: Params }) {
   const completedMatch: MatchItem[] = await completedMatches();
   const upcomingMatch: MatchItem[] = await upcomingMatches();
   const liveMatch: MatchItem[] = await liveMatches();
-  
 
   // const  matchData = ChatComponent();
 
@@ -169,7 +165,7 @@ export default async function Home(props: { params: Params }) {
                   className={`tab-content ${
                     activeMainTab === "info1" ? "" : "hidden"
                   }`}
-                >
+                 >
                   {/* <!-- live match desktop view start --> */}
                   {liveMatch.map((items) => (
                     <div
@@ -264,7 +260,7 @@ export default async function Home(props: { params: Params }) {
                       <div className="border-t-[1px] border-[#E7F2F4]"></div>
 
                       <div className="py-4 px-3">
-                        <Link href="/match-live-now">
+                        <Link href={"/match/live-score/" + items.match_id}>
                           <div className="flex justify-between items-center text-[14px]">
                             <div className="">
                               <p className="text-[#586577] text-[12px] mb-4 font-medium">
@@ -445,7 +441,8 @@ export default async function Home(props: { params: Params }) {
                             <Image
                               src="/assets/img/arrow.png"
                               className=""
-                              width={10} height={15}
+                              width={10}
+                              height={15}
                               alt=""
                             />
                           </button>
@@ -1812,6 +1809,7 @@ export default async function Home(props: { params: Params }) {
                     </div>
                   ))}
 
+{liveMatch.map((items) => (
                   <div className="lg:hidden rounded-lg p-4 mb-4 bg-[#ffffff] performance-section relative hover:shadow-lg">
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center space-x-2">
@@ -1835,11 +1833,12 @@ export default async function Home(props: { params: Params }) {
                               </circle>
                             </svg>
                           </span>
-                          LIVE
+                          {items.status_str}
                         </div>
                         <div>
                           <h4 className="text-[15px] font-semibold pl-[10px] border-l-[1px] border-[#E4E9F0]">
-                            Australia tour of England - 2024
+                          {items.competition.title} -{" "}
+                          {items.competition.season}
                           </h4>
                         </div>
                         <span className="absolute right-4 top-[19px]">
@@ -1847,8 +1846,7 @@ export default async function Home(props: { params: Params }) {
                             <Image
                               src="/assets/img/arrow.png"
                               className=""
-                              width={10}
-                              height={15}
+                              width={10} height={15}
                               alt=""
                             />
                           </button>
@@ -1861,40 +1859,60 @@ export default async function Home(props: { params: Params }) {
                       <Link href="/match-live-now">
                         <div className="py-2 pb-3">
                           <p className="text-[#586577] text-[11px] mb-4 font-normal">
-                            1st TEST day 1 , MA Chidambaram Stadium, Chennai
+                          {items.subtitle} ,{items.format_str} 
+                          {items.venue.name}, {items.venue.location}
                           </p>
                           <div className="flex justify-between items-center text-[14px]">
                             <div className="">
                               <div className="items-center space-x-2 font-medium w-[162px] md:w-full mb-4">
                                 <div className="flex items-center space-x-2">
                                   <Image
-                                    src="/assets/img/flg-1.png"
+                                    src={items.teama.logo_url}
                                     className="h-[30px] rounded-full"
                                     width={30}
                                     height={30}
-                                    alt="aus"
+                                    alt={items.teama.short_name}
                                   />
                                   <div>
                                     <span className="flex items-center gap-1">
                                       <span className="text-[#5e5e5e] font-medium">
-                                        IND
+                                      {items.teama.short_name}
                                       </span>
                                       <Image
                                         src="/assets/img/home/bat.png"
-                                        className="h-[15px]"
+                                        className={"h-[15px] hidden mmatchbat" +
+                                        items.match_id +
+                                        "-" +
+                                        items.teama.team_id}
                                         width={30}
                                         height={30}
                                         alt=""
                                       />
                                     </span>
-                                    <p className="flex items-end gap-2">
+                                   
+                                    <p className={"flex items-end gap-2 mmatch" +
+                                      items.match_id +
+                                      "-" +
+                                      items.teama.team_id}>
+                                         {items.teama.scores === undefined ||
+                                    items.teama.scores === null ||
+                                    items.teama.scores === "" ? (
                                       <span className=" font-semibold">
-                                        339/6
+                                        {" "}
+                                        (Yet to bat){" "}
                                       </span>
-
+                                      ) : (
+                                     
+                                      <>
+                                      <span className="font-semibold">
+                                        {items.teama.scores}
+                                      </span>
                                       <span className="text-[#909090] text-[12px] font-normal">
-                                        (81.2 overs)
+                                        {" "}
+                                        ({items.teama.overs}){" "}
                                       </span>
+                                    </>
+                                  )}
                                     </p>
                                   </div>
                                 </div>
@@ -1904,19 +1922,52 @@ export default async function Home(props: { params: Params }) {
                                 <div className="flex items-center space-x-2 font-medium w-[162px] md:w-full">
                                   <div className="flex items-center space-x-2">
                                     <Image
-                                      src="/assets/img/ban.png"
+                                      src={items.teamb.logo_url}
                                       className="h-[30px]"
                                       width={30}
                                       height={30}
-                                      alt="ind"
+                                      alt={items.teamb.short_name}
                                     />
                                     <div>
+                                    <span className="flex items-center gap-1">
                                       <span className="text-[#5e5e5e] font-medium">
-                                        Bangladesh
+                                      {items.teamb.short_name}
                                       </span>
-                                      <p className="font-normal text-[11px]">
-                                        (Yet to bat)
-                                      </p>
+                                      <Image
+                                        src="/assets/img/home/bat.png"
+                                        className={"h-[15px] hidden mmatchbat" +
+                                        items.match_id +
+                                        "-" +
+                                        items.teamb.team_id}
+                                        width={30}
+                                        height={30}
+                                        alt=""
+                                      />
+                                      </span>
+                                      <p className={"flex items-end gap-2 mmatch" +
+                                      items.match_id +
+                                      "-" +
+                                      items.teamb.team_id}>
+                                         {items.teamb.scores === undefined ||
+                                    items.teamb.scores === null ||
+                                    items.teamb.scores === "" ? (
+                                      <span className=" font-semibold">
+                                        {" "}
+                                        (Yet to bat){" "}
+                                      </span>
+                                      ) : (
+                                     
+                                      <>
+                                      <span className="font-semibold">
+                                        {items.teamb.scores}
+                                      </span>
+                                      <span className="text-[#909090] text-[12px] font-normal">
+                                        {" "}
+                                        ({items.teamb.overs}){" "}
+                                      </span>
+                                    </>
+                                  )}
+                                    </p>
                                     </div>
                                   </div>
                                 </div>
@@ -1925,7 +1976,7 @@ export default async function Home(props: { params: Params }) {
 
                             <div className=" font-medium text-center">
                               <p className="text-[#2F335C] font-light mt-1 text-[11px]">
-                                BAN elected to bowl
+                              {items.status_note}
                               </p>
                             </div>
                           </div>
@@ -1962,7 +2013,7 @@ export default async function Home(props: { params: Params }) {
 
                         <div className="flex items-center space-x-2 text-[11px]">
                           <span className="text-[#909090] font-medium">
-                            BAN
+                            {items.teama.short_name}
                           </span>
                           <span className="flex items-center bg-[#FAFFFC] border-[1px] border-[#0B773C] rounded-md text-[#0B773C] pr-2">
                             <span className="">
@@ -1981,7 +2032,9 @@ export default async function Home(props: { params: Params }) {
                                 />
                               </svg>
                             </span>
-                            41
+                            <span className={"oddback" + items.match_id}>
+                              0
+                            </span>
                           </span>
                           <span className="flex items-center bg-[#FFF7F7] border-[1px] border-[#A70B0B]  rounded-md text-[#A70B0B] pr-2">
                             <span className="">
@@ -2000,12 +2053,15 @@ export default async function Home(props: { params: Params }) {
                                 />
                               </svg>
                             </span>
-                            45
+                            <span className={"oddlay" + items.match_id}>
+                              0
+                            </span>
                           </span>
                         </div>
                       </div>
                     </div>
                   </div>
+                  ))}
                 </div>
 
                 <div
@@ -2172,18 +2228,20 @@ export default async function Home(props: { params: Params }) {
                     </div>
                   ))}
 
-                  <div className="lg:hidden rounded-lg p-4 mb-4 bg-[#ffffff] performance-section relative">
+{completedMatch.map((cmatch) => (
+                  <div  className="lg:hidden rounded-lg p-4 mb-4 bg-[#ffffff] performance-section relative">
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center space-x-2">
                         <div
                           className="flex items-center text-[#0B773C] rounded-full  font-semibold"
                           style={{ gap: "3px" }}
                         >
-                          <span className="rounded-full">●</span> RESULT
+                          <span className="rounded-full">●</span> {cmatch.status_str}
                         </div>
                         <div>
                           <h4 className="text-[15px] font-semibold pl-[10px] border-l-[1px] border-[#E4E9F0]">
-                            Australia tour of England - 2024
+                          {cmatch.competition.title} -{" "}
+                          {cmatch.competition.season}
                           </h4>
                         </div>
                         <span className="absolute right-4 top-[19px]">
@@ -2206,32 +2264,33 @@ export default async function Home(props: { params: Params }) {
                       <Link href="/match-result">
                         <div className="py-2 pb-3">
                           <p className="text-[#586577] text-[11px] mb-4 font-normal">
-                            1st ODI , Trent Bridge, Nottingham
+                          {cmatch.subtitle} ,{cmatch.format_str} 
+                          {cmatch.venue.name}, {cmatch.venue.location}
                           </p>
                           <div className="flex justify-between items-center text-[14px]">
                             <div className="">
                               <div className="items-center space-x-2 font-medium w-[162px] md:w-full mb-4">
                                 <div className="flex items-center space-x-2">
                                   <Image
-                                    src="/assets/img/eng.png"
+                                    src={cmatch.teama.logo_url}
                                     className="h-[30px] rounded-full"
                                     width={30}
                                     height={30}
-                                    alt="aus"
+                                    alt={cmatch.teama.short_name}
                                   />
                                   <div>
                                     <span className="flex items-center gap-1">
                                       <span className="text-[#5e5e5e] font-medium">
-                                        Australia
+                                      {cmatch.teama.short_name}
                                       </span>
                                     </span>
                                     <p className="flex items-end gap-2">
                                       <span className=" font-semibold">
-                                        317/3
+                                      {cmatch.teama.scores}
                                       </span>
 
                                       <span className="text-[#909090] text-[12px] font-normal">
-                                        (44 overs)
+                                        ({cmatch.teama.overs})
                                       </span>
                                     </p>
                                   </div>
@@ -2241,25 +2300,25 @@ export default async function Home(props: { params: Params }) {
                                 <div className="flex items-center space-x-2 font-medium w-[162px] md:w-full">
                                   <div className="flex items-center space-x-2">
                                     <Image
-                                      src="/assets/img/aus.png"
+                                      src={cmatch.teamb.logo_url}
                                       className="h-[30px] rounded-full"
                                       width={30}
                                       height={30}
-                                      alt="aus"
+                                      alt={cmatch.teamb.short_name}
                                     />
                                     <div>
                                       <span className="flex items-center gap-1">
                                         <span className="text-[#5e5e5e] font-medium">
-                                          England
+                                        {cmatch.teamb.short_name}
                                         </span>
                                       </span>
                                       <p className="flex items-end gap-2">
                                         <span className=" font-semibold">
-                                          315/10
+                                        {cmatch.teamb.scores}
                                         </span>
 
                                         <span className="text-[#909090] text-[12px] font-normal">
-                                          (49.4 overs)
+                                          ({cmatch.teamb.overs})
                                         </span>
                                       </p>
                                     </div>
@@ -2278,7 +2337,7 @@ export default async function Home(props: { params: Params }) {
                                 alt=""
                               />
                               <p className="text-[#0B773C] font-semibold mt-1 text-[13px] w-[75%] text-center">
-                                Australia won by 7 wickets
+                              {cmatch.result}
                               </p>
                             </div>
                           </div>
@@ -2331,6 +2390,7 @@ export default async function Home(props: { params: Params }) {
                       </div>
                     </div>
                   </div>
+                  ))}
                 </div>
 
                 <div
@@ -2492,18 +2552,20 @@ export default async function Home(props: { params: Params }) {
                       </div>
                     </div>
                   ))}
-                  <div className="lg:hidden rounded-lg p-4 mb-4 bg-[#ffffff] performance-section relative hover:shadow-lg">
+                  {upcomingMatch.map((ucmatch) => (
+                  <div  className="lg:hidden rounded-lg p-4 mb-4 bg-[#ffffff] performance-section relative hover:shadow-lg">
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center space-x-2">
                         <div
                           className="flex items-center text-[#A45B09] rounded-full font-semibold"
                           style={{ gap: "3px" }}
                         >
-                          <span className="rounded-full">●</span> SCHEDULED
+                          <span className="rounded-full">●</span> {ucmatch.status_str}
                         </div>
                         <div>
                           <h4 className="text-[15px] font-semibold pl-[10px] border-l-[1px] border-[#E4E9F0]">
-                            Australia tour of England 2024
+                          {ucmatch.competition.title} -{" "}
+                          {ucmatch.competition.season}
                           </h4>
                         </div>
                         <span className="absolute right-[12px] top-[19px]">
@@ -2521,28 +2583,28 @@ export default async function Home(props: { params: Params }) {
                     </div>
 
                     <div className="border-t-[1px] border-[#E7F2F4]"></div>
-
                     <Link href="/scheduled/infoUpcoming-match">
                       <div className="open-Performance-data">
                         <div className="py-2 pb-3">
                           <p className="text-[#586577] text-[12px] mb-4 font-medium">
-                            2nd ODI, Sharjah Cricket Stadium, Sharjah
+                          {ucmatch.subtitle} ,{ucmatch.format_str} 
+                          {ucmatch.venue.name}, {ucmatch.venue.location}
                           </p>
                           <div className="flex justify-between items-center text-[14px]">
                             <div>
                               <div className="items-center space-x-2 font-medium w-[162px] md:w-full mb-4">
                                 <div className="flex items-center space-x-2">
                                   <Image
-                                    src="/assets/img/eng.png"
+                                    src={ucmatch.teama.logo_url}
                                     className="h-[30px] rounded-full"
                                     width={30}
                                     height={30}
-                                    alt="aus"
+                                    alt={ucmatch.teama.short_name}
                                   />
                                   <div>
                                     <span className="flex items-center gap-1">
                                       <span className="text-[#5e5e5e] font-medium">
-                                        Australia
+                                      {ucmatch.teama.short_name}
                                       </span>
                                     </span>
                                   </div>
@@ -2551,16 +2613,16 @@ export default async function Home(props: { params: Params }) {
                               <div className="flex items-center space-x-2 font-medium w-[162px] md:w-full">
                                 <div className="flex items-center space-x-2">
                                   <Image
-                                    src="/assets/img/aus.png"
+                                    src={ucmatch.teamb.logo_url}
                                     className="h-[30px] rounded-full"
                                     width={30}
                                     height={30}
-                                    alt="aus"
+                                    alt={ucmatch.teamb.short_name}
                                   />
                                   <div>
                                     <span className="flex items-center gap-1">
                                       <span className="text-[#5e5e5e] font-medium">
-                                        England
+                                      {ucmatch.teamb.short_name}
                                       </span>
                                     </span>
                                   </div>
@@ -2568,43 +2630,12 @@ export default async function Home(props: { params: Params }) {
                               </div>
                             </div>
 
-                            <div className="font-semibold text-center">
-                              <div className="text-[#144280] mt-1">
-                                <div
-                                  className="flex space-x-1 justify-center countdown"
-                                  data-time="28800"
-                                >
-                                  {/* <!-- 08:00:00 = 8 * 60 * 60 = 28800 seconds --> */}
-                                  <div className="flex flex-col items-center">
-                                    <div className="text-[16px]">
-                                      <span className="hours"></span>
-                                    </div>
-                                    <span className="text-[11px] font-normal">
-                                      {" "}
-                                      Hrs{" "}
-                                    </span>
-                                  </div>
-                                  <div>:</div>
-                                  <div className="flex flex-col items-center">
-                                    <div className="text-[16px]">
-                                      <span className="minutes"></span>
-                                    </div>
-                                    <span className="text-[11px] font-normal">
-                                      {" "}
-                                      Min{" "}
-                                    </span>
-                                  </div>
-                                  <div>:</div>
-                                  <div className="flex flex-col items-center">
-                                    <div className="text-[16px] seconds"></div>
-                                    <span className="text-[11px] font-normal">
-                                      {" "}
-                                      Sec{" "}
-                                    </span>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
+                            
+                            <div className=" font-medium text-center">
+                            <p className="text-[#2F335C] text-[14px]">
+                            {ucmatch.date_start_ist}
+                            </p>
+                          </div>
                           </div>
                         </div>
                       </div>
@@ -2679,6 +2710,7 @@ export default async function Home(props: { params: Params }) {
                       </div>
                     </div>
                   </div>
+                  ))}
 
                   <div className="lg:block hidden rounded-lg p-4 mb-4 bg-[#ffffff] hover:shadow-lg">
                     <div className="flex items-center justify-between mb-4">

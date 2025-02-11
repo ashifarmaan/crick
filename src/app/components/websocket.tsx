@@ -10,6 +10,7 @@ interface MatchData {
   matchWikets: string;
   matchStatus: string;
   matchBattingTeam: string;
+  matchcrr: string;
   aa: string;
 }
 
@@ -27,6 +28,7 @@ class MatchWebSocket extends Component<object, MatchData> { // Changed from {} t
       matchWikets: "", 
       matchStatus: "",
       matchBattingTeam: "",
+      matchcrr: "",
       aa: ""
     };
   }
@@ -34,7 +36,7 @@ class MatchWebSocket extends Component<object, MatchData> { // Changed from {} t
   componentDidMount() {
     // Open WebSocket connection
     this.socket = new WebSocket(
-      "ws://webhook.entitysport.com:8087/connect?token=35f1701edeebeabc332e2a1825a022e7"
+      "ws://webhook.entitysport.com:8087/connect?token=7b58d13da34a07b0a047e129874fdbf4"
     );
 
     this.socket.onmessage = (event) => {
@@ -45,8 +47,7 @@ class MatchWebSocket extends Component<object, MatchData> { // Changed from {} t
         data?.live?.live_inning?.batting_team_id !== undefined &&
         data?.live?.live_inning?.batting_team_id !== ""
       ) {
-        console.log("11", JSON.stringify(data?.live?.live_inning?.batting_team_id));
-        console.log(JSON.stringify(data?.live?.live_score));
+        console.log("wesocket",JSON.stringify(data));
         this.setState({
           matchId: data?.match_id,
           matchOddsback: data?.live_odds?.matchodds?.teama.back
@@ -59,11 +60,11 @@ class MatchWebSocket extends Component<object, MatchData> { // Changed from {} t
           matchRuns: data?.live?.live_score?.runs,
           matchOvers: data?.live?.live_score?.overs,
           matchWikets: data?.live?.live_score?.wickets,
-          matchStatus: JSON.stringify(data?.live?.status_note)
+          matchStatus: JSON.stringify(data?.live?.status_note),
+          matchcrr: data?.live?.live_score?.runrate,
         });
 
         // Update div elements based on class
-        console.log("state", this.state);
         this.updateDivElements();
       }
     };
@@ -84,7 +85,6 @@ class MatchWebSocket extends Component<object, MatchData> { // Changed from {} t
     const elements = document.querySelectorAll(
       `.match${this.state.matchId}-${this.state.matchBattingTeam}`
     ); // Select elements with class `match-info`
-    console.log("st1-", elements);
     elements.forEach((element) => {
       element.innerHTML = `
               <span className="font-semibold" style="font-weight: 600;">${this.state.matchRuns}/${this.state.matchWikets}</span>
@@ -94,6 +94,21 @@ class MatchWebSocket extends Component<object, MatchData> { // Changed from {} t
               <Image src="/assets/img/home/bat.png" style="height:13px;" className="h-[13px]" alt="" />
       `;
     });
+
+    // for mobile view
+    const melements = document.querySelectorAll(
+      `.mmatch${this.state.matchId}-${this.state.matchBattingTeam}`
+    ); 
+    melements.forEach((element) => {
+      element.innerHTML = `
+              <span className="font-semibold" style="font-weight: 600;">${this.state.matchRuns}/${this.state.matchWikets} </span>
+              <span className="text-[#909090] text-[12px] font-normal">(${this.state.matchOvers})</span>
+      `;
+    });
+
+    const batImages = document.querySelectorAll(`.mmatchbat${this.state.matchId}-${this.state.matchBattingTeam}`);
+    batImages.forEach((el) => el.classList.remove("hidden"));
+  
 
     const statuselements = document.querySelectorAll(
       `.statusNote${this.state.matchId}`
@@ -117,6 +132,24 @@ class MatchWebSocket extends Component<object, MatchData> { // Changed from {} t
 
     oddlayelements.forEach((element) => {
       element.innerHTML = ` <p>${this.state.matchOddslay}</p>`;
+    });
+
+    // more info page 
+    const matchInfoelements = document.querySelectorAll(
+      `.matchinfo${this.state.matchId}-${this.state.matchBattingTeam}`
+    ); // Select elements with class `match-info`
+    matchInfoelements.forEach((element) => {
+      element.innerHTML = `${this.state.matchRuns}/${this.state.matchWikets}
+                        <span className="text-[13px] font-medium"  style="font-weight: 500; font-size: 13px">(${this.state.matchOvers})</span>
+                      `;
+    });
+
+    const crrelements = document.querySelectorAll(
+      `.crr${this.state.matchId}`
+    ); // Select elements with class `match-info`
+
+    crrelements.forEach((element) => {
+      element.innerHTML = ` <p>CRR: ${this.state.matchcrr } ${this.state.matchStatus}</p>`;
     });
   };
 

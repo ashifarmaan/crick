@@ -1,7 +1,2 @@
-import React from 'react'
-
-export default function info() {
-  return (
-    <div>info</div>
-  )
-}
+import Page from '../../page'
+export default Page

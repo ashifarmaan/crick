@@ -5,7 +5,7 @@ import redis from "../config/redis";
 export async function upcomingMatches() {
   const CACHE_KEY = "upcoming_matches";
   const CACHE_TTL = 60;
-  const API_URL =  "https://rest.entitysport.com/exchange/matches?token=35f1701edeebeabc332e2a1825a022e7&status=1&per_page=10";
+  const API_URL =  "https://rest.entitysport.com/exchange/matches?token=7b58d13da34a07b0a047e129874fdbf4&status=1&per_page=10";
 
   const cachedData = await redis.get(CACHE_KEY);
   if (cachedData) {
@@ -26,7 +26,7 @@ export async function upcomingMatches() {
 export async function liveMatches() {
   const CACHE_KEY = "live_matches";
   const CACHE_TTL = 60;
-  const API_URL = "https://rest.entitysport.com/exchange/matches?token=35f1701edeebeabc332e2a1825a022e7&status=3&per_page=10";
+  const API_URL = "https://rest.entitysport.com/exchange/matches?token=7b58d13da34a07b0a047e129874fdbf4&status=3&per_page=10";
 
   const cachedData = await redis.get(CACHE_KEY);
   if (cachedData) {
@@ -47,7 +47,7 @@ export async function liveMatches() {
 export async function completedMatches() {
   const CACHE_KEY = "completed_matches";
   const CACHE_TTL = 60;
-  const API_URL = "https://rest.entitysport.com/exchange/matches?token=35f1701edeebeabc332e2a1825a022e7&status=2&per_page=10";
+  const API_URL = "https://rest.entitysport.com/exchange/matches?token=7b58d13da34a07b0a047e129874fdbf4&status=2&per_page=10";
 
   const cachedData = await redis.get(CACHE_KEY);
   if (cachedData) {
