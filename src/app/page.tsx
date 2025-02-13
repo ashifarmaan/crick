@@ -1569,9 +1569,9 @@ export default async function Home(props: { params: Params }) {
                   }`}
                 >
                   {/* <!-- live match desktop view start --> */}
-                  {liveMatch.map((items) => (
+                  {liveMatch.map((items,index:number) => (
                     <div
-                      key={items.match_id}
+                      key={index}
                       data-key={items.match_id}
                       data-id="aaa"
                       className="lg:block hidden rounded-lg p-4 mb-4 bg-[#ffffff] hover:shadow-lg"
@@ -1809,8 +1809,8 @@ export default async function Home(props: { params: Params }) {
                     </div>
                   ))}
 
-{liveMatch.map((items) => (
-                  <div className="lg:hidden rounded-lg p-4 mb-4 bg-[#ffffff] performance-section relative hover:shadow-lg">
+{liveMatch.map((items,index:number) => (
+                  <div className="lg:hidden rounded-lg p-4 mb-4 bg-[#ffffff] performance-section relative hover:shadow-lg" key={index}>
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center space-x-2">
                         <div className="flex items-center text-[#a70b0b] rounded-full font-semibold">
@@ -2070,9 +2070,9 @@ export default async function Home(props: { params: Params }) {
                     activeMainTab === "finished1" ? "" : "hidden"
                   }`}
                 >
-                  {completedMatch.map((cmatch) => (
+                  {completedMatch.map((cmatch,index:number) => (
                     <div
-                      key={cmatch.match_id}
+                      key={index}
                       className="lg:block hidden rounded-lg p-4 mb-4 bg-[#ffffff] hover:shadow-lg"
                     >
                       <div className="flex items-center justify-between mb-4">
@@ -2228,8 +2228,8 @@ export default async function Home(props: { params: Params }) {
                     </div>
                   ))}
 
-{completedMatch.map((cmatch) => (
-                  <div  className="lg:hidden rounded-lg p-4 mb-4 bg-[#ffffff] performance-section relative">
+{completedMatch.map((cmatch ,index:number) => (
+                  <div  className="lg:hidden rounded-lg p-4 mb-4 bg-[#ffffff] performance-section relative" key={index}>
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center space-x-2">
                         <div
@@ -2399,9 +2399,9 @@ export default async function Home(props: { params: Params }) {
                     activeMainTab === "scorecard1" ? "" : "hidden"
                   }`}
                 >
-                  {upcomingMatch.map((ucmatch) => (
+                  {upcomingMatch.map((ucmatch,index:number) => (
                     <div
-                      key={ucmatch.match_id}
+                      key={index}
                       className="lg:block hidden rounded-lg p-4 mb-4 bg-[#ffffff] hover:shadow-lg"
                     >
                       <div className="flex items-center justify-between mb-4">
@@ -2552,8 +2552,8 @@ export default async function Home(props: { params: Params }) {
                       </div>
                     </div>
                   ))}
-                  {upcomingMatch.map((ucmatch) => (
-                  <div  className="lg:hidden rounded-lg p-4 mb-4 bg-[#ffffff] performance-section relative hover:shadow-lg">
+                  {upcomingMatch.map((ucmatch,index:number) => (
+                  <div  className="lg:hidden rounded-lg p-4 mb-4 bg-[#ffffff] performance-section relative hover:shadow-lg" key={index}>
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center space-x-2">
                         <div

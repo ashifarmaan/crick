@@ -5,53 +5,56 @@ import Layout from "@/app/components/Layout";
 import Image from "next/image";
 import Live from "./matchComponents/Live";
 import Scorecard from "./matchComponents/Scorecard";
-import { MatcheInfo, Last10Match } from "@/controller/matchInfoController";
+import { MatcheInfo, Last10Match, MatchStatistics } from "@/controller/matchInfoController";
 import ChatComponent from "../components/websocket";
 
-interface MatchInfo {
-  match_id: number;
-  matchid: number;
-  status_str: string;
-  competition: {
-    title: string;
-    season: string;
-  };
-  teama: {
-    short_name: string;
-    logo_url: string;
-    scores?: string;
-    overs?: string;
-    team_id?: string;
-  };
-  teamb: {
-    short_name: string;
-    logo_url: string;
-    scores?: string;
-    overs?: string;
-    team_id?: string;
-  };
-  subtitle: string;
-  format_str: string;
-  venue: {
-    name: string;
-    location: string;
-  };
-  status_note: string;
-  result: string;
-  date_start_ist: string;
-  matchData: string;
-  matchLast: string;
-  children?: React.ReactNode;
-}
+// interface MatchInfo {
+//   match_id: number;
+//   matchid: number;
+//   status_str: string;
+//   competition: {
+//     title: string;
+//     season: string;
+//   };
+//   teama: {
+//     short_name: string;
+//     logo_url: string;
+//     scores?: string;
+//     overs?: string;
+//     team_id?: string;
+//   };
+//   teamb: {
+//     short_name: string;
+//     logo_url: string;
+//     scores?: string;
+//     overs?: string;
+//     team_id?: string;
+//   };
+//   subtitle: string;
+//   format_str: string;
+//   venue: {
+//     name: string;
+//     location: string;
+//   };
+//   status_note: string;
+//   result: string;
+//   date_start_ist: string;
+//   matchData: string;
+//   matchLast: string;
+//   matchStates: string;
+//   children?: React.ReactNode;
+// }
 
-type Params = Promise<{ matchId: number; matchType: string }>;
+type Params = Promise<{ matchId: number; matchTab: string }>;
 export default async function page(props: { params: Params }) {
   const params = await props.params;
   const matchid = params.matchId;
+  const matchType = params.matchTab;
 
   const liveMatch = await MatcheInfo(matchid);
   const last10Match = await Last10Match(matchid);
-  console.log(liveMatch);
+  const matchStatistics = await MatchStatistics(matchid);
+  // console.log("matchType",matchType);
   
   const teamascores = liveMatch?.match_info?.teama?.scores ?? "";
   const teambscores = liveMatch?.match_info?.teamb?.scores ?? "";
@@ -85,7 +88,7 @@ export default async function page(props: { params: Params }) {
             {liveMatch?.live?.live_inning?.name },&nbsp;
               <span className="font-semibold text-[#b9b9b9]">
                 {" "}
-                Day {liveMatch?.live?.live_inning ?.number}
+                Day {liveMatch?.match_info?.competition ?.total_rounds}
               </span>
             </div>
             <div className="flex text-[#8192B4] text-1xl font-normal md:justify-start">
@@ -141,7 +144,7 @@ export default async function page(props: { params: Params }) {
               </div>
               <div className="text-[#8192B4] font-normal w-full text-center md:my-0 my-4">
                 <p className="text-[#FFBD71] lg:text-[20px] text-[16px] font-semibold">
-                  Day {liveMatch?.live?.live_inning ?.number}
+                  Day {liveMatch?.match_info?.competition ?.total_rounds}
                 </p>
                 <p className={"text-[#C1CEEA] text-[14px] crr"+matchid}>
                   CRR: {liveMatch?.live?.live_score?.runrate } {liveMatch?.live?.status_note }.
@@ -248,11 +251,16 @@ export default async function page(props: { params: Params }) {
         </div>
       </section>
 
-      <MoreInfo match_id={matchid} matchData={liveMatch} matchLast={last10Match}/> 
+      {matchType === "moreinfo" ? (
+        <MoreInfo match_id={matchid} matchData={liveMatch} matchLast={last10Match}/> 
+      ): matchType === "live-score" ?(
+        <Live match_id={matchid}  matchData={liveMatch}/>
+      ): matchType === "scorecard" ?(
+        <Scorecard match_id={matchid} matchData={liveMatch} matchStates={matchStatistics}/>
+      ): null}
+    
 
-      {/* <Live></Live> */}
 
-      {/* <Scorecard></Scorecard> */}
     </Layout>
   );
 }

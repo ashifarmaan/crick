@@ -1,5 +1,6 @@
 "use client";
 import React, { Component } from "react";
+import eventEmitter from "@/utils/eventEmitter";
 
 interface MatchData {
   matchId: string;
@@ -12,6 +13,7 @@ interface MatchData {
   matchBattingTeam: string;
   matchcrr: string;
   aa: string;
+  // matchlivedata:any;
 }
 
 class MatchWebSocket extends Component<object, MatchData> { // Changed from {} to object
@@ -29,7 +31,8 @@ class MatchWebSocket extends Component<object, MatchData> { // Changed from {} t
       matchStatus: "",
       matchBattingTeam: "",
       matchcrr: "",
-      aa: ""
+      aa: "",
+      // matchlivedata:""
     };
   }
 
@@ -47,7 +50,7 @@ class MatchWebSocket extends Component<object, MatchData> { // Changed from {} t
         data?.live?.live_inning?.batting_team_id !== undefined &&
         data?.live?.live_inning?.batting_team_id !== ""
       ) {
-        console.log("wesocket",JSON.stringify(data));
+        // console.log("wesocket",JSON.stringify(data));
         this.setState({
           matchId: data?.match_id,
           matchOddsback: data?.live_odds?.matchodds?.teama.back
@@ -62,8 +65,10 @@ class MatchWebSocket extends Component<object, MatchData> { // Changed from {} t
           matchWikets: data?.live?.live_score?.wickets,
           matchStatus: JSON.stringify(data?.live?.status_note),
           matchcrr: data?.live?.live_score?.runrate,
+          // matchlivedata: data,
         });
 
+        eventEmitter.emit("matchLiveData", data);
         // Update div elements based on class
         this.updateDivElements();
       }
@@ -149,12 +154,12 @@ class MatchWebSocket extends Component<object, MatchData> { // Changed from {} t
     ); // Select elements with class `match-info`
 
     crrelements.forEach((element) => {
-      element.innerHTML = ` <p>CRR: ${this.state.matchcrr } ${this.state.matchStatus}</p>`;
+      element.innerHTML = ` <p>CRR: ${this.state.matchcrr } ${JSON.parse(this.state.matchStatus)}</p>`;
     });
   };
 
   render() {
-    return <div></div>;
+    return <div></div>
   }
 }
 

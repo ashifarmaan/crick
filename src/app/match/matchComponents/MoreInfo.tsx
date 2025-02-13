@@ -2,12 +2,12 @@
 import Link from "next/link";
 import React, { useState } from "react";
 import Image from "next/image";
-import { StaticImport } from "next/dist/shared/lib/get-img-props";
+// import { StaticImport } from "next/dist/shared/lib/get-img-props";
 
 interface MatchInfo {
   match_id: number;
 
-  matchData: any | null;
+  matchData: any| null;
 
   matchLast: any | null;
 }
@@ -17,6 +17,7 @@ export default function MoreInfo({
   matchData,
   matchLast,
 }: MatchInfo) {
+    
   const teama_id = matchData?.match_info?.teama?.team_id;
   const teamb_id = matchData?.match_info?.teamb?.team_id;
 
@@ -39,8 +40,8 @@ export default function MoreInfo({
 
   let teamaWinMatch = 0;
   let teambWinMatch = 0;
-  let matchPlayed = matchlistAB.length;
-  matchlistAB.map((items: { winning_team_id: any; }) =>
+  const matchPlayed = matchlistAB.length;
+  matchlistAB.map((items: { winning_team_id:any; }) =>
     items.winning_team_id === teama_id
       ? teamaWinMatch++
       : items.winning_team_id === teamb_id
@@ -48,8 +49,8 @@ export default function MoreInfo({
       : ""
   );
 
-  let teamaWinper = teamaWinMatch > 0 ? (teamaWinMatch / matchPlayed) * 100 : 0;
-  let teambWinper = teambWinMatch > 0 ? (teambWinMatch / matchPlayed) * 100 : 0;
+  const teamaWinper = teamaWinMatch > 0 ? (teamaWinMatch / matchPlayed) * 100 : 0;
+  const teambWinper = teambWinMatch > 0 ? (teambWinMatch / matchPlayed) * 100 : 0;
 
   const teamAScores = matchlistAB.map((match: { teama: { scores: string; }; }) => {
     const score = match.teama.scores.split("/")[0]; // Get the runs before "/"
@@ -58,7 +59,7 @@ export default function MoreInfo({
   const highestScoreTeamA = teamAScores > 0 ? Math.max(...teamAScores): 0;
   const lowestScoreTeamA = teamAScores > 0 ? Math.min(...teamAScores): 0;
   const averageScoreTeamA =teamAScores > 0 ? 
-    teamAScores.reduce((sum: any, score: any) => sum + score, 0) / teamAScores.length : 0;
+    teamAScores.reduce((sum:any, score:any) => sum + score, 0) / teamAScores.length : 0;
 
   const teamBScores = matchlistAB.map((match: { teamb: { scores: string; }; }) => {
     const score = match.teamb.scores.split("/")[0]; // Get the runs before "/"
@@ -67,13 +68,13 @@ export default function MoreInfo({
   const highestScoreTeamB = teamBScores > 0 ? Math.max(...teamBScores) :0;
   const lowestScoreTeamB = teamBScores > 0 ? Math.min(...teamBScores) :0;
   const averageScoreTeamB = teamBScores > 0 ? 
-    teamBScores.reduce((sum: any, score: any) => sum + score, 0) / teamBScores.length: 0;
+    teamBScores.reduce((sum:any, score:any) => sum + score, 0) / teamBScores.length: 0;
 
 
     let sameVenueteamaWinMatch = 0;
     let sameVenueteambWinMatch = 0;
-    let sameVenuematchPlayed = matchlistSameVenue.length;
-    matchlistSameVenue.map((items: { winning_team_id: any; }) =>
+    const sameVenuematchPlayed = matchlistSameVenue.length;
+    matchlistSameVenue.map((items: { winning_team_id:any; }) =>
       items.winning_team_id === teama_id
         ? sameVenueteamaWinMatch++
         : items.winning_team_id === teamb_id
@@ -82,8 +83,8 @@ export default function MoreInfo({
     );
 
   
-    let sameVenueteamaWinper = sameVenuematchPlayed > 0 ? (sameVenueteamaWinMatch / sameVenuematchPlayed) * 100    : 0;
-    let sameVenueteambWinper = sameVenuematchPlayed > 0 ? (sameVenueteambWinMatch / sameVenuematchPlayed) * 100    : 0;
+    const sameVenueteamaWinper = sameVenuematchPlayed > 0 ? (sameVenueteamaWinMatch / sameVenuematchPlayed) * 100    : 0;
+    const sameVenueteambWinper = sameVenuematchPlayed > 0 ? (sameVenueteambWinMatch / sameVenuematchPlayed) * 100    : 0;
   
     const sameVenueteamAScores = matchlistSameVenue.map((match: { teama: { scores: string; }; }) => {
       const score = match.teama.scores.split("/")[0]; // Get the runs before "/"
@@ -92,7 +93,7 @@ export default function MoreInfo({
     const sameVenuehighestScoreTeamA = sameVenueteamAScores > 0 ? Math.max(...sameVenueteamAScores) : 0;
     const sameVenuelowestScoreTeamA = sameVenueteamAScores > 0 ? Math.min(...sameVenueteamAScores) : 0;
     const sameVenueaverageScoreTeamA = sameVenueteamAScores > 0 ?
-    sameVenueteamAScores.reduce((sum: any, score: any) => sum + score, 0) / sameVenueteamAScores.length: 0;
+    sameVenueteamAScores.reduce((sum:any, score:any) => sum + score, 0) / sameVenueteamAScores.length: 0;
   
     const sameVenueteamBScores = matchlistSameVenue.map((match: { teamb: { scores: string; }; }) => {
       const score = match.teamb.scores.split("/")[0]; // Get the runs before "/"
@@ -101,7 +102,7 @@ export default function MoreInfo({
     const sameVenuehighestScoreTeamB = sameVenueteamBScores > 0 ? Math.max(...sameVenueteamBScores):0;
     const sameVenuelowestScoreTeamB = sameVenueteamBScores > 0 ? Math.min(...sameVenueteamBScores):0;
     const sameVenueaverageScoreTeamB =
-    sameVenueteamBScores > 0 ? sameVenueteamBScores.reduce((sum: any, score: any) => sum + score, 0) / sameVenueteamBScores.length: 0;
+    sameVenueteamBScores > 0 ? sameVenueteamBScores.reduce((sum:any, score:any) => sum + score, 0) / sameVenueteamBScores.length: 0;
 
   console.log("playing11", teama11Players);
 
@@ -138,7 +139,7 @@ export default function MoreInfo({
                 Live
               </button>
             </Link>
-            <Link href="/match-scorecard">
+            <Link href={"/match/scorecard/" + match_id}>
               <button className="font-medium py-2 px-3 whitespace-nowrap">
                 Scorecard
               </button>
@@ -289,8 +290,8 @@ export default function MoreInfo({
                             <div className="overflow-x-auto lg:block hidden">
                               <table className="w-full text-left rtl:text-right">
                                 <tbody>
-                                  {matchlistA.slice(0, 5).map((items:any) => (
-                                    <tr className="whitespace-nowrap bg-white border-b dark:bg-gray-800 dark:border-gray-700 text-[13px]">
+                                  {matchlistA.slice(0, 5).map((items:any, index:number) => (
+                                    <tr className="whitespace-nowrap bg-white border-b dark:bg-gray-800 dark:border-gray-700 text-[13px]" key={index}>
                                       <td className="px-4 pl-0 py-1 ">
                                         <Link href="#">
                                           <div className="flex items-center space-x-2 font-medium w-[162px] md:w-full">
@@ -715,7 +716,7 @@ export default function MoreInfo({
                                 {matchlistB
                                   .slice(0, 5)
                                   .map((items: {
-                                      match_id: number; winning_team_id: any; 
+                                      match_id: number; winning_team_id:any; 
 }) =>
                                     items.winning_team_id === teamb_id ? (
                                       <span  key={items.match_id} className="bg-[#13b76dbd] text-white text-[13px] px-[6px] py-[3px] rounded">
@@ -762,8 +763,8 @@ export default function MoreInfo({
                             <div className="overflow-x-auto lg:block hidden">
                               <table className="w-full text-left rtl:text-right">
                                 <tbody>
-                                {matchlistB.slice(0, 5).map((items:any) => (
-                                  <tr className="whitespace-nowrap bg-white border-b dark:bg-gray-800 dark:border-gray-700 text-[13px]">
+                                {matchlistB.slice(0, 5).map((items:any, index:number) => (
+                                  <tr className="whitespace-nowrap bg-white border-b dark:bg-gray-800 dark:border-gray-700 text-[13px]" key={index}>
                                     <td className="px-4 pl-0 py-1 ">
                                       <Link href="#">
                                         <div className="flex items-center space-x-2 font-medium w-[162px] md:w-full">
@@ -1164,7 +1165,7 @@ export default function MoreInfo({
                 </div>
 
                 <div className="rounded-lg bg-[#ffffff] my-4 p-4">
-                  <div>
+                  <div key="mypage">
                     <h3 className="text-1xl font-semibold pl-[7px] border-l-[3px] mb-3 border-[#229ED3]">
                       Head To Head (Last 10 matches)
                     </h3>
@@ -1209,8 +1210,8 @@ export default function MoreInfo({
                     </div>
 
                     <div className="border-t-[1px] border-[#E4E9F0]" />
-                    {matchlistAB.slice(0, 5).map((items:any) => (
-                      <div className="py-4 flex justify-between items-center">
+                    {matchlistAB.slice(0, 5).map((items:any, index:number) => (
+                      <div className="py-4 flex justify-between items-center" key={index}>
                         <Link href="">
                           <div className="font-medium  w-full">
                             <p className="mx-2 font-semibold uppercase">
@@ -1982,7 +1983,7 @@ export default function MoreInfo({
                         }`}>
                       <div>
                         {teama11Players.map((player) => (
-                          <Link href="/profile">
+                          <Link href="/profile"  key={player.player_id}>
                             <div className="flex items-center space-x-3 py-3 border-b-[1px] border-border-gray-700">
                               <div>
                                 <Image
@@ -2016,7 +2017,7 @@ export default function MoreInfo({
                         }`}>
                       <div>
                         {teamb11Players.map((player) => (
-                          <Link href="/profile">
+                          <Link href="/profile"  key={player.player_id}>
                             <div className="flex items-center space-x-3 py-3 border-b-[1px] border-border-gray-700">
                               <div>
                                 <Image
