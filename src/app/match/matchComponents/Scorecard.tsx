@@ -105,7 +105,7 @@ export default function Scorecard({
               Scorecard
             </button>
           </Link>
-          <Link href="/match/live/squad">
+          <Link href={"/match/squad/"+ match_id}>
             <button
               className="font-medium py-2 px-3 whitespace-nowrap"
             >

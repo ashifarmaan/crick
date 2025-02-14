@@ -12,8 +12,7 @@ export function calculateRemainingOvers(maxOver: number, finishOver: number) {
   
     // Convert remaining balls back to overs and balls
     const remainingOvers = Math.floor(remainingBalls / 6);
-    const remainingBallsInOver = remainingBalls % 6;
-  
+    const remainingBallsInOver = Math.trunc(Number(remainingBalls % 6));
     // Combine to get the result in overs.balls format
     return `${remainingOvers}.${remainingBallsInOver}`;
   }

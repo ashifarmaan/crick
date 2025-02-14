@@ -144,7 +144,7 @@ export default function MoreInfo({
                 Scorecard
               </button>
             </Link>
-            <Link href="/match-squad">
+            <Link href={"/match/squad/"+ match_id}>
               <button className="font-medium py-2 px-3 whitespace-nowrap">
                 Squad
               </button>

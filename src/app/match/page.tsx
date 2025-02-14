@@ -5,6 +5,7 @@ import Layout from "@/app/components/Layout";
 import Image from "next/image";
 import Live from "./matchComponents/Live";
 import Scorecard from "./matchComponents/Scorecard";
+import Squads from "./matchComponents/Squad";
 import { MatcheInfo, Last10Match, MatchStatistics } from "@/controller/matchInfoController";
 import ChatComponent from "../components/websocket";
 
@@ -257,9 +258,11 @@ export default async function page(props: { params: Params }) {
         <Live match_id={matchid}  matchData={liveMatch}/>
       ): matchType === "scorecard" ?(
         <Scorecard match_id={matchid} matchData={liveMatch} matchStates={matchStatistics}/>
+      ): matchType === "squad" ?(
+        <Squads match_id={matchid} matchData={liveMatch} />
       ): null}
     
-
+    
 
     </Layout>
   );
