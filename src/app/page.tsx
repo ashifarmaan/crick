@@ -7,6 +7,7 @@ import ChatComponent from "./components/websocket";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import TabButtons from "./components/buttonclick";
+import { urlStringEncode } from "../utils/utility";
 
 import {
   completedMatches,
@@ -15,6 +16,9 @@ import {
 } from "@/controller/homeController";
 
 interface MatchItem {
+  match_number: string;
+  commentary: number;
+  live: string;
   match_id: number;
   status_str: string;
   competition: {
@@ -79,7 +83,8 @@ export default async function Home(props: { params: Params }) {
   const liveMatch: MatchItem[] = await liveMatches();
 
   // const  matchData = ChatComponent();
-
+console.log(liveMatch);
+  
   return (
     <Layout>
       <ChatComponent></ChatComponent>
@@ -160,6 +165,7 @@ export default async function Home(props: { params: Params }) {
                   {/* <!-- live match desktop view start --> */}
                   <div className="liveMatch">
                   {liveMatch.map((items) => (
+                    items.commentary !== 0 ? (
                     <div
                       key={items.match_id}
                       data-key={items.match_id}
@@ -252,7 +258,7 @@ export default async function Home(props: { params: Params }) {
                       <div className="border-t-[1px] border-[#E7F2F4]"></div>
 
                       <div className="py-4 px-3">
-                        <Link href={"/match/live-score/" + items.match_id}>
+                        <Link href={"/live-score/"+urlStringEncode(items?.teama?.short_name+"-vs-"+items?.teamb?.short_name+"-match-"+items?.match_number+"-"+items?.competition?.title)+"/" + items.match_id}>
                           <div className="flex justify-between items-center text-[14px]">
                             <div className="">
                               <p className="text-[#586577] text-[12px] mb-4 font-medium">
@@ -397,6 +403,7 @@ export default async function Home(props: { params: Params }) {
                         </Link>
                       </div>
                     </div>
+                  ):("")
                   ))}
                   
                   <div className="lg:hidden rounded-lg p-4 mb-4 bg-[#ffffff] performance-section relative hover:shadow-lg">

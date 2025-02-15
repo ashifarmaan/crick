@@ -16,3 +16,14 @@ export function calculateRemainingOvers(maxOver: number, finishOver: number) {
     // Combine to get the result in overs.balls format
     return `${remainingOvers}.${remainingBallsInOver}`;
   }
+
+export  function getPlayerNameByPid(players:any, pid:number) {
+    const player = players.find((p: { pid: number; }) => p.pid === pid);
+    return player ? player.title : "Player not found";
+}
+
+export  function urlStringEncode(str: string) {
+  const formattedString = str.toLowerCase().replace(/\s+/g, '-').replace(/[^a-zA-Z0-9-]/g, ''); 
+
+  return formattedString;
+}

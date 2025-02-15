@@ -4,21 +4,28 @@ import Link from "next/link";
 import React, { useState } from "react";
 import Image from "next/image";
 import eventEmitter from "@/utils/eventEmitter";
-import { calculateRemainingOvers } from "@/utils/utility";
+import { calculateRemainingOvers, getPlayerNameByPid } from "@/utils/utility";
 
 interface Live {
   match_id: number;
 
   matchData: any | null;
 
+  matchUrl :string | null;
   // matchLast:any | null;
 }
 
 export default function Live({
   match_id,
   matchData,
+  matchUrl
 }: // matchLast,
 Live) {
+
+  let allCommenries = matchData?.live?.commentaries;
+  if(allCommenries){
+  allCommenries = [...allCommenries]?.reverse();
+  }
   const [matchLiveData, setmatchLiveData] = useState(matchData);
 
   const handleMatchData = (data: any) => {
@@ -31,31 +38,32 @@ Live) {
 
   let teamwinpercentage = matchLiveData?.teamwinpercentage;
   let matchDetails = matchLiveData?.match_info;
+  let players = matchLiveData?.players;
   let matchinfo = matchLiveData?.live;
   let matchinning = matchLiveData?.live?.live_inning;
   let commentaries = matchLiveData?.live?.commentaries;
-  let batsman = matchinning.batsmen;
-  let bowlers = matchinning.bowlers;
-  let fows = matchinning.fows;
-  let yetTobat = matchinning.did_not_bat;
+  let batsman = matchinfo?.batsmen;
+  let bowlers = matchinning?.bowlers;
+  let fows = matchinning?.fows;
+  let yetTobat = matchinning?.did_not_bat;
   let currPartnership = matchLiveData?.live?.live_inning?.current_partnership;
-  let currentOver = Math.floor(matchinning.equations.overs);
+  let currentOver = Math.floor(matchinning?.equations.overs);
   let lastOver = currentOver - 1;
-  let thisOverRun = commentaries.filter(
+  let thisOverRun = commentaries?.filter(
     (events: { event: string; over: any }) =>
       Number(events.over) === currentOver && events.event !== "overend"
   );
-  let lastOverRun = commentaries.filter(
+  let lastOverRun = commentaries?.filter(
     (events: { event: string; over: any }) =>
       Number(events.over) === lastOver && events.event !== "overend"
   );
-  let thisOvertotalRuns = thisOverRun.reduce(
+  let thisOvertotalRuns = thisOverRun?.reduce(
     (accumulator: number, currentEvent: { run: number }) => {
       return accumulator + currentEvent.run;
     },
     0
   );
-  let lastOvertotalRuns = lastOverRun.reduce(
+  let lastOvertotalRuns = lastOverRun?.reduce(
     (accumulator: number, currentEvent: { run: number }) => {
       return accumulator + currentEvent.run;
     },
@@ -74,9 +82,10 @@ Live) {
     teamwinpercentage = matchLiveData?.teamwinpercentage;
     matchDetails = matchLiveData?.match_info;
     matchinfo = matchLiveData?.live;
+    players = matchLiveData?.players;
     matchinning = matchLiveData?.live?.live_inning;
     commentaries = matchLiveData?.live?.commentaries;
-    batsman = matchinning.batsmen;
+    batsman = matchinfo.batsmen;
     bowlers = matchinning.bowlers;
     fows = matchinning.fows;
     yetTobat = matchinning.did_not_bat;
@@ -105,26 +114,44 @@ Live) {
     );
   }
 
-  commentaries = [...commentaries].reverse();
-  console.log("comment", commentaries);
-
-  const [filter, setFilter] = useState("All");
-  console.log("filter", filter);
-  if(filter === "all"){
-    commentaries;
-  }else if (filter === "6s"){
-    commentaries = commentaries.filter((item: { score: number; event: string;}) => Number(item.score) === 6  || item.event === "overend");
-  }else if(filter === "4s"){
-    commentaries = commentaries.filter((item: { score: number; event: string;}) => Number(item.score) === 4  || item.event === "overend");
-  }else if(filter === "Wicket"){
-    commentaries = commentaries.filter((item: { score: string; event: string;}) => item.event === "wicket"  || item.event === "overend");
-  }else{
-    commentaries;
+  if(commentaries){
+  commentaries = [...commentaries]?.reverse();
   }
+  // console.log("comment", commentaries);
 
+  const newCommentary = commentaries?.filter(
+    (item: { event_id: any; event:string; over:number }) =>
+      !allCommenries.some((existingItem: { event_id: any; event:string; over:number}) => 
+        item.event_id 
+          ? existingItem.event_id === item.event_id  // Compare event_id for regular events
+          : (existingItem.event === "overend" && existingItem.over === item.over) // Compare "overend" events by over number
+      )
+  );
   
+  // Merge new unique data into firstArray
+     let updatedCommentaries = [...newCommentary,...allCommenries];
+  
+  const [filter, setFilter] = useState("All");
+  // console.log("filter", filter);
+  if(filter === "all"){
+    updatedCommentaries;
+  }else if (filter === "6s"){
+    updatedCommentaries = updatedCommentaries.filter((item: { score: number; event: string;}) => Number(item.score) === 6 );
+  }else if(filter === "4s"){
+    updatedCommentaries = updatedCommentaries.filter((item: { score: number; event: string;}) => Number(item.score) === 4 );
+  }else if(filter === "Wicket"){
+    updatedCommentaries = updatedCommentaries.filter((item: { score: string; event: string;}) => item.score === "w" );
+  }else if(filter === "Overs"){
+    updatedCommentaries = updatedCommentaries.filter((item: { score: string; event: string;}) => item.event === "overend");
+  }else{
+    updatedCommentaries;
+  }
+  
+  // console.log("allComm",updatedCommentaries);
+  
+  const playerName = getPlayerNameByPid(players, 117226);
 
-  const numberOfSpans = 6 - thisOverRun.length;
+  const numberOfSpans = 6 - thisOverRun?.length;
   const emptySpans = [];
   for (let i = 0; i < numberOfSpans; i++) {
     emptySpans.push(
@@ -144,35 +171,47 @@ Live) {
   return (
     <section className="lg:w-[1000px] mx-auto md:mb-0 mb-4 px-2 lg:px-0">
       <div id="tabs" className="my-4">
+        
         <div className="flex text-1xl space-x-8 p-2 bg-[#ffffff] rounded-lg overflow-auto">
-          <Link href={"/match/moreinfo/" + match_id}>
-            <button className="font-medium py-2 px-3 whitespace-nowrap">
+        <Link href={"/moreinfo/"+matchUrl+"/" + match_id}>
+            <button
+              className="font-medium py-2 px-3 whitespace-nowrap "
+            >
               More Info
             </button>
           </Link>
-          <Link href={"/match/live-score/" + match_id}>
-            <button className="font-medium py-2 px-3 whitespace-nowrap bg-[#1A80F8] text-white rounded-md">
+          <Link href={"/live-score/"+matchUrl+"/" + match_id}>
+            <button
+              className="font-medium py-2 px-3 whitespace-nowrap bg-[#1A80F8] text-white rounded-md"
+            >
               Live
             </button>
           </Link>
-          <Link href={"/match/scorecard/" + match_id}>
-            <button className="font-medium py-2 px-3 whitespace-nowrap">
+          <Link href={"/scorecard/"+matchUrl+"/" + match_id}>
+            <button
+              className="font-medium py-2 px-3 whitespace-nowrap"
+            >
               Scorecard
             </button>
           </Link>
-          <Link href={"/match/squad/"+ match_id}>
-            <button className="font-medium py-2 px-3 whitespace-nowrap">
+          <Link href={"/squad/"+matchUrl+"/"+ match_id}>
+            <button
+              className="font-medium py-2 px-3 whitespace-nowrap"
+            >
               Squad
             </button>
           </Link>
-
-          <Link href="/matchpoints">
-            <button className="font-medium py-2 px-3 whitespace-nowrap">
+          <Link href={"/points-table/"+matchUrl+"/"+ match_id}>
+            <button
+              className="font-medium py-2 px-3 whitespace-nowrap"
+            >
               Points Table
             </button>
           </Link>
-          <Link href="/live-stats/most-runs-stats">
-            <button className="font-medium py-2 px-3 whitespace-nowrap">
+          <Link href={"/stats/"+matchUrl+"/"+ match_id}>
+            <button
+              className="font-medium py-2 px-3 whitespace-nowrap"
+            >
               Stats
             </button>
           </Link>
@@ -199,14 +238,14 @@ Live) {
                           </div>
                           <div className="font-medium">
                             <h2 className="md:text-[15px] text-[14px] text-[#909090]">
-                              {currPartnership?.batsmen?.[0]?.name}{" "}
+                              {batsman?.[0]?.name}{" "}
                             </h2>
                             <p className="md:text-[15px] text-[14px] flex items-center">
-                              {currPartnership?.batsmen?.[0]?.runs}{" "}
+                            {batsman?.[0].runs}{" "}
                               <span className="md:text-[13px] text-[12px] text-[#909090] px-1">
-                                ({currPartnership?.batsmen?.[0]?.balls})
+                                ({batsman?.[0]?.balls_faced})
                               </span>
-                              {matchinfo?.batsmen?.[0]?.batsman_id ==
+                              {batsman?.[0]?.batsman_id ==
                               currPartnership?.batsmen?.[0]?.batsman_id ? (
                                 <Image
                                   src="/assets/img/home/bat.png"
@@ -243,15 +282,15 @@ Live) {
                           </div>
                           <div className="font-medium text-end">
                             <h2 className="md:text-[15px] text-[14px] text-[#909090]">
-                              {currPartnership?.batsmen?.[1]?.name}
+                              {batsman?.[1]?.name}
                             </h2>
                             <p className="md:text-[15px] text-[14px] flex items-center">
-                              {currPartnership?.batsmen?.[1]?.runs}{" "}
+                              {batsman?.[1]?.runs}{" "}
                               <span className="md:text-[13px] text-[12px] text-[#909090] pl-1">
-                                ({currPartnership?.batsmen?.[1]?.balls})
+                                ({batsman?.[1]?.balls_faced})
                               </span>
-                              {matchinfo?.batsmen?.[0]?.batsman_id ==
-                              currPartnership?.batsmen?.[1]?.batsman_id ? (
+                              {batsman?.[0]?.batsman_id ==
+                              currPartnership?.batsman?.[1]?.batsman_id ? (
                                 <Image
                                   src="/assets/img/home/bat.png"
                                   className="h-[14px]"
@@ -485,10 +524,10 @@ Live) {
             <div className="cust-box-click-content">
               <div>         
                     
-                    {commentaries.map((comment: any, index: number) =>
+                    {updatedCommentaries.map((comment: any, index: number) =>
                   comment?.event === "overend" ? (
-                    <div className="rounded-t-lg bg-white p-4 mt-4">
-                      <div  key={index} className="flex md:flex-row flex-col justify-between md:items-center gap-2">
+                    <div className="rounded-t-lg bg-white p-4 mt-4"  key={index}>
+                      <div  className="flex md:flex-row flex-col justify-between md:items-center gap-2">
                         <div className="text-[14px] font-normal">
                           IND 1st Innings : {comment.score}
                         </div>
@@ -499,20 +538,22 @@ Live) {
                           </span>
                         </div>
                         <div className="text-[14px] font-normal text-black">
-                          6 4 4 1 4 4
+                        {lastOverRun.map((lastOver: any) => (
+                           lastOver.score +" "
+                        ))}
                         </div>
                         <div className="text-[14px] font-normal">
-                          R Sharma: {comment?.bats?.[0]?.runs}{" "}
+                          {getPlayerNameByPid(players, comment?.bats?.[0]?.batsman_id)}: {comment?.bats?.[0]?.runs}{" "}
                           <span className="text-[#909090]">
                             ({comment?.bats?.[0]?.balls_faced})
                           </span>{" "}
-                          | S Gill: {comment?.bats?.[1]?.runs}{" "}
+                          | {getPlayerNameByPid(players, comment?.bats?.[1]?.batsman_id)}: {comment?.bats?.[1]?.runs}{" "}
                           <span className="text-[#909090]">
                             ({comment?.bats?.[1]?.balls_faced}){" "}
                           </span>
                         </div>
                         <div className="text-[14px] font-normal">
-                          Taskin Ahmed{" "}
+                        {getPlayerNameByPid(players, comment?.bowls?.[0]?.bowler_id)}{" "}
                           <span className="text-[#909090]">
                             {comment?.bowls?.[0]?.overs}-
                             {comment?.bowls?.[0]?.runs_conceded}-
@@ -539,12 +580,12 @@ Live) {
                                       ? "bg-[#13b76dbd] text-white"
                                       : comment?.run == 4
                                       ? "bg-orange-500 text-white"
-                                      : comment?.run == "w"
+                                      : comment?.score == "w"
                                       ? "bg-red-500 text-white"
                                       : " text-white bg-[#bec2d3]"
                                   }`}
                                 >
-                                  {comment?.run}{" "}
+                                  {comment?.score}{" "}
                                 </p>
                               </div>
                               <div>

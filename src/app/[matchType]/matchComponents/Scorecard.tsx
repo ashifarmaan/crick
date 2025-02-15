@@ -12,12 +12,15 @@ interface Scorecard {
   // matchLast:any | null;
 
   matchStates:any | null;
+
+  matchUrl :string | null;
 }
 export default function Scorecard({
   match_id,
   matchData,
   // matchLast,
   matchStates,
+  matchUrl
 }: Scorecard) {
 
   
@@ -84,42 +87,42 @@ export default function Scorecard({
     <div className="my-4">
       <div id="tabs" className="my-4">
         <div className="flex text-1xl space-x-8 p-2 bg-[#ffffff] rounded-lg overflow-auto">
-        <Link href={"/match/moreinfo/" + match_id}>
+        <Link href={"/moreinfo/"+matchUrl+"/" + match_id}>
             <button
               className="font-medium py-2 px-3 whitespace-nowrap "
             >
               More Info
             </button>
           </Link>
-          <Link href={"/match/live-score/" + match_id}>
+          <Link href={"/live-score/"+matchUrl+"/" + match_id}>
             <button
               className="font-medium py-2 px-3 whitespace-nowrap"
             >
               Live
             </button>
           </Link>
-          <Link href={"/match/scorecard/" + match_id}>
+          <Link href={"/scorecard/"+matchUrl+"/" + match_id}>
             <button
               className="font-medium py-2 px-3 whitespace-nowrap bg-[#1A80F8] text-white rounded-md"
             >
               Scorecard
             </button>
           </Link>
-          <Link href={"/match/squad/"+ match_id}>
+          <Link href={"/squad/"+matchUrl+"/"+ match_id}>
             <button
               className="font-medium py-2 px-3 whitespace-nowrap"
             >
               Squad
             </button>
           </Link>
-          <Link href="/match/live/points-table">
+          <Link href={"/points-table/"+matchUrl+"/"+ match_id}>
             <button
               className="font-medium py-2 px-3 whitespace-nowrap"
             >
               Points Table
             </button>
           </Link>
-          <Link href="/match/live/stats">
+          <Link href={"/stats/"+matchUrl+"/"+ match_id}>
             <button
               className="font-medium py-2 px-3 whitespace-nowrap"
             >

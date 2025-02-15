@@ -10,12 +10,14 @@ interface MatchInfo {
   matchData: any| null;
 
   matchLast: any | null;
+  matchUrl :string | null;
 }
 
 export default function MoreInfo({
   match_id,
   matchData,
   matchLast,
+  matchUrl
 }: MatchInfo) {
     
   const teama_id = matchData?.match_info?.teama?.team_id;
@@ -128,38 +130,50 @@ export default function MoreInfo({
     <>
       <section className="lg:w-[1000px] mx-auto md:mb-0 mb-4 px-2 lg:px-0">
         <div id="tabs" className="my-4">
-          <div className="flex text-1xl space-x-8 p-2 bg-[#ffffff] rounded-lg overflow-auto">
-            <Link href={"/match/moreinfo/" + match_id}>
-              <button className="font-medium py-2 px-3 whitespace-nowrap bg-[#1A80F8] text-white rounded-md">
-                More Info
-              </button>
-            </Link>
-            <Link href={"/match/live-score/" + match_id}>
-              <button className="font-medium py-2 px-3 whitespace-nowrap">
-                Live
-              </button>
-            </Link>
-            <Link href={"/match/scorecard/" + match_id}>
-              <button className="font-medium py-2 px-3 whitespace-nowrap">
-                Scorecard
-              </button>
-            </Link>
-            <Link href={"/match/squad/"+ match_id}>
-              <button className="font-medium py-2 px-3 whitespace-nowrap">
-                Squad
-              </button>
-            </Link>
-            <Link href="/matchpoints">
-              <button className="font-medium py-2 px-3 whitespace-nowrap">
-                Points Table
-              </button>
-            </Link>
-            <Link href="/live-stats/most-runs-stats">
-              <button className="font-medium py-2 px-3 whitespace-nowrap">
-                Stats
-              </button>
-            </Link>
-          </div>
+        <div className="flex text-1xl space-x-8 p-2 bg-[#ffffff] rounded-lg overflow-auto">
+        <Link href={"/moreinfo/"+matchUrl+"/" + match_id}>
+            <button
+              className="font-medium py-2 px-3 whitespace-nowrap  bg-[#1A80F8] text-white rounded-md"
+            >
+              More Info
+            </button>
+          </Link>
+          <Link href={"/live-score/"+matchUrl+"/" + match_id}>
+            <button
+              className="font-medium py-2 px-3 whitespace-nowrap"
+            >
+              Live
+            </button>
+          </Link>
+          <Link href={"/scorecard/"+matchUrl+"/" + match_id}>
+            <button
+              className="font-medium py-2 px-3 whitespace-nowrap"
+            >
+              Scorecard
+            </button>
+          </Link>
+          <Link href={"/squad/"+matchUrl+"/"+ match_id}>
+            <button
+              className="font-medium py-2 px-3 whitespace-nowrap"
+            >
+              Squad
+            </button>
+          </Link>
+          <Link href={"/points-table/"+matchUrl+"/"+ match_id}>
+            <button
+              className="font-medium py-2 px-3 whitespace-nowrap"
+            >
+              Points Table
+            </button>
+          </Link>
+          <Link href={"/stats/"+matchUrl+"/"+ match_id}>
+            <button
+              className="font-medium py-2 px-3 whitespace-nowrap"
+            >
+              Stats
+            </button>
+          </Link>
+        </div>
         </div>
 
         <div id="tab-content">
