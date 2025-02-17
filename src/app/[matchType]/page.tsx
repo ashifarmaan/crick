@@ -48,12 +48,13 @@ import ChatComponent from "../components/websocket";
 //   children?: React.ReactNode;
 // }
 
-type Params = Promise<{ matchType: string; matchTab: string; matchId: number }>;
+type Params = Promise<{ matchType: string; matchTab: string; matchId: number; matchTitle: string }>;
 export default async function page(props: { params: Params }) {
   const params = await props.params;
   const matchid = params.matchId;
   const matchTab = params.matchTab;
   const matchType = params.matchType;
+  const matchTitle= params.matchTitle;
 
   const liveMatch = await MatcheInfo(matchid);
   const last10Match = await Last10Match(matchid);
@@ -71,7 +72,7 @@ export default async function page(props: { params: Params }) {
   const [inning1teamaOver, inning2teamaOver] = teamaovers.includes(" & ") ? teamaovers.split(" & ") : [teamaovers, ""];
   const [inning1teambOver, inning2teambOver] = teambovers.includes(" & ") ? teambovers.split(" & ") : [teambovers, ""];
 
-
+  
   return (
     <Layout>
       <ChatComponent></ChatComponent>
@@ -147,11 +148,8 @@ export default async function page(props: { params: Params }) {
                 </div>
               </div>
               <div className="text-[#8192B4] font-normal w-full text-center md:my-0 my-4">
-                <p className="text-[#FFBD71] lg:text-[20px] text-[16px] font-semibold">
-                  Day {liveMatch?.match_info?.competition ?.total_rounds}
-                </p>
-                <p className={"text-[#C1CEEA] text-[14px] crr"+matchid}>
-                  CRR: {liveMatch?.live?.live_score?.runrate } {liveMatch?.live?.status_note }.
+                <p className={"text-[#FFBD71] lg:text-[20px] text-[16px] ballEvent"+matchid}>
+                   {liveMatch?.live?.status_note}
                 </p>
               </div>
               <div className="flex gap-2 flex-row-reverse md:flex-row  items-center text-[#8192B4] font-normal w-full justify-end">
@@ -264,7 +262,7 @@ export default async function page(props: { params: Params }) {
       ): matchType === "squad" ?(
         <Squads match_id={matchid} matchData={liveMatch}  matchUrl ={matchTab} />
       ): matchType === "stats" ?(
-        <Stats match_id={matchid} matchData={liveMatch}  matchUrl ={matchTab} />
+        <Stats match_id={matchid} matchData={liveMatch}  matchUrl ={matchTab} matchTitle ={matchTitle} />
       ): matchType === "points-table" ?(
         <PointsTable match_id={matchid} matchData={liveMatch}  matchUrl ={matchTab} />
       ): null}

@@ -43,14 +43,25 @@ class MatchWebSocket extends Component<object, MatchData> { // Changed from {} t
     );
 
     this.socket.onmessage = (event) => {
+      // console.log("wesocket",event.data);
+      eventEmitter.emit("matchEvent", event.data);
+      
       const data = JSON.parse(event.data).response;
+      if(data?.ball_event !== undefined && data?.ball_event !== null && data?.ball_event !== '' && data?.ball_event !== Number){
+        const ballelements = document.querySelectorAll(
+          `.ballEvent${this.state.matchId}`
+        ); 
+        ballelements.forEach((element) => {
+          element.innerHTML = data?.ball_event;
+        });
+      }
       if (
         data?.match_id !== undefined &&
         data?.match_id !== "" &&
         data?.live?.live_inning?.batting_team_id !== undefined &&
         data?.live?.live_inning?.batting_team_id !== ""
       ) {
-        // console.log("wesocket",JSON.stringify(data));
+        
         this.setState({
           matchId: data?.match_id,
           matchOddsback: data?.live_odds?.matchodds?.teama.back

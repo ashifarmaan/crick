@@ -3,6 +3,7 @@ import React from 'react'
 import Image from "next/image";
 import Link from 'next/link';
 import WeeklySlider from "@/app/components/WeeklySlider";
+import { SeriesPointsTable } from "@/controller/matchInfoController";
 
 interface PointsTable {
     match_id: number;
@@ -12,13 +13,17 @@ interface PointsTable {
     matchUrl :string | null;
 
   }
-export default function PointsTable({
+export default async function PointsTable({
     match_id,
     matchData,
     matchUrl
   }: PointsTable) {
 
 
+        const cid = matchData?.match_info?.competition?.cid;
+        const pointTable =  await SeriesPointsTable(cid);
+        const standings = pointTable?.standing?.standings;
+        console.log(pointTable);
 
   return (
     
@@ -108,9 +113,11 @@ export default function PointsTable({
                         </svg>
                     </button>
                 </div>
+                
+                {standings.map((rounds : any) => ( 
                 <div className="rounded-lg bg-[#ffffff] mb-2 p-4">
                     <h3 className="text-1xl font-semibold mb-3 pl-[7px] border-l-[3px] border-[#229ED3]">
-                        IPl 2024 Pointe Table
+                        {rounds?.round?.name}
                     </h3>
                     <div>
                         <div
@@ -148,6 +155,7 @@ export default function PointsTable({
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-200">
+                                {rounds.standings.map((point : any) => ( 
                                     <tr className="hover:bg-[#fffae5]">
                                         <td className="md:px-2 pl-[14px] py-3 w-[10px]">1</td>
                                         <td className="md:px-2 pl-[14px] py-3 text-[#217AF7]">
@@ -155,41 +163,33 @@ export default function PointsTable({
                                                 <div className="flex items-center gap-[5px] w-[120px]">
                                                     <div>
                                                         <Image
-                                                            src="/assets/img/ipl/1.png"
+                                                            src={point?.team?.thumb_url}
                                                             className="h-[20px]"
                                                             width={20} height={20} alt=""
                                                         />
                                                     </div>
                                                     <p>
-                                                        KKR<span className="text-[#00B564]"> (Q)</span>
+                                                        {point?.team?.abbr}
+                                                        {/* <span className="text-[#00B564]"> (Q)</span> */}
                                                     </p>
                                                 </div>
                                             </Link>
                                         </td>
-                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                        <td className="md:px-2 pl-[14px] py-3">123</td>
-                                        <td className="md:px-2 pl-[14px] py-3">45.50</td>
-                                        <td className="md:px-2 pl-[14px] py-3">9</td>
-                                        <td className="md:px-2 pl-[14px] py-3">0</td>
-                                        <td className="md:px-2 pl-[14px] py-3">74.65</td>
+                                        <td className="md:px-2 pl-[14px] py-3">{point?.played}</td>
+                                        <td className="md:px-2 pl-[14px] py-3">{point?.win}</td>
+                                        <td className="md:px-2 pl-[14px] py-3">{point?.loss}</td>
+                                        <td className="md:px-2 pl-[14px] py-3">{point?.draw}</td>
+                                        <td className="md:px-2 pl-[14px] py-3">{point?.nr}</td>
+                                        <td className="md:px-2 pl-[14px] py-3">{point?.points}</td>
+                                        <td className="md:px-2 pl-[14px] py-3">{point?.netrr}</td>
                                         <td className="md:px-2 pl-[14px] py-3">
                                             <div className="ml-auto flex gap-1 items-center">
-                                                <span className="bg-[#13b76dbd] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    W
+                                                {point?.lastfivematchresult.split(",").map((item: string, index:number) => (
+                                                <span className={`${item[index] == "W" ? "bg-[#13b76dbd]" : "bg-[#f63636c2]" } text-white text-[13px] px-[4px] py-[0px] rounded`}>
+                                                    {item}
                                                 </span>
-                                                <span className="bg-[#13b76dbd] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    W
-                                                </span>
-                                                <span className="bg-[#f63636c2] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    L
-                                                </span>
-                                                <span className="bg-[#f63636c2] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    L
-                                                </span>
-                                                <span className="bg-[#13b76dbd] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    W
-                                                </span>
+                                                ))}
+                                                
                                                 <span className="flex">
                                                     <button className="arro-button">
                                                         <svg
@@ -211,567 +211,14 @@ export default function PointsTable({
                                             </div>
                                         </td>
                                     </tr>
-                                    <tr>
-                                        <td className="md:px-2 pl-[14px] py-3 w-[10px]">2</td>
-                                        <td className="md:px-2 pl-[14px] py-3 text-[#217AF7]">
-                                            <Link href="/kkrseries">
-                                                <div className="flex items-center gap-[5px]">
-                                                    <div>
-                                                        <Image
-                                                            src="/assets/img/ipl/2.png"
-                                                            className="h-[20px]"
-                                                            width={20} height={20} alt=""
-                                                        />
-                                                    </div>
-                                                    <p>
-                                                        SH<span className="text-[#00B564]"> (Q)</span>
-                                                    </p>
-                                                </div>
-                                            </Link>
-                                        </td>
-                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                        <td className="md:px-2 pl-[14px] py-3">123</td>
-                                        <td className="md:px-2 pl-[14px] py-3">45.50</td>
-                                        <td className="md:px-2 pl-[14px] py-3">9</td>
-                                        <td className="md:px-2 pl-[14px] py-3">0</td>
-                                        <td className="md:px-2 pl-[14px] py-3">74.65</td>
-                                        <td className="md:px-2 pl-[14px] py-3">
-                                            <div className="ml-auto flex gap-1 items-center">
-                                                <span className="bg-[#13b76dbd] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    W
-                                                </span>
-                                                <span className="bg-[#13b76dbd] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    W
-                                                </span>
-                                                <span className="bg-[#f63636c2] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    L
-                                                </span>
-                                                <span className="bg-[#f63636c2] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    L
-                                                </span>
-                                                <span className="bg-[#13b76dbd] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    W
-                                                </span>
-                                                <span className="flex">
-                                                    <button className="arro-button">
-                                                        <svg
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            fill="none"
-                                                            viewBox="0 0 24 24"
-                                                            strokeWidth="1.5"
-                                                            stroke="currentColor"
-                                                            className="size-4"
-                                                        >
-                                                            <path
-                                                                strokeLinecap="round"
-                                                                strokeLinejoin="round"
-                                                                d="m19.5 8.25-7.5 7.5-7.5-7.5"
-                                                            />
-                                                        </svg>
-                                                    </button>
-                                                </span>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className="md:px-2 pl-[14px] py-3 w-[10px]">3</td>
-                                        <td className="md:px-2 pl-[14px] py-3 text-[#217AF7]">
-                                            <Link href="/kkrseries">
-                                                <div className="flex items-center gap-[5px]">
-                                                    <div>
-                                                        <Image
-                                                            src="/assets/img/ipl/3.png"
-                                                            className="h-[20px]"
-                                                            width={20} height={20} alt=""
-                                                        />
-                                                    </div>
-                                                    <p>
-                                                        RR<span className="text-[#00B564]"> (Q)</span>
-                                                    </p>
-                                                </div>
-                                            </Link>
-                                        </td>
-                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                        <td className="md:px-2 pl-[14px] py-3">123</td>
-                                        <td className="md:px-2 pl-[14px] py-3">45.50</td>
-                                        <td className="md:px-2 pl-[14px] py-3">9</td>
-                                        <td className="md:px-2 pl-[14px] py-3">0</td>
-                                        <td className="md:px-2 pl-[14px] py-3">74.65</td>
-                                        <td className="md:px-2 pl-[14px] py-3">
-                                            <div className="ml-auto flex gap-1 items-center">
-                                                <span className="bg-[#13b76dbd] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    W
-                                                </span>
-                                                <span className="bg-[#13b76dbd] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    W
-                                                </span>
-                                                <span className="bg-[#f63636c2] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    L
-                                                </span>
-                                                <span className="bg-[#f63636c2] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    L
-                                                </span>
-                                                <span className="bg-[#13b76dbd] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    W
-                                                </span>
-                                                <span className="flex">
-                                                    <button className="arro-button">
-                                                        <svg
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            fill="none"
-                                                            viewBox="0 0 24 24"
-                                                            strokeWidth="1.5"
-                                                            stroke="currentColor"
-                                                            className="size-4"
-                                                        >
-                                                            <path
-                                                                strokeLinecap="round"
-                                                                strokeLinejoin="round"
-                                                                d="m19.5 8.25-7.5 7.5-7.5-7.5"
-                                                            />
-                                                        </svg>
-                                                    </button>
-                                                </span>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className="md:px-2 pl-[14px] py-3 w-[10px]">4</td>
-                                        <td className="md:px-2 pl-[14px] py-3 text-[#217AF7]">
-                                            <Link href="/kkrseries">
-                                                <div className="flex items-center gap-[5px]">
-                                                    <div>
-                                                        <Image
-                                                            src="/assets/img/ipl/4.png"
-                                                            className="h-[20px]"
-                                                            width={20} height={20} alt=""
-                                                        />
-                                                    </div>
-                                                    <p>
-                                                        RCB<span className="text-[#00B564]"> (Q)</span>
-                                                    </p>
-                                                </div>
-                                            </Link>
-                                        </td>
-                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                        <td className="md:px-2 pl-[14px] py-3">123</td>
-                                        <td className="md:px-2 pl-[14px] py-3">45.50</td>
-                                        <td className="md:px-2 pl-[14px] py-3">9</td>
-                                        <td className="md:px-2 pl-[14px] py-3">0</td>
-                                        <td className="md:px-2 pl-[14px] py-3">74.65</td>
-                                        <td className="md:px-2 pl-[14px] py-3">
-                                            <div className="ml-auto flex gap-1 items-center">
-                                                <span className="bg-[#13b76dbd] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    W
-                                                </span>
-                                                <span className="bg-[#13b76dbd] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    W
-                                                </span>
-                                                <span className="bg-[#f63636c2] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    L
-                                                </span>
-                                                <span className="bg-[#f63636c2] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    L
-                                                </span>
-                                                <span className="bg-[#13b76dbd] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    W
-                                                </span>
-                                                <span className="flex">
-                                                    <button className="arro-button">
-                                                        <svg
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            fill="none"
-                                                            viewBox="0 0 24 24"
-                                                            strokeWidth="1.5"
-                                                            stroke="currentColor"
-                                                            className="size-4"
-                                                        >
-                                                            <path
-                                                                strokeLinecap="round"
-                                                                strokeLinejoin="round"
-                                                                d="m19.5 8.25-7.5 7.5-7.5-7.5"
-                                                            />
-                                                        </svg>
-                                                    </button>
-                                                </span>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className="md:px-2 pl-[14px] py-3 w-[10px]">5</td>
-                                        <td className="md:px-2 pl-[14px] py-3 text-[#217AF7]">
-                                            <Link href="/kkrseries">
-                                                <div className="flex items-center gap-[5px]">
-                                                    <div>
-                                                        <Image
-                                                            src="/assets/img/ipl/5.png"
-                                                            className="h-[20px]"
-                                                            width={20} height={20} alt=""
-                                                        />
-                                                    </div>
-                                                    <p>CSK</p>
-                                                </div>
-                                            </Link>
-                                        </td>
-                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                        <td className="md:px-2 pl-[14px] py-3">123</td>
-                                        <td className="md:px-2 pl-[14px] py-3">45.50</td>
-                                        <td className="md:px-2 pl-[14px] py-3">9</td>
-                                        <td className="md:px-2 pl-[14px] py-3">0</td>
-                                        <td className="md:px-2 pl-[14px] py-3">74.65</td>
-                                        <td className="md:px-2 pl-[14px] py-3">
-                                            <div className="ml-auto flex gap-1 items-center">
-                                                <span className="bg-[#13b76dbd] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    W
-                                                </span>
-                                                <span className="bg-[#13b76dbd] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    W
-                                                </span>
-                                                <span className="bg-[#f63636c2] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    L
-                                                </span>
-                                                <span className="bg-[#f63636c2] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    L
-                                                </span>
-                                                <span className="bg-[#13b76dbd] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    W
-                                                </span>
-                                                <span className="flex">
-                                                    <button className="arro-button">
-                                                        <svg
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            fill="none"
-                                                            viewBox="0 0 24 24"
-                                                            strokeWidth="1.5"
-                                                            stroke="currentColor"
-                                                            className="size-4"
-                                                        >
-                                                            <path
-                                                                strokeLinecap="round"
-                                                                strokeLinejoin="round"
-                                                                d="m19.5 8.25-7.5 7.5-7.5-7.5"
-                                                            />
-                                                        </svg>
-                                                    </button>
-                                                </span>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className="md:px-2 pl-[14px] py-3 w-[10px]">6</td>
-                                        <td className="md:px-2 pl-[14px] py-3 text-[#217AF7]">
-                                            <Link href="/kkrseries">
-                                                <div className="flex items-center gap-[5px]">
-                                                    <div>
-                                                        <Image
-                                                            src="/assets/img/ipl/6.png"
-                                                            className="h-[20px]"
-                                                            width={20} height={20} alt=""
-                                                        />
-                                                    </div>
-                                                    <p>DC</p>
-                                                </div>
-                                            </Link>
-                                        </td>
-                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                        <td className="md:px-2 pl-[14px] py-3">123</td>
-                                        <td className="md:px-2 pl-[14px] py-3">45.50</td>
-                                        <td className="md:px-2 pl-[14px] py-3">9</td>
-                                        <td className="md:px-2 pl-[14px] py-3">0</td>
-                                        <td className="md:px-2 pl-[14px] py-3">74.65</td>
-                                        <td className="md:px-2 pl-[14px] py-3">
-                                            <div className="ml-auto flex gap-1 items-center">
-                                                <span className="bg-[#13b76dbd] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    W
-                                                </span>
-                                                <span className="bg-[#13b76dbd] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    W
-                                                </span>
-                                                <span className="bg-[#f63636c2] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    L
-                                                </span>
-                                                <span className="bg-[#f63636c2] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    L
-                                                </span>
-                                                <span className="bg-[#13b76dbd] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    W
-                                                </span>
-                                                <span className="flex">
-                                                    <button className="arro-button">
-                                                        <svg
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            fill="none"
-                                                            viewBox="0 0 24 24"
-                                                            strokeWidth="1.5"
-                                                            stroke="currentColor"
-                                                            className="size-4"
-                                                        >
-                                                            <path
-                                                                strokeLinecap="round"
-                                                                strokeLinejoin="round"
-                                                                d="m19.5 8.25-7.5 7.5-7.5-7.5"
-                                                            />
-                                                        </svg>
-                                                    </button>
-                                                </span>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className="md:px-2 pl-[14px] py-3 w-[10px]">7</td>
-                                        <td className="md:px-2 pl-[14px] py-3 text-[#217AF7]">
-                                            <Link href="/kkrseries">
-                                                <div className="flex items-center gap-[5px]">
-                                                    <div>
-                                                        <Image
-                                                            src="/assets/img/ipl/7.png"
-                                                            className="h-[20px]"
-                                                            width={20} height={20} alt=""
-                                                        />
-                                                    </div>
-                                                    <p>LSG</p>
-                                                </div>
-                                            </Link>
-                                        </td>
-                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                        <td className="md:px-2 pl-[14px] py-3">123</td>
-                                        <td className="md:px-2 pl-[14px] py-3">45.50</td>
-                                        <td className="md:px-2 pl-[14px] py-3">9</td>
-                                        <td className="md:px-2 pl-[14px] py-3">0</td>
-                                        <td className="md:px-2 pl-[14px] py-3">74.65</td>
-                                        <td className="md:px-2 pl-[14px] py-3">
-                                            <div className="ml-auto flex gap-1 items-center">
-                                                <span className="bg-[#13b76dbd] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    W
-                                                </span>
-                                                <span className="bg-[#13b76dbd] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    W
-                                                </span>
-                                                <span className="bg-[#f63636c2] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    L
-                                                </span>
-                                                <span className="bg-[#f63636c2] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    L
-                                                </span>
-                                                <span className="bg-[#13b76dbd] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    W
-                                                </span>
-                                                <span className="flex">
-                                                    <button className="arro-button">
-                                                        <svg
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            fill="none"
-                                                            viewBox="0 0 24 24"
-                                                            strokeWidth="1.5"
-                                                            stroke="currentColor"
-                                                            className="size-4"
-                                                        >
-                                                            <path
-                                                                strokeLinecap="round"
-                                                                strokeLinejoin="round"
-                                                                d="m19.5 8.25-7.5 7.5-7.5-7.5"
-                                                            />
-                                                        </svg>
-                                                    </button>
-                                                </span>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className="md:px-2 pl-[14px] py-3 w-[10px]">8</td>
-                                        <td className="md:px-2 pl-[14px] py-3 text-[#217AF7]">
-                                            <Link href="/kkrseries">
-                                                <div className="flex items-center gap-[5px]">
-                                                    <div>
-                                                        <Image
-                                                            src="/assets/img/ipl/8.png"
-                                                            className="h-[20px]"
-                                                            width={20} height={20} alt=""
-                                                        />
-                                                    </div>
-                                                    <p>GT</p>
-                                                </div>
-                                            </Link>
-                                        </td>
-                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                        <td className="md:px-2 pl-[14px] py-3">123</td>
-                                        <td className="md:px-2 pl-[14px] py-3">45.50</td>
-                                        <td className="md:px-2 pl-[14px] py-3">9</td>
-                                        <td className="md:px-2 pl-[14px] py-3">0</td>
-                                        <td className="md:px-2 pl-[14px] py-3">74.65</td>
-                                        <td className="md:px-2 pl-[14px] py-3">
-                                            <div className="ml-auto flex gap-1 items-center">
-                                                <span className="bg-[#13b76dbd] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    W
-                                                </span>
-                                                <span className="bg-[#13b76dbd] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    W
-                                                </span>
-                                                <span className="bg-[#f63636c2] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    L
-                                                </span>
-                                                <span className="bg-[#f63636c2] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    L
-                                                </span>
-                                                <span className="bg-[#13b76dbd] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    W
-                                                </span>
-                                                <span className="flex">
-                                                    <button className="arro-button">
-                                                        <svg
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            fill="none"
-                                                            viewBox="0 0 24 24"
-                                                            strokeWidth="1.5"
-                                                            stroke="currentColor"
-                                                            className="size-4"
-                                                        >
-                                                            <path
-                                                                strokeLinecap="round"
-                                                                strokeLinejoin="round"
-                                                                d="m19.5 8.25-7.5 7.5-7.5-7.5"
-                                                            />
-                                                        </svg>
-                                                    </button>
-                                                </span>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className="md:px-2 pl-[14px] py-3 w-[10px]">9</td>
-                                        <td className="md:px-2 pl-[14px] py-3 text-[#217AF7]">
-                                            <Link href="/kkrseries">
-                                                <div className="flex items-center gap-[5px]">
-                                                    <div>
-                                                        <Image
-                                                            src="/assets/img/ipl/9.png"
-                                                            className="h-[20px]"
-                                                            width={20} height={20} alt=""
-                                                        />
-                                                    </div>
-                                                    <p>PK</p>
-                                                </div>
-                                            </Link>
-                                        </td>
-                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                        <td className="md:px-2 pl-[14px] py-3">123</td>
-                                        <td className="md:px-2 pl-[14px] py-3">45.50</td>
-                                        <td className="md:px-2 pl-[14px] py-3">9</td>
-                                        <td className="md:px-2 pl-[14px] py-3">0</td>
-                                        <td className="md:px-2 pl-[14px] py-3">74.65</td>
-                                        <td className="md:px-2 pl-[14px] py-3">
-                                            <div className="ml-auto flex gap-1 items-center">
-                                                <span className="bg-[#13b76dbd] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    W
-                                                </span>
-                                                <span className="bg-[#13b76dbd] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    W
-                                                </span>
-                                                <span className="bg-[#f63636c2] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    L
-                                                </span>
-                                                <span className="bg-[#f63636c2] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    L
-                                                </span>
-                                                <span className="bg-[#13b76dbd] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    W
-                                                </span>
-                                                <span className="flex">
-                                                    <button className="arro-button">
-                                                        <svg
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            fill="none"
-                                                            viewBox="0 0 24 24"
-                                                            strokeWidth="1.5"
-                                                            stroke="currentColor"
-                                                            className="size-4"
-                                                        >
-                                                            <path
-                                                                strokeLinecap="round"
-                                                                strokeLinejoin="round"
-                                                                d="m19.5 8.25-7.5 7.5-7.5-7.5"
-                                                            />
-                                                        </svg>
-                                                    </button>
-                                                </span>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className="md:px-2 pl-[14px] py-3 w-[10px]">10</td>
-                                        <td className="md:px-2 pl-[14px] py-3 text-[#217AF7]">
-                                            <Link href="/kkrseries">
-                                                <div className="flex items-center gap-[5px]">
-                                                    <div>
-                                                        <Image
-                                                            src="/assets/img/ipl/10.png"
-                                                            className="h-[20px]"
-                                                            width={20} height={20} alt=""
-                                                        />
-                                                    </div>
-                                                    <p>MI</p>
-                                                </div>
-                                            </Link>
-                                        </td>
-                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                        <td className="md:px-2 pl-[14px] py-3">123</td>
-                                        <td className="md:px-2 pl-[14px] py-3">45.50</td>
-                                        <td className="md:px-2 pl-[14px] py-3">9</td>
-                                        <td className="md:px-2 pl-[14px] py-3">0</td>
-                                        <td className="md:px-2 pl-[14px] py-3">74.65</td>
-                                        <td className="md:px-2 pl-[14px] py-3">
-                                            <div className="ml-auto flex gap-1 items-center">
-                                                <span className="bg-[#13b76dbd] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    W
-                                                </span>
-                                                <span className="bg-[#13b76dbd] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    W
-                                                </span>
-                                                <span className="bg-[#f63636c2] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    L
-                                                </span>
-                                                <span className="bg-[#f63636c2] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    L
-                                                </span>
-                                                <span className="bg-[#13b76dbd] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    W
-                                                </span>
-                                                <span className="flex">
-                                                    <button className="arro-button">
-                                                        <svg
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            fill="none"
-                                                            viewBox="0 0 24 24"
-                                                            strokeWidth="1.5"
-                                                            stroke="currentColor"
-                                                            className="size-4"
-                                                        >
-                                                            <path
-                                                                strokeLinecap="round"
-                                                                strokeLinejoin="round"
-                                                                d="m19.5 8.25-7.5 7.5-7.5-7.5"
-                                                            />
-                                                        </svg>
-                                                    </button>
-                                                </span>
-                                            </div>
-                                        </td>
-                                    </tr>
+                                ))}
+                                    
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
-
+                ))}
                 <div className="mb-4">
                     <p className="font-semibold">
                         {" "}

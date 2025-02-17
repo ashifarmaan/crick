@@ -36,6 +36,8 @@ Live) {
 
   eventEmitter.on("matchLiveData", handleMatchData);
 
+  
+  // console.log("Live", matchLiveData);
   let teamwinpercentage = matchLiveData?.teamwinpercentage;
   let matchDetails = matchLiveData?.match_info;
   let players = matchLiveData?.players;
@@ -77,7 +79,7 @@ Live) {
     matchLiveData?.live?.live_inning !== undefined &&
     matchLiveData?.live?.live_inning !== ""
   ) {
-    console.log("Livematch", matchLiveData);
+    
     matchData = matchLiveData;
     teamwinpercentage = matchLiveData?.teamwinpercentage;
     matchDetails = matchLiveData?.match_info;
@@ -238,7 +240,7 @@ Live) {
                           </div>
                           <div className="font-medium">
                             <h2 className="md:text-[15px] text-[14px] text-[#909090]">
-                              {batsman?.[0]?.name}{" "}
+                              {getPlayerNameByPid(players, batsman?.[0]?.batsman_id)}{" "}
                             </h2>
                             <p className="md:text-[15px] text-[14px] flex items-center">
                             {batsman?.[0].runs}{" "}
@@ -282,7 +284,7 @@ Live) {
                           </div>
                           <div className="font-medium text-end">
                             <h2 className="md:text-[15px] text-[14px] text-[#909090]">
-                              {batsman?.[1]?.name}
+                              {getPlayerNameByPid(players, batsman?.[1]?.batsman_id)}
                             </h2>
                             <p className="md:text-[15px] text-[14px] flex items-center">
                               {batsman?.[1]?.runs}{" "}
@@ -463,9 +465,11 @@ Live) {
                           {matchDetails?.teama?.short_name}:{" "}
                           {teamwinpercentage?.team_a_win}%
                         </p>
+                        {teamwinpercentage?.draw > 0 ? 
                         <p className="text-yellow-600 font-medium">
                           Drew: {teamwinpercentage?.draw}%
                         </p>
+                        : ""}
                         <p className="text-red-600 font-medium">
                           {matchDetails?.teamb?.short_name}:{" "}
                           {teamwinpercentage?.team_b_win}%

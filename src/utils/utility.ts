@@ -19,7 +19,7 @@ export function calculateRemainingOvers(maxOver: number, finishOver: number) {
 
 export  function getPlayerNameByPid(players:any, pid:number) {
     const player = players.find((p: { pid: number; }) => p.pid === pid);
-    return player ? player.title : "Player not found";
+    return player ? player.short_name : "Player not found";
 }
 
 export  function urlStringEncode(str: string) {
