@@ -121,7 +121,7 @@ export default async function Stats({
                                 <Link href={"/stats/"+matchUrl+"/"+ match_id+"/most-run"}>
                                     <button
 
-                                        className={`state-btn new-class border-t px-2 py-3 w-full font-medium active text-left rounded-md ${matchTitle == 'most-run' ? "bg-[#ecf2fd] text-[#1a80f8]" : "hover:bg-[#ecf2fd] hover:text-[#1a80f8]" } `}
+                                        className={`state-btn new-class border-t px-2 py-3 w-full font-medium active text-left rounded-md ${matchTitle == 'most-run' || matchTitle == undefined ? "bg-[#ecf2fd] text-[#1a80f8]" : "hover:bg-[#ecf2fd] hover:text-[#1a80f8]" } `}
                                     >
                                         Most Runs
                                     </button>
@@ -236,7 +236,7 @@ export default async function Stats({
                     <div className="lg:col-span-9 md:col-span-8">
                         <div id="most-runs" className={`state-content most-runs" ? "" : "hidden"}`} >
                             <div>
-                                <div className="rounded-lg bg-[#ffffff] mb-4 p-4">
+                                <div className={`rounded-lg bg-[#ffffff] mb-4 p-4 ${matchTitle == "most-wicket" || matchTitle == "best-average" || matchTitle == "best-bowling" || matchTitle == "most-five_wickets" || matchTitle == "best-economy" || matchTitle == "best-strike" ? "hidden" : ""}`}>
                                     <h3 className="text-1xl font-semibold mb-3 pl-[7px] border-l-[3px] border-[#229ED3]">
                                     Batting
                                     </h3>
@@ -283,6 +283,64 @@ export default async function Stats({
                                                         <td className="md:px-2 pl-[14px] py-3">{stats?.average}</td>
                                                         <td className="md:px-2 pl-[14px] py-3">{stats?.run4}</td>
                                                         <td className="md:px-2 pl-[14px] py-3">{stats?.run6}</td>
+                                                        <td className="md:px-2 pl-[14px] py-3">{stats?.strike}</td>
+                                                    </tr>
+                                                    ))}
+                                                    
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                           
+                                <div className={`rounded-lg bg-[#ffffff] mb-4 p-4  ${matchTitle == "most-wicket" || matchTitle == "best-average" || matchTitle == "best-bowling" || matchTitle == "most-five_wickets" || matchTitle == "best-economy" || matchTitle == "best-strike" ? "" : "hidden"}`}>
+                                    <h3 className="text-1xl font-semibold mb-3 pl-[7px] border-l-[3px] border-[#229ED3]">
+                                    Bowling
+                                    </h3>
+                                    <div>
+                                        <div className="overflow-x-auto">
+                                            <table className="w-full text-sm text-left text-gray-500 whitespace-nowrap">
+                                                <thead className="bg-blue-50 text-gray-700 ">
+                                                    <tr>
+                                                        <th className="px-4 py-3 font-medium w-[10px]" />
+                                                        <th className="px-4 py-3 font-medium">Bowler</th>
+                                                        <th className="md:px-2 pl-[14px] py-3 font-medium">
+                                                            Match
+                                                        </th>
+                                                        <th className="md:px-2 pl-[14px] py-3 font-medium">
+                                                            Inns
+                                                        </th>
+                                                        <th className="md:px-2 pl-[14px] py-3 font-medium">
+                                                            Wickets
+                                                        </th>
+                                                        <th className="md:px-2 pl-[14px] py-3 font-medium">
+                                                            Avg
+                                                        </th>
+                                                        <th className="md:px-2 pl-[14px] py-3 font-medium">
+                                                            Wicket4i
+                                                        </th>
+                                                        <th className="md:px-2 pl-[14px] py-3 font-medium">
+                                                            wicket5i
+                                                        </th>
+                                                        <th className="md:px-2 pl-[14px] py-3 font-medium">
+                                                            SR
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody className="divide-y divide-gray-200">
+                                                    {matchStats.map((stats:any, index:number) => (
+                                                    <tr>
+                                                        <td className="md:px-2 pl-[14px] py-3 w-[10px]">{index+1}</td>
+                                                        <td className="md:px-2 py-3 text-[#217AF7]">
+                                                            <Link href="/profile"> {stats?.player?.short_name}</Link>
+                                                        </td>
+                                                        <td className="md:px-2 pl-[14px] py-3">{stats?.matches}</td>
+                                                        <td className="md:px-2 pl-[14px] py-3">{stats?.innings}</td>
+                                                        <td className="md:px-2 pl-[14px] py-3">{stats?.wickets}</td>
+                                                        <td className="md:px-2 pl-[14px] py-3">{stats?.average}</td>
+                                                        <td className="md:px-2 pl-[14px] py-3">{stats?.wicket4i}</td>
+                                                        <td className="md:px-2 pl-[14px] py-3">{stats?.wicket5i}</td>
                                                         <td className="md:px-2 pl-[14px] py-3">{stats?.strike}</td>
                                                     </tr>
                                                     ))}

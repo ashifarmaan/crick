@@ -155,9 +155,9 @@ export default async function PointsTable({
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-200">
-                                {rounds.standings.map((point : any) => ( 
+                                {rounds.standings.map((point : any, index:number) => ( 
                                     <tr className="hover:bg-[#fffae5]">
-                                        <td className="md:px-2 pl-[14px] py-3 w-[10px]">1</td>
+                                        <td className="md:px-2 pl-[14px] py-3 w-[10px]">{index + 1}</td>
                                         <td className="md:px-2 pl-[14px] py-3 text-[#217AF7]">
                                             <Link href="/kkrseries">
                                                 <div className="flex items-center gap-[5px] w-[120px]">

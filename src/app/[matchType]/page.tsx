@@ -202,7 +202,7 @@ export default async function page(props: { params: Params }) {
                       height={30}
                       alt=""
                     />
-                    Live
+                    {liveMatch?.match_info?.status_str }
                   </div>
 
                   <div className="flex items-center justify-between">
@@ -216,12 +216,12 @@ export default async function page(props: { params: Params }) {
                       />
                       <div className="flex flex-col items-start gap-0">
                         <p className="text-[14px] font-semibold uppercase">
-                          IND
+                        {liveMatch?.live?.team_batting}
                         </p>
                         <p className="lg:text-[18px] text-[18px] font-semibold">
-                          139/4{" "}
+                        {liveMatch?.live?.live_score?.runs}/{liveMatch?.live?.live_score?.wickets}{" "}
                           <span className="text-[13px] font-medium">
-                            (42.0)
+                            ({liveMatch?.live?.live_score?.overs})
                           </span>
                         </p>
                       </div>
@@ -230,18 +230,18 @@ export default async function page(props: { params: Params }) {
                     <div className="border-r-[1px] border-[#e5e5e5] h-[60px]"></div>
 
                     <div className="w-full text-center">
-                      <h2 className="text-[24px] font-semibold text-[#342df2]">
-                        No Ball
+                      <h2 className={"text-[24px] font-semibold text-[#342df2] ballEvent"+matchid}>
+                        
                       </h2>
                     </div>
                   </div>
 
                   <div className="flex items-center justify-between mt-3 text-[14px]">
                     <p>
-                      CRR : <span>8.69</span>
+                      CRR : <span>{liveMatch?.live?.live_score?.runrate}</span>
                     </p>
                     <p>
-                      Over left Today : <span>36.0</span>
+                      {/* Over left Today : <span>36.0</span> */}
                     </p>
                   </div>
                 </div>

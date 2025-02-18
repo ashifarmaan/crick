@@ -22,6 +22,8 @@ export default function Live({
 }: // matchLast,
 Live) {
 
+  const [activeTab, setActiveTab] = useState("tab1");
+
   let allCommenries = matchData?.live?.commentaries;
   if(allCommenries){
   allCommenries = [...allCommenries]?.reverse();
@@ -149,7 +151,7 @@ Live) {
     updatedCommentaries;
   }
   
-  // console.log("allComm",updatedCommentaries);
+  console.log("allComm",matchLiveData);
   
   const playerName = getPlayerNameByPid(players, 117226);
 
@@ -334,7 +336,7 @@ Live) {
                       </div>
                       <div className="font-medium">
                         <h2 className="md:text-[15px] text-[14px] text-[#909090]">
-                          {matchinfo?.bowlers?.[0]?.name}
+                          {getPlayerNameByPid(players, matchinfo?.bowlers?.[0]?.bowler_id)}
                         </h2>
                         <p className="md:text-[15px] text-[14px] flex items-center">
                           {matchinfo?.bowlers?.[0]?.wickets}-
@@ -418,14 +420,21 @@ Live) {
                       <h3 className="text-1xl font-semibold">Probability</h3>
                     </div>
                     <div className="flex items-center gap-2">
-                      <button className="cust-box-click-button bg-[#081736] font-medium text-[#ffffff] px-5 py-1 rounded-full">
+                      <button className={`cust-box-click-button  font-medium ${activeTab === "tab1"
+                                            ? "bg-[#081736] text-[#ffffff] "
+                                            : "bg-[#ffffff] text-[#6A7586]"
+                                        } px-5 py-1 rounded-full`} onClick={() => setActiveTab("tab1")}>
                         <span>% View</span>
                       </button>
-                      <button className="cust-box-click-button bg-[#ffffff] font-medium text-[#6A7586] px-5 py-1 rounded-full">
+                      <button className={`cust-box-click-button font-medium ${activeTab === "tab2"
+                                            ? "bg-[#081736] text-[#ffffff] "
+                                            : "bg-[#ffffff] text-[#6A7586]"
+                                        }  px-5 py-1 rounded-full`} onClick={() => setActiveTab("tab2")}>
                         <span>Odds View</span>
                       </button>
                     </div>
                   </div>
+                  {activeTab === "tab1" &&
                   <div className="cust-box-click-content">
                     <div>
                       <div className="flex justify-between items-center">
@@ -477,19 +486,22 @@ Live) {
                       </div>
                     </div>
                   </div>
-                  <div className="cust-box-click-content hidden">
+                  }
+                  {activeTab === "tab2" && 
+                  <div className="cust-box-click-content">
                     <div className="flex justify-between items-center border-t-[1px] pt-2">
-                      <div className="text-1xl font-medium">RR</div>
+                      <div className="text-1xl font-medium">{matchLiveData?.match_info?.teama?.short_name}</div>
                       <div className="flex items-center gap-2">
                         <p className="py-1 px-4 bg-orange-500 rounded-md text-white">
-                          41
+                          {matchLiveData?.live_odds?.matchodds?.teama?.back}
                         </p>
                         <p className="py-1 px-4 bg-orange-500 rounded-md text-white">
-                          42
+                        {matchLiveData?.live_odds?.matchodds?.teama?.lay}
                         </p>
                       </div>
                     </div>
                   </div>
+                    }
                 </div>
               </div>
             </div>

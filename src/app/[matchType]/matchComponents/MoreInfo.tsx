@@ -55,7 +55,7 @@ export default function MoreInfo({
   const teambWinper = teambWinMatch > 0 ? (teambWinMatch / matchPlayed) * 100 : 0;
 
   const teamAScores = matchlistAB.map((match: { teama: { scores: string; }; }) => {
-    const score = match.teama.scores.split("/")[0]; // Get the runs before "/"
+    const score = match?.teama?.scores?.split("/")[0]; // Get the runs before "/"
     return parseInt(score, 10); // Convert to a number
   });
   const highestScoreTeamA = teamAScores > 0 ? Math.max(...teamAScores): 0;
@@ -64,7 +64,7 @@ export default function MoreInfo({
     teamAScores.reduce((sum:any, score:any) => sum + score, 0) / teamAScores.length : 0;
 
   const teamBScores = matchlistAB.map((match: { teamb: { scores: string; }; }) => {
-    const score = match.teamb.scores.split("/")[0]; // Get the runs before "/"
+    const score = match?.teamb?.scores?.split("/")[0]; // Get the runs before "/"
     return parseInt(score, 10); // Convert to a number
   });
   const highestScoreTeamB = teamBScores > 0 ? Math.max(...teamBScores) :0;
@@ -89,7 +89,7 @@ export default function MoreInfo({
     const sameVenueteambWinper = sameVenuematchPlayed > 0 ? (sameVenueteambWinMatch / sameVenuematchPlayed) * 100    : 0;
   
     const sameVenueteamAScores = matchlistSameVenue.map((match: { teama: { scores: string; }; }) => {
-      const score = match.teama.scores.split("/")[0]; // Get the runs before "/"
+      const score = match?.teama?.scores?.split("/")[0]; // Get the runs before "/"
       return parseInt(score, 10); // Convert to a number
     });
     const sameVenuehighestScoreTeamA = sameVenueteamAScores > 0 ? Math.max(...sameVenueteamAScores) : 0;
@@ -98,7 +98,7 @@ export default function MoreInfo({
     sameVenueteamAScores.reduce((sum:any, score:any) => sum + score, 0) / sameVenueteamAScores.length: 0;
   
     const sameVenueteamBScores = matchlistSameVenue.map((match: { teamb: { scores: string; }; }) => {
-      const score = match.teamb.scores.split("/")[0]; // Get the runs before "/"
+      const score = match?.teamb?.scores?.split("/")[0]; // Get the runs before "/"
       return parseInt(score, 10); // Convert to a number
     });
     const sameVenuehighestScoreTeamB = sameVenueteamBScores > 0 ? Math.max(...sameVenueteamBScores):0;
@@ -1611,8 +1611,7 @@ export default function MoreInfo({
                       <div className="col-span-3">
                         <div className="font-normal text-[#616161] mb-2">
                           <p className="lg:relative lg:top-0 lg:right-0 lg:text-left lg:text-[13px] absolute top-[4px] right-0 text-right text-[10px]">
-                            <span className="lg:block"> Last Updated: </span>
-                            12:00AM / 18th Nov 2024
+                            {matchData?.match_info?.weather?.weather_desc}
                           </p>
                         </div>
                       </div>
@@ -1648,10 +1647,10 @@ export default function MoreInfo({
                               height={15}
                               alt=""
                             />
-                            <p className="">Rain chance: </p>
+                            <p className="">Clouds: </p>
                           </div>
                           <div>
-                            <span className="text-[#16A1EF]">40%</span>
+                            <span className="text-[#16A1EF]">{matchData?.match_info?.weather?.clouds}</span>
                           </div>
                         </div>
                         <div className="flex justify-between items-center">

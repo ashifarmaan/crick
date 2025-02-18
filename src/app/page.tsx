@@ -166,8 +166,9 @@ console.log(liveMatch);
                   <div className="liveMatch">
                   {liveMatch.map((items) => (
                     items.commentary !== 0 ? (
+                      <div key={items.match_id}>
                     <div
-                      key={items.match_id}
+                      
                       data-key={items.match_id}
                       data-id="aaa"
                       className="lg:block hidden rounded-lg p-4 mb-4 bg-[#ffffff] hover:shadow-lg"
@@ -228,7 +229,7 @@ console.log(liveMatch);
                               </svg>
                             </span>
                             <span className={"oddback" + items.match_id}>
-                              41
+                              0
                             </span>
                           </span>
                           <span className="flex items-center bg-[#FFF7F7] border-[1px] border-[#A70B0B]  rounded-full text-[#A70B0B] pr-2">
@@ -249,7 +250,7 @@ console.log(liveMatch);
                               </svg>
                             </span>
                             <span className={"oddlay" + items.match_id}>
-                              45
+                              0
                             </span>
                           </span>
                         </div>
@@ -403,10 +404,10 @@ console.log(liveMatch);
                         </Link>
                       </div>
                     </div>
-                  ):("")
-                  ))}
-                  
-                  <div className="lg:hidden rounded-lg p-4 mb-4 bg-[#ffffff] performance-section relative hover:shadow-lg">
+                      
+                      {/* mobile */}
+                    
+                    <div className="lg:hidden rounded-lg p-4 mb-4 bg-[#ffffff] performance-section relative hover:shadow-lg">
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center space-x-2">
                         <div className="flex items-center text-[#a70b0b] rounded-full font-semibold">
@@ -429,11 +430,12 @@ console.log(liveMatch);
                               </circle>
                             </svg>
                           </span>
-                          LIVE
+                          {items.status_str}
                         </div>
                         <div>
                           <h4 className="text-[15px] font-semibold pl-[10px] border-l-[1px] border-[#E4E9F0]">
-                            Australia tour of England - 2024
+                          {items.competition.title} -{" "}
+                          {items.competition.season}
                           </h4>
                         </div>
                         <span className="absolute right-4 top-[19px]">
@@ -452,26 +454,27 @@ console.log(liveMatch);
 
                     <div className="border-t-[1px] border-[#E7F2F4]"></div>
                     <div className="open-Performance-data">
-                      <Link href="/match-live-now">
+                      <Link href={"/live-score/"+urlStringEncode(items?.teama?.short_name+"-vs-"+items?.teamb?.short_name+"-match-"+items?.match_number+"-"+items?.competition?.title)+"/" + items.match_id}>
                         <div className="py-2 pb-3">
                           <p className="text-[#586577] text-[11px] mb-4 font-normal">
-                            1st TEST day 1 , MA Chidambaram Stadium, Chennai
+                          {items.subtitle} ,{items.format_str} 
+                          {items.venue.name}, {items.venue.location}
                           </p>
                           <div className="flex justify-between items-center text-[14px]">
                             <div className="">
                               <div className="items-center space-x-2 font-medium w-[162px] md:w-full mb-4">
                                 <div className="flex items-center space-x-2">
                                   <Image
-                                    src="/assets/img/flg-1.png"
+                                    src={items.teama.logo_url}
                                     className="h-[30px] rounded-full"
                                     width={30}
                                     height={30}
-                                    alt="aus"
+                                    alt={items.teama.short_name}
                                   />
                                   <div>
                                     <span className="flex items-center gap-1">
                                       <span className="text-[#5e5e5e] font-medium">
-                                        IND
+                                      {items.teama.short_name}
                                       </span>
                                       <Image
                                         src="/assets/img/home/bat.png"
@@ -481,14 +484,32 @@ console.log(liveMatch);
                                         alt=""
                                       />
                                     </span>
-                                    <p className="flex items-end gap-2">
-                                      <span className=" font-semibold">
-                                        339/6
+                                    
+                                    <p className={
+                                    "flex items-center gap-2 match" +
+                                    items.match_id +
+                                    "-" +
+                                    items.teama.team_id
+                                  }>
+                                    {items.teama.scores === undefined ||
+                                  items.teama.scores === null ||
+                                  items.teama.scores === "" ? (
+                                    <span className="font-semibold">
+                                      {" "}
+                                      (Yet to bat){" "}
+                                    </span>
+                                  ) : (
+                                    <>
+                                      <span className="font-semibold">
+                                        {items.teama.scores}
                                       </span>
-
-                                      <span className="text-[#909090] text-[12px] font-normal">
-                                        (81.2 overs)
+                                      <span className="text-[#909090] text-[12px]">
+                                        {" "}
+                                        ({items.teama.overs}){" "}
                                       </span>
+                                    </>
+                                  )}
+                                      
                                     </p>
                                   </div>
                                 </div>
@@ -498,19 +519,44 @@ console.log(liveMatch);
                                 <div className="flex items-center space-x-2 font-medium w-[162px] md:w-full">
                                   <div className="flex items-center space-x-2">
                                     <Image
-                                      src="/assets/img/ban.png"
+                                      src={items.teamb.logo_url}
                                       className="h-[30px]"
                                       width={30}
                                       height={30}
-                                      alt="ind"
+                                      alt={items.teamb.short_name}
                                     />
                                     <div>
                                       <span className="text-[#5e5e5e] font-medium">
-                                        Bangladesh
+                                      {items.teamb.short_name}
                                       </span>
-                                      <p className="font-normal text-[11px]">
-                                        (Yet to bat)
-                                      </p>
+                                      <p
+                                    className={
+                                      "font-normal text-[11px] match" +
+                                      items.match_id +
+                                      "-" +
+                                      items.teamb.team_id
+                                    }
+                                  >
+                                    {items.teamb.scores === undefined ||
+                                    items.teamb.scores === null ||
+                                    items.teamb.scores === "" ? (
+                                      <span className="font-semibold">
+                                        {" "}
+                                        (Yet to bat){" "}
+                                      </span>
+                                    ) : (
+                                      <>
+                                        <span className="font-semibold">
+                                          {items.teamb.scores}
+                                        </span>
+                                        <span className="text-[#909090] text-[12px]">
+                                          {" "}
+                                          ({items.teamb.overs}){" "}
+                                        </span>
+                                      </>
+                                    )}
+                                  </p>
+                                      
                                     </div>
                                   </div>
                                 </div>
@@ -518,8 +564,10 @@ console.log(liveMatch);
                             </div>
 
                             <div className=" font-medium text-center">
-                              <p className="text-[#2F335C] font-light mt-1 text-[11px]">
-                                BAN elected to bowl
+                              <p className={"text-[#2F335C] font-light mt-1 text-[11px]  statusNote" +
+                                  items.match_id
+                                }>
+                              {items.status_note}
                               </p>
                             </div>
                           </div>
@@ -556,7 +604,7 @@ console.log(liveMatch);
 
                         <div className="flex items-center space-x-2 text-[11px]">
                           <span className="text-[#909090] font-medium">
-                            BAN
+                            {items.teama.short_name}
                           </span>
                           <span className="flex items-center bg-[#FAFFFC] border-[1px] border-[#0B773C] rounded-md text-[#0B773C] pr-2">
                             <span className="">
@@ -575,7 +623,9 @@ console.log(liveMatch);
                                 />
                               </svg>
                             </span>
-                            41
+                            <span className={"oddback" + items.match_id}>
+                            0
+                            </span>
                           </span>
                           <span className="flex items-center bg-[#FFF7F7] border-[1px] border-[#A70B0B]  rounded-md text-[#A70B0B] pr-2">
                             <span className="">
@@ -594,17 +644,28 @@ console.log(liveMatch);
                                 />
                               </svg>
                             </span>
-                            45
+                            <span className={"oddlay" + items.match_id}>
+                            0
+                            </span>
                           </span>
                         </div>
                       </div>
                     </div>
-                  </div>
+                    </div>
+                    </div>
+
+                  ):("")
+                  
+                  
+                  
+                  ))}
+                  
+                  
                   </div>
                   <div className="completedMatch">
                   {completedMatch.map((cmatch) => (
+                    <div key={cmatch.match_id}>
                     <div
-                      key={cmatch.match_id}
                       className="lg:block hidden rounded-lg p-4 mb-4 bg-[#ffffff] hover:shadow-lg"
                     >
                       <div className="flex items-center justify-between mb-4">
@@ -758,19 +819,21 @@ console.log(liveMatch);
                         </div>
                       </div>
                     </div>
-                  ))}
-                  <div className="lg:hidden rounded-lg p-4 mb-4 bg-[#ffffff] performance-section relative">
+                    {/* Mobile */}
+
+                    <div className="lg:hidden rounded-lg p-4 mb-4 bg-[#ffffff] performance-section relative">
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center space-x-2">
                         <div
                           className="flex items-center text-[#0B773C] rounded-full  font-semibold"
                           style={{ gap: "3px" }}
                         >
-                          <span className="rounded-full">●</span> RESULT
+                          <span className="rounded-full">●</span> {cmatch.status_str}
                         </div>
                         <div>
                           <h4 className="text-[15px] font-semibold pl-[10px] border-l-[1px] border-[#E4E9F0]">
-                            Australia tour of England - 2024
+                          {cmatch.competition.title} -{" "}
+                          {cmatch.competition.season}
                           </h4>
                         </div>
                         <span className="absolute right-4 top-[19px]">
@@ -793,32 +856,33 @@ console.log(liveMatch);
                       <Link href="/match-result">
                         <div className="py-2 pb-3">
                           <p className="text-[#586577] text-[11px] mb-4 font-normal">
-                            1st ODI , Trent Bridge, Nottingham
+                          {cmatch.subtitle} ,{cmatch.format_str} 
+                          {cmatch.venue.name}, {cmatch.venue.location}
                           </p>
                           <div className="flex justify-between items-center text-[14px]">
                             <div className="">
                               <div className="items-center space-x-2 font-medium w-[162px] md:w-full mb-4">
                                 <div className="flex items-center space-x-2">
                                   <Image
-                                    src="/assets/img/eng.png"
+                                    src={cmatch.teama.logo_url}
                                     className="h-[30px] rounded-full"
                                     width={30}
                                     height={30}
-                                    alt="aus"
+                                    alt={cmatch.teama.short_name}
                                   />
                                   <div>
                                     <span className="flex items-center gap-1">
                                       <span className="text-[#5e5e5e] font-medium">
-                                        Australia
+                                      {cmatch.teama.short_name}
                                       </span>
                                     </span>
                                     <p className="flex items-end gap-2">
                                       <span className=" font-semibold">
-                                        317/3
+                                      {cmatch.teama.scores}
                                       </span>
 
                                       <span className="text-[#909090] text-[12px] font-normal">
-                                        (44 overs)
+                                        ({cmatch.teama.overs})
                                       </span>
                                     </p>
                                   </div>
@@ -828,25 +892,25 @@ console.log(liveMatch);
                                 <div className="flex items-center space-x-2 font-medium w-[162px] md:w-full">
                                   <div className="flex items-center space-x-2">
                                     <Image
-                                      src="/assets/img/aus.png"
+                                      src={cmatch.teamb.logo_url}
                                       className="h-[30px] rounded-full"
                                       width={30}
                                       height={30}
-                                      alt="aus"
+                                      alt={cmatch.teamb.short_name}
                                     />
                                     <div>
                                       <span className="flex items-center gap-1">
                                         <span className="text-[#5e5e5e] font-medium">
-                                          England
+                                        {cmatch.teamb.short_name}
                                         </span>
                                       </span>
                                       <p className="flex items-end gap-2">
                                         <span className=" font-semibold">
-                                          315/10
+                                        {cmatch.teamb.scores}
                                         </span>
 
                                         <span className="text-[#909090] text-[12px] font-normal">
-                                          (49.4 overs)
+                                          ({cmatch.teama.overs})
                                         </span>
                                       </p>
                                     </div>
@@ -865,7 +929,7 @@ console.log(liveMatch);
                                 alt=""
                               />
                               <p className="text-[#0B773C] font-semibold mt-1 text-[13px] w-[75%] text-center">
-                                Australia won by 7 wickets
+                              {cmatch.result}
                               </p>
                             </div>
                           </div>
@@ -918,11 +982,14 @@ console.log(liveMatch);
                       </div>
                     </div>
                   </div>
+                    </div>
+                  ))}
+                  
                   </div>
                   <div className="upcomingMatch">
                   {upcomingMatch.map((ucmatch) => (
+                    <div key={ucmatch.match_id}>
                     <div
-                      key={ucmatch.match_id}
                       className="lg:block hidden rounded-lg p-4 mb-4 bg-[#ffffff] hover:shadow-lg"
                     >
                       <div className="flex items-center justify-between mb-4">
@@ -1072,19 +1139,21 @@ console.log(liveMatch);
                         </Link>
                       </div>
                     </div>
-                  ))}
-                  <div className="lg:hidden rounded-lg p-4 mb-4 bg-[#ffffff] performance-section relative hover:shadow-lg">
+
+                    {/* Mobile */}
+                    <div className="lg:hidden rounded-lg p-4 mb-4 bg-[#ffffff] performance-section relative hover:shadow-lg">
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center space-x-2">
                         <div
                           className="flex items-center text-[#A45B09] rounded-full font-semibold"
                           style={{ gap: "3px" }}
                         >
-                          <span className="rounded-full">●</span> SCHEDULED
+                          <span className="rounded-full">●</span> {ucmatch.status_str}
                         </div>
                         <div>
                           <h4 className="text-[15px] font-semibold pl-[10px] border-l-[1px] border-[#E4E9F0]">
-                            Australia tour of England 2024
+                          {ucmatch.competition.title} -{" "}
+                          {ucmatch.competition.season}
                           </h4>
                         </div>
                         <span className="absolute right-[12px] top-[19px]">
@@ -1106,23 +1175,24 @@ console.log(liveMatch);
                       <div className="open-Performance-data">
                         <div className="py-2 pb-3">
                           <p className="text-[#586577] text-[12px] mb-4 font-medium">
-                            2nd ODI, Sharjah Cricket Stadium, Sharjah
+                          {ucmatch.subtitle} ,{ucmatch.format_str} 
+                          {ucmatch.venue.name}, {ucmatch.venue.location}
                           </p>
                           <div className="flex justify-between items-center text-[14px]">
                             <div>
                               <div className="items-center space-x-2 font-medium w-[162px] md:w-full mb-4">
                                 <div className="flex items-center space-x-2">
                                   <Image
-                                    src="/assets/img/eng.png"
+                                    src={ucmatch.teama.logo_url}
                                     className="h-[30px] rounded-full"
                                     width={30}
                                     height={30}
-                                    alt="aus"
+                                    alt={ucmatch.teama.short_name}
                                   />
                                   <div>
                                     <span className="flex items-center gap-1">
                                       <span className="text-[#5e5e5e] font-medium">
-                                        Australia
+                                      {ucmatch.teama.short_name}
                                       </span>
                                     </span>
                                   </div>
@@ -1131,16 +1201,16 @@ console.log(liveMatch);
                               <div className="flex items-center space-x-2 font-medium w-[162px] md:w-full">
                                 <div className="flex items-center space-x-2">
                                   <Image
-                                    src="/assets/img/aus.png"
+                                    src={ucmatch.teamb.logo_url}
                                     className="h-[30px] rounded-full"
                                     width={30}
                                     height={30}
-                                    alt="aus"
+                                    alt={ucmatch.teamb.short_name}
                                   />
                                   <div>
                                     <span className="flex items-center gap-1">
                                       <span className="text-[#5e5e5e] font-medium">
-                                        England
+                                      {ucmatch.teamb.short_name}
                                       </span>
                                     </span>
                                   </div>
@@ -1259,6 +1329,9 @@ console.log(liveMatch);
                       </div>
                     </div>
                   </div>
+                    </div>
+                  ))}
+                  
                   </div>
 
                 
