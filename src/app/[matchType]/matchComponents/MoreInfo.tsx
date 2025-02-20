@@ -1224,7 +1224,7 @@ export default function MoreInfo({
                     </div>
 
                     <div className="border-t-[1px] border-[#E4E9F0]" />
-                    {matchlistAB.slice(0, 5).map((items:any, index:number) => (
+                    {matchlistAB.slice(0, 10).map((items:any, index:number) => (
                       <div className="py-4 flex justify-between items-center" key={index}>
                         <Link href="">
                           <div className="font-medium  w-full">

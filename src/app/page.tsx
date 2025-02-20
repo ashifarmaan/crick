@@ -375,7 +375,7 @@ console.log(liveMatch);
 
                       <div className="flex items-center justify-between space-x-5 mt-3">
                         <div className="flex items-center">
-                          <Link href="#">
+                          <Link href={"/points-table/"+urlStringEncode(items?.teama?.short_name+"-vs-"+items?.teamb?.short_name+"-match-"+items?.match_number+"-"+items?.competition?.title)+"/" + items.match_id}>
                             <p className=" text-[#909090] font-medium">
                               {" "}
                               Points Table
@@ -578,7 +578,7 @@ console.log(liveMatch);
 
                       <div className="flex items-center justify-between space-x-5 mt-2">
                         <div className="flex items-center">
-                          <Link href="#">
+                          <Link href={"/points-table/"+urlStringEncode(items?.teama?.short_name+"-vs-"+items?.teamb?.short_name+"-match-"+items?.match_number+"-"+items?.competition?.title)+"/" + items.match_id}>
                             <p className=" text-[#909090] text-[11px] font-medium">
                               {" "}
                               Points Table
@@ -940,7 +940,7 @@ console.log(liveMatch);
 
                       <div className="flex items-center justify-between space-x-5 mt-2">
                         <div className="flex items-center">
-                          <Link href="#">
+                          <Link href={"/points-table/"+urlStringEncode(cmatch?.teama?.short_name+"-vs-"+cmatch?.teamb?.short_name+"-match-"+cmatch?.match_number+"-"+cmatch?.competition?.title)+"/" + cmatch.match_id}>
                             <p className=" text-[#909090] text-[11px] font-medium">
                               {" "}
                               Points Table
@@ -1110,7 +1110,7 @@ console.log(liveMatch);
 
                       <div className="flex items-center justify-between space-x-5 mt-3">
                         <div className="flex items-center">
-                          <Link href="#">
+                          <Link href={"/points-table/"+urlStringEncode(ucmatch?.teama?.short_name+"-vs-"+ucmatch?.teamb?.short_name+"-match-"+ucmatch?.match_number+"-"+ucmatch?.competition?.title)+"/" + ucmatch.match_id}>
                             <p className=" text-[#909090] font-medium">
                               {" "}
                               Points Table
@@ -1264,7 +1264,7 @@ console.log(liveMatch);
 
                     <div className="flex items-center justify-between space-x-5 mt-2">
                       <div className="flex items-center">
-                        <Link href="#">
+                        <Link href={"/points-table/"+urlStringEncode(ucmatch?.teama?.short_name+"-vs-"+ucmatch?.teamb?.short_name+"-match-"+ucmatch?.match_number+"-"+ucmatch?.competition?.title)+"/" + ucmatch.match_id}>
                           <p className="text-[#909090] text-[11px] font-medium">
                             Points Table
                           </p>

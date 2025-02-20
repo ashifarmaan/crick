@@ -50,6 +50,11 @@ import ChatComponent from "../components/websocket";
 
 type Params = Promise<{ matchType: string; matchTab: string; matchId: number; matchTitle: string }>;
 export default async function page(props: { params: Params }) {
+
+  
+  // Example server-side event
+
+  // console.log('serverEvent', evdata);
   const params = await props.params;
   const matchid = params.matchId;
   const matchTab = params.matchTab;
@@ -272,3 +277,5 @@ export default async function page(props: { params: Params }) {
     </Layout>
   );
 }
+
+
