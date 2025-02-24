@@ -1,29 +1,47 @@
-
-import React from 'react'
+"use client";
+import React, {useState} from 'react';
 import Image from "next/image";
 import Link from 'next/link';
 import WeeklySlider from "@/app/components/WeeklySlider";
-import { SeriesPointsTable } from "@/controller/matchInfoController";
 
 interface PointsTable {
-    match_id: number;
-  
+    match_id: number;  
     matchData:any | null;
-
     matchUrl :string | null;
+    seriesPointsTable: any | null;
+    seriesPointsTableMatches: any | null;
 
   }
-export default async function PointsTable({
+export default function PointsTable({
     match_id,
     matchData,
-    matchUrl
+    matchUrl,
+    seriesPointsTable,
+    seriesPointsTableMatches
   }: PointsTable) {
 
-
-        const cid = matchData?.match_info?.competition?.cid;
-        const pointTable =  await SeriesPointsTable(cid);
+        const pointTable = seriesPointsTable;
+        // const cid = matchData?.match_info?.competition?.cid;
         const standings = pointTable?.standing?.standings;
-        console.log(pointTable);
+
+        const pointTableMatches =   seriesPointsTableMatches;
+
+        const filteredMatches = pointTableMatches.items.filter(
+            (            match: { teama: { team_id: number; }; teamb: { team_id: number; }; }) =>
+              match.teama.team_id === 128816 || match.teamb.team_id === 128816
+          );
+       
+        console.log("filteredItems",filteredMatches);
+        
+        // console.log(pointTableMatches);
+
+        const [expandedRow, setExpandedRow] = useState<number | null>(null);
+
+        const toggleRow = (rowId: number) => {
+            console.log("Toggling row:", rowId, "Current expandedRow:", expandedRow);
+            setExpandedRow(prev => (prev === rowId ? null : rowId));
+        };
+        
 
   return (
     
@@ -114,8 +132,8 @@ export default async function PointsTable({
                     </button>
                 </div>
                 
-                {standings.map((rounds : any) => ( 
-                <div className="rounded-lg bg-[#ffffff] mb-2 p-4">
+                {standings.map((rounds : any, index:number) => ( 
+                <div className="rounded-lg bg-[#ffffff] mb-2 p-4" key={index}>
                     <h3 className="text-1xl font-semibold mb-3 pl-[7px] border-l-[3px] border-[#229ED3]">
                         {rounds?.round?.name}
                     </h3>
@@ -156,7 +174,7 @@ export default async function PointsTable({
                                 </thead>
                                 <tbody className="divide-y divide-gray-200">
                                 {rounds.standings.map((point : any, index:number) => ( 
-                                    <tr className="hover:bg-[#fffae5]">
+                                    <tr className="" key={index}>
                                         <td className="md:px-2 pl-[14px] py-3 w-[10px]">{index + 1}</td>
                                         <td className="md:px-2 pl-[14px] py-3 text-[#217AF7]">
                                             <Link href="/kkrseries">
@@ -185,33 +203,104 @@ export default async function PointsTable({
                                         <td className="md:px-2 pl-[14px] py-3">
                                             <div className="ml-auto flex gap-1 items-center">
                                                 {point?.lastfivematchresult.split(",").map((item: string, index:number) => (
-                                                <span className={`${item[index] == "W" ? "bg-[#13b76dbd]" : "bg-[#f63636c2]" } text-white text-[13px] px-[4px] py-[0px] rounded`}>
+                                                <span className={`${item === "W" ? "bg-[#13b76dbd]" : "bg-[#f63636c2]" } text-white text-[13px] px-[4px] py-[0px] rounded`} key={index}>
                                                     {item}
                                                 </span>
                                                 ))}
                                                 
                                                 <span className="flex">
-                                                    <button className="arro-button">
-                                                        <svg
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            fill="none"
-                                                            viewBox="0 0 24 24"
-                                                            strokeWidth="1.5"
-                                                            stroke="currentColor"
-                                                            className="size-4"
-                                                        >
-                                                            <path
-                                                                strokeLinecap="round"
-                                                                strokeLinejoin="round"
-                                                                d="m19.5 8.25-7.5 7.5-7.5-7.5"
-                                                            />
-                                                        </svg>
-                                                    </button>
+                                                    
+                                                    <button className="arro-button" onClick={() => toggleRow(index)}>
+                                                            <svg
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                fill="none"
+                                                                viewBox="0 0 24 24"
+                                                                strokeWidth="1.5"
+                                                                stroke="currentColor"
+                                                                className={`size-4 transition-transform ${expandedRow === index ? "rotate-180" : ""}`}
+                                                            >
+                                                                <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                                                            </svg>
+                                                        </button>
                                                 </span>
                                             </div>
                                         </td>
                                     </tr>
+                                    
                                 ))}
+
+                           {/* {  pointTableMatches.items.filter((match: { teama: { team_id: number; }; teamb: { team_id: number; }; }) =>
+                                        match.teama.team_id === 128816 || match.teamb.team_id === 128816)
+                            .map((match: any, index: number) => (
+                                        <tr  key={index}>
+                                        <td colSpan={10} >
+                                            <div className='bg-[#ecf2fd] my-2 rounded-md'>
+                                                <div className='border-b-[1px] border-[#e4e9f0]'>
+                                                    <div className="flex justify-between items-center whitespace-nowrap p-2">
+                                                        <div>
+                                                            <Link href="/team/india/test">
+                                                                <div className="flex items-center space-x-2 font-medium w-[162px] md:w-full">
+                                                                    <div className="flex items-center space-x-1">
+                                                                        <Image
+                                                                            src={match?.teama?.logo_url}
+                                                                            className="h-[24px] rounded-full"
+                                                                            width={25} height={25} alt={match?.teama?.short_name}
+                                                                        />
+                                                                        <span className="text-[#909090]">{match?.teama?.short_name}</span>
+                                                                    </div>
+                                                                    <p>{match?.teama?.scores_full}</p>
+                                                                </div>
+
+                                                            </Link>
+                                                        </div>
+                                                        <p>VS</p>
+                                                        <div>
+                                                            <Link href="/team/india/test">
+                                                                <div className="flex items-center space-x-2 font-medium w-[162px] md:w-full">
+                                                                    <div className="flex items-center space-x-1">
+                                                                        <Image
+                                                                            src={match?.teamb?.logo_url}
+                                                                            className="h-[24px]"
+                                                                            width={25} height={25} alt={match?.teamb?.short_name}
+                                                                        />
+                                                                        <span className="text-[#909090]">{match?.teamb?.short_name}</span>
+                                                                    </div>
+                                                                    <p>{match?.teamb?.scores_full}</p>
+                                                                </div>
+                                                            </Link>
+                                                        </div>
+
+
+                                                        <div className="flex items-center space-x-4">
+                                                            <div className="text-right leading-6">
+                                                                <p className="font-medium">{match?.subtitle}</p>
+                                                                <p className="text-[#909090] font-normal">
+                                                                {match?.result}
+                                                                </p>
+                                                            </div>
+                                                            <div>
+                                                                <div className="text-center">
+                                                                    <span className="bg-[#13b76dbd] text-white text-[13px] px-[6px] py-[3px] rounded">
+                                                                    {match?.result}
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </td>
+                                    </tr>
+                                       )) }
+                                {expandedRow === index && (
+                                        <tr>
+                                            <td colSpan={10} >
+                                               
+                                            </td>
+                                        </tr>
+
+                                    )} */}
                                     
                                 </tbody>
                             </table>

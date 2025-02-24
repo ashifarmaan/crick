@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import eventEmitter from "@/utils/eventEmitter";
 import { calculateRemainingOvers, getPlayerNameByPid } from "@/utils/utility";
@@ -26,40 +26,18 @@ export default function Live({
   matchCommentary,
 }: // matchLast,
 Live) {
-  
   const [activeTab, setActiveTab] = useState("tab1");
 
-  // const [allCommentries, setAllCommentries] = useState(
-  //   [...matchCommentary?.commentaries]?.reverse()
-  // );
+  let commentaries = [...matchCommentary?.commentaries]?.reverse();
 
-  const [allCommentries, setAllCommentries] = useState(
-    Array.isArray(matchCommentary?.commentaries)
-      ? [...matchCommentary.commentaries].reverse()
-      : []
-  );
-  const [matchLiveData, setmatchLiveData] = useState(matchData);
+  const matchLiveData = matchData;
 
-  const handleMatchData = (data: any) => {
-    if (data?.match_id == match_id) {
-      setmatchLiveData(data); // ✅ Update only when new data is received
-    }
-  };
-
-  // let matchInningatsmen = matchCommentary?.commentaries[6]?.bowlers?.bowls?.overs;
   
-  // console.log("matchCommentary",matchCommentary);
-  
-  // let commentaries = matchInningCommentaries;
-  eventEmitter.on("matchLiveData", handleMatchData);
-
-  // console.log("Live", matchLiveData);
   let teamwinpercentage = matchLiveData?.teamwinpercentage;
   let matchDetails = matchLiveData?.match_info;
   let players = matchLiveData?.players;
   let matchinfo = matchLiveData?.live;
   let matchinning = matchLiveData?.live?.live_inning;
-  let commentaries = matchLiveData?.live?.commentaries;
   let batsman = matchinfo?.batsmen;
   let bowlers = matchinning?.bowlers;
   let fows = matchinning?.fows;
@@ -87,90 +65,17 @@ Live) {
     },
     0
   );
-  // const players = matchStates?.players;
-
-  if (
-    matchLiveData !== undefined &&
-    matchLiveData?.match_id == match_id &&
-    matchLiveData?.live?.live_inning !== undefined &&
-    matchLiveData?.live?.live_inning !== ""
-  ) {
-    matchData = matchLiveData;
-    teamwinpercentage = matchLiveData?.teamwinpercentage;
-    matchDetails = matchLiveData?.match_info;
-    matchinfo = matchLiveData?.live;
-    players = matchLiveData?.players;
-    matchinning = matchLiveData?.live?.live_inning;
-    commentaries = matchLiveData?.live?.commentaries;
-    batsman = matchinfo.batsmen;
-    bowlers = matchinning.bowlers;
-    fows = matchinning.fows;
-    yetTobat = matchinning.did_not_bat;
-    currPartnership = matchinning.current_partnership;
-    currentOver = Math.floor(matchinning.equations.overs);
-    lastOver = currentOver - 1;
-    thisOverRun = commentaries.filter(
-      (events: { event: string; over: any }) =>
-        Number(events.over) === currentOver && events.event !== "overend"
-    );
-    lastOverRun = commentaries.filter(
-      (events: { event: string; over: any }) =>
-        Number(events.over) === lastOver && events.event !== "overend"
-    );
-    thisOvertotalRuns = thisOverRun.reduce(
-      (accumulator: number, currentEvent: { run: number }) => {
-        return accumulator + currentEvent.run;
-      },
-      0
-    );
-    lastOvertotalRuns = lastOverRun.reduce(
-      (accumulator: number, currentEvent: { run: number }) => {
-        return accumulator + currentEvent.run;
-      },
-      0
-    );
-  }
-
+ 
   if (commentaries) {
     commentaries = [...commentaries]?.reverse();
   }
  
 
-  const newCommentary = commentaries?.filter(
-    (item: { event_id: any; event: string; over: number; wicket_batsman_id: string }) =>
-      !allCommentries.some(
-        (existingItem: { event_id: any; event: string; over: number; wicket_batsman_id: string }) =>
-          item.event_id
-            ? existingItem.event_id === item.event_id && existingItem.event === item.event// Compare event_id for regular events
-            : existingItem.event === "overend" &&
-              existingItem.over === item.over  // Compare "overend" events by over number
-      )
-  );
-
 
   // Merge new unique data into firstArray
-  let updatedCommentaries = [...allCommentries];
-  // console.log("comment", newCommentary);
-  if (newCommentary && Array.isArray(newCommentary)) {
-    newCommentary.forEach((newItem: { event_id: number; event: string}) => {
-      const index = updatedCommentaries.findIndex(
-        (existingItem) => existingItem.event_id === newItem.event_id 
-      );
+  let updatedCommentaries =commentaries;
 
-      if (index !== -1) {
-        //  Update existing item
-        allCommentries[index] = { ...updatedCommentaries[index], ...newItem };
-      } else {
-        //  Add new item if not found
-        // updatedCommentaries.unshift(newItem);
-        updatedCommentaries = [...newCommentary, ...updatedCommentaries];
-      }
-    });
-  }
-  // let updatedCommentaries = [...newCommentary, ...allCommentries];
-  if (allCommentries.length !== updatedCommentaries.length) {
-    setAllCommentries(updatedCommentaries);
-  }
+
 
   const [filter, setFilter] = useState("All");
   // console.log("filter", filter);
@@ -230,7 +135,6 @@ Live) {
 
   return (
     <section className="lg:w-[1000px] mx-auto md:mb-0 mb-4 px-2 lg:px-0">
-     
       <div id="tabs" className="my-4">
         <div className="flex text-1xl space-x-8 p-2 bg-[#ffffff] rounded-lg overflow-auto">
           <Link href={"/moreinfo/" + matchUrl + "/" + match_id}>
@@ -411,7 +315,7 @@ Live) {
                       Last Over:
                     </span>
                     <div className="flex gap-1">
-                      {lastOverRun?.map((lastOver: any, index: number) => (
+                      {lastOverRun.map((lastOver: any, index: number) => (
                         <span
                           className={`px-2 py-1 border rounded ${
                             lastOver.score == 6
@@ -438,7 +342,7 @@ Live) {
                       This Over:
                     </span>
                     <div className="flex gap-1">
-                      {thisOverRun?.map((thisOver: any, index: number) => (
+                      {thisOverRun.map((thisOver: any, index: number) => (
                         <span
                           className={`px-2 py-1 border rounded ${
                             thisOver.score == 6
@@ -608,10 +512,10 @@ Live) {
                 ))}
               </div>
             </div>
-            <div className="cust-box-click-content" key="testMatch">
+            <div className="cust-box-click-content">
               {updatedCommentaries.map((comment: any, index: number) =>
                 comment?.event === "overend" ? (
-                  <div className="rounded-t-lg bg-white p-4 mt-4" key={`over-${index}`}>
+                  <div className="rounded-t-lg bg-white p-4 mt-4" key={index}>
                     <div className="flex md:flex-row flex-col justify-between md:items-center gap-2">
                       <div className="text-[14px] font-normal">
                         {matchinning.short_name} : {comment.score}
@@ -661,8 +565,8 @@ Live) {
                     </div>
                   </div>
                 ) : (
-                  
-                  <div className="rounded-t-lg bg-white" key={`other-${comment?.event_id || index}`}>
+                  <>
+                  <div className="rounded-t-lg bg-white" key={index}>
                     <div className="border-t-[1px] border-[#E7F2F4]" />
                     <div
                       className="md:flex items-start py-3 md:px-3 gap-[21px] bg-white p-4"
@@ -764,7 +668,7 @@ Live) {
                       ""
                     )}
                     </div>
-                  
+                  </>
                 )
               )}
               {matchinfo?.bowlers?.[0]?.overs == 3000 ? 

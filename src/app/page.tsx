@@ -8,6 +8,8 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import TabButtons from "./components/buttonclick";
 import { urlStringEncode } from "../utils/utility";
+import { format, isSameDay  } from "date-fns";
+import CountdownTimer from "./components/countdownTimer";
 
 import {
   completedMatches,
@@ -78,9 +80,13 @@ export default async function Home(props: { params: Params }) {
   console.log("open", activeTabValue);
   const activeMainTab = activeTabValue;
 
-  const completedMatch: MatchItem[] = await completedMatches();
-  const upcomingMatch: MatchItem[] = await upcomingMatches();
-  const liveMatch: MatchItem[] = await liveMatches();
+  let completedMatch: MatchItem[] = await completedMatches();
+  let upcomingMatch: MatchItem[] = await upcomingMatches();
+  let liveMatch: MatchItem[] = await liveMatches();
+
+  completedMatch = completedMatch.filter((item: { commentary: number}) => Number(item.commentary) === 1);
+  upcomingMatch = upcomingMatch.filter((item: { commentary: number}) => Number(item.commentary) === 1);
+  liveMatch = liveMatch.filter((item: { commentary: number}) => Number(item.commentary) === 1);
 
   // const  matchData = ChatComponent();
 console.log(liveMatch);
@@ -165,7 +171,6 @@ console.log(liveMatch);
                   {/* <!-- live match desktop view start --> */}
                   <div className="liveMatch">
                   {liveMatch.map((items) => (
-                    items.commentary !== 0 ? (
                       <div key={items.match_id}>
                     <div
                       
@@ -654,7 +659,6 @@ console.log(liveMatch);
                     </div>
                     </div>
 
-                  ):("")
                   
                   
                   
@@ -731,7 +735,7 @@ console.log(liveMatch);
 
                       <div className="py-4 px-3">
                         <div className="flex justify-between items-center text-[14px]">
-                          <Link href="/resultMatch/result-scorecard">
+                          <Link href={"/scorecard/"+urlStringEncode(cmatch?.teama?.short_name+"-vs-"+cmatch?.teamb?.short_name+"-match-"+cmatch?.match_number+"-"+cmatch?.competition?.title)+"/" + cmatch.match_id}>
                             <div className="">
                               <p className="text-[#586577] text-[12px] mb-4 font-medium">
                                 {cmatch.subtitle} ,{cmatch.format_str} 
@@ -789,7 +793,7 @@ console.log(liveMatch);
                           </Link>
                           <div className="h-[100px] border-l-[1px] border-[#d0d3d7]"></div>
 
-                          <Link href="/match-result">
+                          <Link href={"/scorecard/"+urlStringEncode(cmatch?.teama?.short_name+"-vs-"+cmatch?.teamb?.short_name+"-match-"+cmatch?.match_number+"-"+cmatch?.competition?.title)+"/" + cmatch.match_id}>
                             <div className=" font-semibold flex flex-col items-center">
                               <Image
                                 src="/assets/img/home/win.png"
@@ -853,7 +857,7 @@ console.log(liveMatch);
                     <div className="border-t-[1px] border-[#E7F2F4]"></div>
 
                     <div className="open-Performance-data">
-                      <Link href="/match-result">
+                      <Link href={"/scorecard/"+urlStringEncode(cmatch?.teama?.short_name+"-vs-"+cmatch?.teamb?.short_name+"-match-"+cmatch?.match_number+"-"+cmatch?.competition?.title)+"/" + cmatch.match_id}>
                         <div className="py-2 pb-3">
                           <p className="text-[#586577] text-[11px] mb-4 font-normal">
                           {cmatch.subtitle} ,{cmatch.format_str} 
@@ -1052,7 +1056,7 @@ console.log(liveMatch);
                       </div>
 
                       <div className="border-t-[1px] border-[#E7F2F4]"></div>
-                      <Link href="/scheduled/infoUpcoming-match">
+                      <Link href={"/moreinfo/"+urlStringEncode(ucmatch?.teama?.short_name+"-vs-"+ucmatch?.teamb?.short_name+"-match-"+ucmatch?.match_number+"-"+ucmatch?.competition?.title)+"/" + ucmatch.match_id}>
                         <div className="py-4 px-3">
                           <div className="flex justify-between items-center text-[14px]">
                             <div className="">
@@ -1096,10 +1100,18 @@ console.log(liveMatch);
                             <div className="font-semibold text-center">
                               <div className="text-[#144280]">
                                 <div className=" font-medium text-center">
+                                  {  isSameDay(new Date(), new Date(ucmatch.date_start_ist))?(
+                                  
+                                    <CountdownTimer targetTime={ucmatch.date_start_ist} />
+                                  
+                                  ):(
                                   <p className="text-[#2F335C] text-[14px]">
-                                    {ucmatch.date_start_ist}
-                                    {/* 20th September - Fri, <br /> 5:30 PM GMT */}
+                                    {format(new Date(ucmatch.date_start_ist), "dd MMMM - EEEE")}, <br />
+                                    {format(new Date(ucmatch.date_start_ist), "hh:mm:aa")}
+                                  
+                                  
                                   </p>
+                                )}
                                 </div>
                               </div>
                             </div>
@@ -1171,7 +1183,7 @@ console.log(liveMatch);
                     </div>
 
                     <div className="border-t-[1px] border-[#E7F2F4]"></div>
-                    <Link href="/scheduled/infoUpcoming-match">
+                    <Link href={"/moreinfo/"+urlStringEncode(ucmatch?.teama?.short_name+"-vs-"+ucmatch?.teamb?.short_name+"-match-"+ucmatch?.match_number+"-"+ucmatch?.competition?.title)+"/" + ucmatch.match_id}>
                       <div className="open-Performance-data">
                         <div className="py-2 pb-3">
                           <p className="text-[#586577] text-[12px] mb-4 font-medium">
@@ -4651,7 +4663,7 @@ console.log(liveMatch);
                   className="bg-cover bg-center py-3 rounded-md text-white"
                   style={{
                     backgroundImage:
-                      "linear-gradient(to right, rgba(20, 67, 158, 1), #14429e7a), url(img/home/bg-1.png)",
+                      "linear-gradient(to right, rgba(20, 67, 158, 1), #14429e7a), url(/assets/img/home/bg-1.png)",
                   }}
                 >
                   <Link href="/team">
@@ -4672,7 +4684,7 @@ console.log(liveMatch);
                   className="bg-cover bg-center py-3 rounded-md text-white"
                   style={{
                     backgroundImage:
-                      "linear-gradient(to right, rgba(20, 67, 158, 1), #14429e7a),url(img/home/bg-2.png)",
+                      "linear-gradient(to right, rgba(20, 67, 158, 1), #14429e7a),url(/assets/img/home/bg-2.png)",
                   }}
                 >
                   <Link href="/team">
@@ -4693,7 +4705,7 @@ console.log(liveMatch);
                   className="bg-cover bg-center py-3 rounded-md text-white"
                   style={{
                     backgroundImage:
-                      "linear-gradient(to right, rgba(20, 67, 158, 1), #14429e7a), url(img/home/bg-3.png)",
+                      "linear-gradient(to right, rgba(20, 67, 158, 1), #14429e7a), url(/assets/img/home/bg-3.png)",
                   }}
                 >
                   <Link href="/team">
@@ -4714,7 +4726,7 @@ console.log(liveMatch);
                   className="bg-cover bg-center py-3 rounded-md text-white"
                   style={{
                     backgroundImage:
-                      "linear-gradient(to right, rgba(20, 67, 158, 1), #14429e7a),url(img/home/bg-4.png)",
+                      "linear-gradient(to right, rgba(20, 67, 158, 1), #14429e7a),url(/assets/img/home/bg-4.png)",
                   }}
                 >
                   <Link href="/team">
@@ -4735,7 +4747,7 @@ console.log(liveMatch);
                   className="bg-cover bg-center py-3 rounded-md text-white"
                   style={{
                     backgroundImage:
-                      "linear-gradient(to right, rgba(20, 67, 158, 1), #14429e7a),url(img/home/bg-5.png)",
+                      "linear-gradient(to right, rgba(20, 67, 158, 1), #14429e7a),url(/assets/img/home/bg-5.png)",
                   }}
                 >
                   <Link href="/team">
@@ -4757,7 +4769,7 @@ console.log(liveMatch);
                   className="bg-cover bg-center py-3 rounded-md text-white"
                   style={{
                     backgroundImage:
-                      "linear-gradient(to right, rgba(20, 67, 158, 1), #14429e7a),url(img/home/bg-6.png)",
+                      "linear-gradient(to right, rgba(20, 67, 158, 1), #14429e7a),url(/assets/img/home/bg-6.png)",
                   }}
                 >
                   <Link href="/team">
@@ -4778,7 +4790,7 @@ console.log(liveMatch);
                   className="bg-cover bg-center py-3 rounded-md text-white"
                   style={{
                     backgroundImage:
-                      "linear-gradient(to right, rgba(20, 67, 158, 1), #14429e7a),url(img/home/bg-7.png)",
+                      "linear-gradient(to right, rgba(20, 67, 158, 1), #14429e7a),url(/assets/img/home/bg-7.png)",
                   }}
                 >
                   <Link href="/team">
@@ -4799,7 +4811,7 @@ console.log(liveMatch);
                   className="bg-cover bg-center py-3 rounded-md text-white"
                   style={{
                     backgroundImage:
-                      "linear-gradient(to right, rgba(20, 67, 158, 1), #14429e7a),url(img/home/bg-8.png)",
+                      "linear-gradient(to right, rgba(20, 67, 158, 1), #14429e7a),url(/assets/img/home/bg-8.png)",
                   }}
                 >
                   <Link href="/team">
@@ -4820,7 +4832,7 @@ console.log(liveMatch);
                   className="bg-cover bg-center py-3 rounded-md text-white"
                   style={{
                     backgroundImage:
-                      "linear-gradient(to right, rgba(20, 67, 158, 1), #14429e7a),url(img/home/bg-9.png)",
+                      "linear-gradient(to right, rgba(20, 67, 158, 1), #14429e7a),url(/assets/img/home/bg-9.png)",
                   }}
                 >
                   <Link href="/team">
@@ -4841,7 +4853,7 @@ console.log(liveMatch);
                   className="bg-cover bg-center py-3 rounded-md text-white"
                   style={{
                     backgroundImage:
-                      "linear-gradient(to right, rgba(20, 67, 158, 1), #14429e7a),url(img/home/bg-10.png)",
+                      "linear-gradient(to right, rgba(20, 67, 158, 1), #14429e7a),url(/assets/img/home/bg-10.png)",
                   }}
                 >
                   <Link href="/team">
