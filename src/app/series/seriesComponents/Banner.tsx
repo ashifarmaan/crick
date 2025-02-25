@@ -31,16 +31,14 @@ export default function IplBanner({seriesData, seriesInfo} : HeaderProps) {
 
 
     const previousAndNext = (data: any[], targetCid: number) => {
-    const index = data.findIndex(item => item.cid === targetCid);
+        const index = data.findIndex(item => item.cid === targetCid);
 
-    if (index === -1) return { previous: null, current: null, next: null };
-    // const formatItem = (item: any) => item ? { title: urlStringEncode(item.title+"-"+item.season) } : null;
-
-    return {
-        previous: data[index - 1] || null,
-        current: data[index],
-        next: data[index + 1] || null
-    };
+        if (index === -1) return { previous: null, current: null, next: null };
+        return {
+            previous: data[index - 1] || null,
+            current: data[index],
+            next: data[index + 1] || null
+        };
     };
 
     const result = previousAndNext(seriesData, seriesInfo?.cid);
@@ -52,7 +50,7 @@ export default function IplBanner({seriesData, seriesInfo} : HeaderProps) {
     if(result?.previous != null) {
      backUrl = "/series/"+urlStringEncode(result?.previous?.title+"-"+result?.previous?.season)+"/"+result?.previous?.cid;
     }
-  console.log("urls",result);
+//   console.log("urls",seriesInfo);
 
   const handleScroll = (direction: string) => {
     if (!sliderRef.current) return;

@@ -94,7 +94,7 @@ export async function seriesById(cid: number) {
 
   const cachedData = await redis.get(CACHE_KEY);
   if (cachedData) {
-    console.log("coming from cache live_series");
+    // console.log("coming from cache live_series");
     return JSON.parse(cachedData);
   }
 
@@ -104,6 +104,6 @@ export async function seriesById(cid: number) {
   if (series.length > 0) {
     await redis.setex(CACHE_KEY, CACHE_TTL, JSON.stringify(series));
   }
-  console.log("coming from API live_series");
+  // console.log("coming from API live_series");
   return series;
 }
