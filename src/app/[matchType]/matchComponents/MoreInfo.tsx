@@ -2,6 +2,7 @@
 import Link from "next/link";
 import React, { useState } from "react";
 import Image from "next/image";
+import { urlStringEncode} from "@/utils/utility";
 // import { StaticImport } from "next/dist/shared/lib/get-img-props";
 
 interface MatchInfo {
@@ -1996,7 +1997,7 @@ export default function MoreInfo({
                         }`}>
                       <div>
                         {teama11Players.map((player) => (
-                          <Link href="/profile"  key={player.player_id}>
+                          <Link href={"/player/"+urlStringEncode(player?.name)+"/"+player?.player_id}  key={player.player_id}>
                             <div className="flex items-center space-x-3 py-3 border-b-[1px] border-border-gray-700">
                               <div>
                                 <Image
@@ -2030,7 +2031,7 @@ export default function MoreInfo({
                         }`}>
                       <div>
                         {teamb11Players.map((player) => (
-                          <Link href="/profile"  key={player.player_id}>
+                          <Link href={"/player/"+urlStringEncode(player?.name)+"/"+player?.player_id}  key={player.player_id}>
                             <div className="flex items-center space-x-3 py-3 border-b-[1px] border-border-gray-700">
                               <div>
                                 <Image

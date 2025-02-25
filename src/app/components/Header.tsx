@@ -3,9 +3,14 @@
 import Link from 'next/link'
 import React, { useState } from 'react'
 import Image from "next/image";
+import {urlStringEncode}  from "./../../utils/utility";
 
-const Header = () => {
+interface HeaderProps {
+  data: any; // Adjust type based on your data
+}
+const Header = ({ data }: HeaderProps) => {
 
+//  console.log("ssee",data);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const toggleDropdown = () => {
@@ -13,90 +18,28 @@ const Header = () => {
   };
 
 
-  const items = [
-    {
-      href: "/t20series",
-      imgSrc: "/assets/img/series/series-1.png",
-      alt: "BGT 2024-25",
-      label: "BGT 2024-25",
-    },
-    {
-      href: "/iplseries",
-      imgSrc: "/assets/img/series/ipl.png",
-      alt: "WBBL 2024",
-      label: "WBBL 2024",
-    },
-    {
-      imgSrc: "/assets/img/series/series-1.png",
-      alt: "Abu Dhabi T10",
-      label: "Abu Dhabi T10",
-    },
-    {
-      imgSrc: "/assets/img/series/ipl.png",
-      alt: "Abu Dhabi T10",
-      label: "Abu Dhabi T10",
-    },
-    {
-      imgSrc: "/assets/img/series/series-1.png",
-      alt: "Abu Dhabi T10",
-      label: "Abu Dhabi T10",
-    },
-    {
-      imgSrc: "/assets/img/series/ipl.png",
-      alt: "Abu Dhabi T10",
-      label: "Abu Dhabi T10",
-    },
-    {
-      imgSrc: "/assets/img/series/series-1.png",
-      alt: "Abu Dhabi T10",
-      label: "Abu Dhabi T10",
-    },
-    {
-      imgSrc: "/assets/img/series/ipl.png",
-      alt: "Abu Dhabi T10",
-      label: "Abu Dhabi T10",
-    },
-    {
-      imgSrc: "/assets/img/series/series-1.png",
-      alt: "Abu Dhabi T10",
-      label: "Abu Dhabi T10",
-    },
-    {
-      imgSrc: "/assets/img/series/ipl.png",
-      alt: "Abu Dhabi T10",
-      label: "Abu Dhabi T10",
-    },
-    {
-      imgSrc: "/assets/img/series/series-1.png",
-      alt: "Abu Dhabi T10",
-      label: "Abu Dhabi T10",
-    },
-    {
-      imgSrc: "/assets/img/series/ipl.png",
-      alt: "Abu Dhabi T10",
-      label: "Abu Dhabi T10",
-    },
-    {
-      imgSrc: "/assets/img/series/series-1.png",
-      alt: "Abu Dhabi T10",
-      label: "Abu Dhabi T10",
-    },
-    {
-      imgSrc: "/assets/img/series/ipl.png",
-      alt: "Abu Dhabi T10",
-      label: "Abu Dhabi T10",
-    },
-    {
-      imgSrc: "/assets/img/series/series-1.png",
-      alt: "Abu Dhabi T10",
-      label: "Abu Dhabi T10",
-    },
-    {
-      imgSrc: "/assets/img/series/ipl.png",
-      alt: "Abu Dhabi T10",
-      label: "Abu Dhabi T10",
-    },
-  ];
+  // const items = [
+  //   data.map((item:any) => (
+  //     {
+  //       href: "/series/T20/overview",
+  //       imgSrc: "/assets/img/series/series-1.png",
+  //       alt: item.abbr,
+  //       label: "BGT 2024-25",
+  //     }
+  //   )) 
+    
+  // ];
+  let items = [];
+if(data){
+   items = data.map((item: any) => ({
+    href: "/series/"+urlStringEncode(item.title+"-"+item.season)+"/"+item.cid,
+    imgSrc: "/assets/img/series/series-1.png",
+    alt: item.abbr,
+    label: item.abbr,
+  }));
+}else{
+   items = [];
+}
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const itemsPerPage = 7;
@@ -156,14 +99,14 @@ const Header = () => {
             <Link href="/" className="hover:text-yellow-400">
               Home
             </Link>
-            <Link href="" className="hover:text-yellow-400">
+            <Link href="#" className="hover:text-yellow-400">
               Fixtures
             </Link>
-            <Link href="" className="hover:text-yellow-400"></Link>
+            <Link href="#" className="hover:text-yellow-400"></Link>
             <div className="group">
               <Link href="" className="hover:text-yellow-400"></Link>
-              <a
-                // href="#!"
+              <Link
+                 href="#"
                 className="hover:text-yellow-400 flex items-center"
                 // id="drop-series-trigger"
                 onClick={toggleDropdown}
@@ -183,12 +126,12 @@ const Header = () => {
                     d="M19 9l-7 7-7-7"
                   />
                 </svg>
-              </a>
+              </Link>
             </div>
             <Link href="" className="hover:text-yellow-400">
               Teams
             </Link>
-            <Link href="/icc-ranking" className="hover:text-yellow-400">
+            <Link href="/iccRanking/man/team" className="hover:text-yellow-400">
               ICC Ranking
             </Link>
             <Link href="" className="hover:text-yellow-400">
@@ -262,13 +205,14 @@ const Header = () => {
               >
                 {items
                   .slice(currentIndex, currentIndex + itemsPerPage)
-                  .map((item, index) => (
+                  .map((item:any, index:number) => (
                     <Link href={item.href || "#"} key={index}>
                       <div className="flex-shrink-0 w-[125px] flex items-center flex-col">
                         <Image 
                           src={item.imgSrc}
                           alt={item.alt}
                           className="rounded-lg w-[80px]"
+                          width={80} height={80}
                         />
                         <p className="mt-2 text-center">{item.label}</p>
                       </div>

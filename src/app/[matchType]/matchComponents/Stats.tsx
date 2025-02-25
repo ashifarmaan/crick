@@ -275,7 +275,7 @@ export default async function Stats({
                                                     <tr>
                                                         <td className="md:px-2 pl-[14px] py-3 w-[10px]">{index+1}</td>
                                                         <td className="md:px-2 py-3 text-[#217AF7]">
-                                                            <Link href="/profile"> {stats?.player?.short_name}</Link>
+                                                            <Link href={"/player/"+urlStringEncode(stats?.player?.first_name)+"/"+stats?.player?.pid}> {stats?.player?.short_name}</Link>
                                                         </td>
                                                         <td className="md:px-2 pl-[14px] py-3">{stats?.matches}</td>
                                                         <td className="md:px-2 pl-[14px] py-3">{stats?.innings}</td>
@@ -333,7 +333,7 @@ export default async function Stats({
                                                     <tr>
                                                         <td className="md:px-2 pl-[14px] py-3 w-[10px]">{index+1}</td>
                                                         <td className="md:px-2 py-3 text-[#217AF7]">
-                                                            <Link href="/profile"> {stats?.player?.short_name}</Link>
+                                                            <Link href={"/player/"+urlStringEncode(stats?.player?.first_name)+"/"+stats?.player?.pid}> {stats?.player?.short_name}</Link>
                                                         </td>
                                                         <td className="md:px-2 pl-[14px] py-3">{stats?.matches}</td>
                                                         <td className="md:px-2 pl-[14px] py-3">{stats?.innings}</td>

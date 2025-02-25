@@ -54,9 +54,9 @@ class MatchWebSocket extends Component<object, MatchData> { // Changed from {} t
         ballelements.forEach((element) => {
           element.innerHTML = data?.ball_event;
         });
-        const utterance = new SpeechSynthesisUtterance(data?.ball_event);
-      utterance.lang = "hi-IN";
-      window.speechSynthesis.speak(utterance);
+      //   const utterance = new SpeechSynthesisUtterance(data?.ball_event);
+      // utterance.lang = "hi-IN";
+      // window.speechSynthesis.speak(utterance);
       }
       if (
         data?.match_id !== undefined &&

@@ -14,3 +14,33 @@ export const getTimeLeft = (targetTime: string) => {
     return { hours, minutes, seconds, isFinished: false };
   };
   
+export  const getAgeDetails = (dob: string): string => {
+    const birthDate = new Date(dob);
+    const today = new Date();
+    let years = today.getFullYear() - birthDate.getFullYear();
+    let months = today.getMonth() - birthDate.getMonth();
+    let days = today.getDate() - birthDate.getDate();
+  
+    if (days < 0) {
+      months -= 1;
+      days += new Date(today.getFullYear(), today.getMonth(), 0).getDate();
+    }
+    if (months < 0) {
+      years -= 1;
+      months += 12;
+    }
+  
+    return `${years} years, ${months} months, ${days} days`;
+  };
+
+  export  const getAge = (dob: string): string => {
+    const birthDate = new Date(dob);
+    const today = new Date();
+    let years = today.getFullYear() - birthDate.getFullYear();
+    let months = today.getMonth() - birthDate.getMonth();
+    if (months < 0) {
+      years -= 1;
+      months += 12;
+    }
+    return `${years} yrs`;
+  };

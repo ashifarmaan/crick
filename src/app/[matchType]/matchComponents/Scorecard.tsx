@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import Image from "next/image";
 import Link from 'next/link';
 import eventEmitter from "@/utils/eventEmitter";
+import { urlStringEncode} from "@/utils/utility";
 
 interface Scorecard {
   match_id: number;
@@ -218,7 +219,7 @@ export default function Scorecard({
                       {batsman.map((batsman:any, index: number) => (
                         <tr className="border-b" key={index}>
                           <td className="md:px-4 py-2 font-medium text-gray-800">
-                            <Link href="/profile" className='hover:text-[#0b59ff] flex gap-1 items-center'>
+                            <Link href={"/player/"+urlStringEncode(batsman.name)+"/"+batsman.batsman_id} className='hover:text-[#0b59ff] flex gap-1 items-center'>
                               {" "}
                               {batsman.name}
                               {
@@ -293,7 +294,7 @@ export default function Scorecard({
                         {bowlers.map((bowlers:any, index: number) => (
                         <tr  key={index}>
                           <td className="px-4 py-3 font-medium text-gray-800">
-                            <Link href="/profile" className='hover:text-[#0b59ff]'>{bowlers.name} </Link>
+                            <Link href={"/player/"+urlStringEncode(bowlers.name)+"/"+bowlers.bowler_id} className='hover:text-[#0b59ff]'>{bowlers.name} </Link>
                           </td>
                           <td className="md:px-4 pl-[14px] py-3">{bowlers.overs} </td>
                           <td className="md:px-4 pl-[14px] py-3">{bowlers.maidens} </td>
@@ -326,7 +327,7 @@ export default function Scorecard({
                       {fows.map((fows:any, index: number) => (
                         <tr className="border-b"  key={index}>
                           <td className="px-4 py-3 font-medium text-gray-800">
-                            <Link href="/profile" className='hover:text-[#0b59ff]'>  {fows.name} </Link>
+                            <Link href={"/player/"+urlStringEncode(fows.name)+"/"+fows.batsman_id} className='hover:text-[#0b59ff]'>  {fows.name} </Link>
                           </td>
                           <td className="px-4 py-3">{fows.score_at_dismissal} </td>
                           <td className="px-4 py-3">{fows.overs_at_dismissal}</td>
@@ -357,7 +358,7 @@ export default function Scorecard({
                   <div className="w-full ">
                     <p className="text-[13px] text-[#909090]">{partnership.order}{partnership.order === 1?("st"):partnership.order === 2?("nd"):partnership.order === 3?("rd"):("th")} Wicket</p>
                     <div className="flex md:flex-row flex-col md:gap-2">
-                      <Link href="/profile" className='hover:text-[#0b59ff]'>  {players.find((p: { player_id: number; }) => p.player_id === partnership.batsmen[0].batsman_id)?.name} </Link>
+                      <Link href={"/player/"+urlStringEncode(players.find((p: { player_id: number; }) => p.player_id === partnership.batsmen[0].batsman_id)?.name)+"/"+partnership.batsmen[0].batsman_id} className='hover:text-[#0b59ff]'>  {players.find((p: { player_id: number; }) => p.player_id === partnership.batsmen[0].batsman_id)?.name} </Link>
                       <p>
                         <span>{partnership.batsmen[0].runs} </span>
                         <span className="text-[13px] text-[#909090]">({partnership.batsmen[0].balls_faced})</span>
@@ -376,7 +377,7 @@ export default function Scorecard({
                     </div>
                   </div>
                   <div className=" w-full flex md:flex-row flex-col md:gap-2 items-end md:items-center  justify-end">
-                    <Link href="/profile" className='hover:text-[#0b59ff]'> <p>{players.find((p: { player_id: number; }) => p.player_id === partnership.batsmen[1].batsman_id)?.name}</p> </Link>
+                    <Link href={"/player/"+urlStringEncode(players.find((p: { player_id: number; }) => p.player_id === partnership.batsmen[1].batsman_id)?.name)+"/"+partnership.batsmen[1].batsman_id} className='hover:text-[#0b59ff]'> <p>{players.find((p: { player_id: number; }) => p.player_id === partnership.batsmen[1].batsman_id)?.name}</p> </Link>
                     <p>
                     {partnership.batsmen[1].runs} <span className="text-[#909090]">({partnership.batsmen[1].balls_faced})</span>
                     </p>
@@ -399,7 +400,7 @@ export default function Scorecard({
                   <div className="border-t-[1px] border-[#E4E9F0]" />
                   <div className="">
                   {yetTobat.map((yetTobat:any, index: number) => (
-                    <Link href="/profile" className='hover:text-[#0b59ff]'  key={index}>
+                    <Link href={"/player/"+urlStringEncode(yetTobat.name)+"/"+yetTobat.player_id} className='hover:text-[#0b59ff]'  key={index}>
                       <div className="flex items-center space-x-3 py-3 border-b-[1px] border-border-gray-700">
                         <div>
                           <Image src="/assets/img/player/1.png" width={40} height={40} alt="R sharma (c)" />

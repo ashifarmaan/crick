@@ -4,6 +4,7 @@ import React from 'react'
 import Image from "next/image";
 import Link from 'next/link';
 import { useState } from "react";
+import { urlStringEncode} from "@/utils/utility";
 
 interface Squads {
     match_id: number;
@@ -183,7 +184,7 @@ export default function Squads({
                                             </h2>
                                             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                                                 {teamASquadBatsmen.map((squads:any, index:number) => (
-                                                <a href="#" key={index}>
+                                                <Link href={"/player/"+urlStringEncode(squads?.name)+"/"+squads?.player_id}  key={index}>
                                                     <div className="text-center p-4 rounded-md border-[1px] border-[##E2E2E2]">
                                                         <div className="relative">
                                                             <Image
@@ -202,7 +203,7 @@ export default function Squads({
                                                         </h3>
                                                         <p className="text-xs text-gray-600">Batsman</p>
                                                     </div>
-                                                </a>
+                                                </Link>
                                                 ))}
                                                 
                                             </div>
@@ -214,7 +215,7 @@ export default function Squads({
                                             </h2>
                                             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                                             {teamASquadBowler.map((bowler:any, index:number) => (
-                                                <a href="#" key={index}>
+                                                <Link href={"/player/"+urlStringEncode(bowler?.name)+"/"+bowler?.player_id}  key={index}>
                                                     <div className="text-center p-4 rounded-md border-[1px] border-[##E2E2E2]">
                                                         <div className="relative">
                                                             <Image
@@ -233,7 +234,7 @@ export default function Squads({
                                                         </h3>
                                                         <p className="text-xs text-gray-600">Bowler</p>
                                                     </div>
-                                                </a>
+                                                </Link>
                                             ))}
                                                 
                                             </div>
@@ -245,7 +246,7 @@ export default function Squads({
                                             </h2>
                                             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                                             {teamASquadAll.map((allrounder:any, index:number) => (
-                                                <a href="#" key={index}>
+                                                <Link href={"/player/"+urlStringEncode(allrounder?.name)+"/"+allrounder?.player_id}  key={index}>
                                                     <div className="text-center p-4 rounded-md border-[1px] border-[##E2E2E2]">
                                                         <div className="relative">
                                                             <Image
@@ -264,7 +265,7 @@ export default function Squads({
                                                         </h3>
                                                         <p className="text-xs text-gray-600">All-Rounder</p>
                                                     </div>
-                                                </a>
+                                                </Link>
                                             ))}
                                                
                                             </div>
@@ -297,7 +298,7 @@ export default function Squads({
                                             </h2>
                                             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                                                 {teamBSquadBatsmen.map((squads:any, index:number) => (
-                                                <a href="#" key={index}>
+                                                <Link href={"/player/"+urlStringEncode(squads?.name)+"/"+squads?.player_id}  key={index}>
                                                     <div className="text-center p-4 rounded-md border-[1px] border-[##E2E2E2]">
                                                         <div className="relative">
                                                             <Image
@@ -316,7 +317,7 @@ export default function Squads({
                                                         </h3>
                                                         <p className="text-xs text-gray-600">Batsman</p>
                                                     </div>
-                                                </a>
+                                                </Link>
                                                 ))}
                                                 
                                             </div>
@@ -328,7 +329,7 @@ export default function Squads({
                                             </h2>
                                             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                                             {teamBSquadBowler.map((bowler:any, index:number) => (
-                                                <a href="#" key={index}>
+                                                <Link href={"/player/"+urlStringEncode(bowler?.name)+"/"+bowler?.player_id}  key={index}>
                                                     <div className="text-center p-4 rounded-md border-[1px] border-[##E2E2E2]">
                                                         <div className="relative">
                                                             <Image
@@ -347,7 +348,7 @@ export default function Squads({
                                                         </h3>
                                                         <p className="text-xs text-gray-600">Bowler</p>
                                                     </div>
-                                                </a>
+                                                </Link>
                                             ))}
                                                 
                                             </div>
@@ -359,7 +360,7 @@ export default function Squads({
                                             </h2>
                                             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                                             {teamBSquadAll.map((allrounder:any, index:number) => (
-                                                <a href="#" key={index}>
+                                                <Link href={"/player/"+urlStringEncode(allrounder.name)+"/"+allrounder.player_id}  key={index}>
                                                     <div className="text-center p-4 rounded-md border-[1px] border-[##E2E2E2]">
                                                         <div className="relative">
                                                             <Image
@@ -378,7 +379,7 @@ export default function Squads({
                                                         </h3>
                                                         <p className="text-xs text-gray-600">All-Rounder</p>
                                                     </div>
-                                                </a>
+                                                </Link>
                                             ))}
                                                
                                             </div>

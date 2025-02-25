@@ -4,12 +4,13 @@ import PhoneMenu from "./PhoneMenu";
 
 interface LayoutProps {
   children: React.ReactNode;
+  headerData: any;
 }
 
-const Layout = ({ children }: LayoutProps) => {
+const Layout = ({ children, headerData  }: LayoutProps) => {
   return (
     <>
-      <Header />
+      <Header  data={headerData}/>
       {children}
       <Footer />
       <PhoneMenu /> 

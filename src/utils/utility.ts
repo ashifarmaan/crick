@@ -1,3 +1,5 @@
+import React from 'react'
+import { TeamDetails } from "@/controller/teamController";
 export function calculateRemainingOvers(maxOver: number, finishOver: number) {
     // Total balls in the match
     const totalBalls = maxOver * 6;
@@ -23,7 +25,13 @@ export  function getPlayerNameByPid(players:any, pid:number) {
 }
 
 export  function urlStringEncode(str: string) {
+  if (!str) return ''; 
   const formattedString = str.toLowerCase().replace(/\s+/g, '-').replace(/[^a-zA-Z0-9-]/g, ''); 
 
   return formattedString;
 }
+
+export const getTeamDetailsByTid = async (teamId: number): Promise<string> => {
+  const data = await TeamDetails(teamId);
+  return data?.logo_url || '/placeholder.png';
+};

@@ -6,6 +6,7 @@ import Image from "next/image";
 import eventEmitter from "@/utils/eventEmitter";
 import { calculateRemainingOvers, getPlayerNameByPid } from "@/utils/utility";
 import { PlayerStats } from "@/controller/playerController";
+import { urlStringEncode} from "@/utils/utility";
 
 interface Live {
   match_id: number;
@@ -230,7 +231,7 @@ Live) {
 
   return (
     <section className="lg:w-[1000px] mx-auto md:mb-0 mb-4 px-2 lg:px-0">
-     
+      
       <div id="tabs" className="my-4">
         <div className="flex text-1xl space-x-8 p-2 bg-[#ffffff] rounded-lg overflow-auto">
           <Link href={"/moreinfo/" + matchUrl + "/" + match_id}>
@@ -265,7 +266,7 @@ Live) {
           </Link>
         </div>
       </div>
-
+      {updatedCommentaries !== null && updatedCommentaries!== undefined && updatedCommentaries.length > 0 ? (
       <div id="tab-content">
         <div id="live" className="tab-content ">
           <div className="md:grid grid-cols-12 gap-4">
@@ -274,7 +275,10 @@ Live) {
                 <div className="rounded-lg bg-white">
                   <div className="p-4">
                     <div className="flex items-center justify-between">
-                      <Link href="/profile">
+                      <Link href={"/player/"+urlStringEncode(getPlayerNameByPid(
+                                players,
+                                batsman?.[0]?.batsman_id
+                              ))+"/"+batsman?.[0]?.batsman_id}>
                         <div className="flex items-center gap-3">
                           <div>
                             <Image
@@ -321,7 +325,10 @@ Live) {
                         </p>
                         <p>Partnership</p>
                       </div>
-                      <Link href="/profile">
+                      <Link href={"/player/"+urlStringEncode(getPlayerNameByPid(
+                                players,
+                                batsman?.[1]?.batsman_id
+                              ))+"/"+batsman?.[1]?.batsman_id}>
                         <div className="flex items-center justify-end flex-row-reverse gap-3">
                           <div>
                             <Image
@@ -365,7 +372,10 @@ Live) {
               </div>
               <div className="col-span-4 my-4 lg:my-0">
                 <div className="rounded-lg bg-white p-4">
-                  <Link href="/profile">
+                  <Link href={"/player/"+urlStringEncode(getPlayerNameByPid(
+                                players,
+                                matchinfo?.bowlers?.[0]?.bowler_id
+                              ))+"/"+matchinfo?.bowlers?.[0]?.bowler_id}>
                     <div className="flex items-center gap-3">
                       <div className="relative">
                         <Image
@@ -854,6 +864,13 @@ Live) {
           </div>
         </div>
       </div>
+      ):(
+        <div className='bg-white p-4 rounded-md mb-8'>
+              <div className='text-[18px] text-center text-red-600 font-semibold'>
+              Match not started, stay tuned.
+              </div>
+        </div>
+      )}
     </section>
   );
 }

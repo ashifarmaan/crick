@@ -6,6 +6,7 @@ import Image from "next/image";
 import eventEmitter from "@/utils/eventEmitter";
 import { calculateRemainingOvers, getPlayerNameByPid } from "@/utils/utility";
 import { PlayerStats } from "@/controller/playerController";
+import { urlStringEncode} from "@/utils/utility";
 
 interface Live {
   match_id: number;
@@ -178,7 +179,10 @@ Live) {
                 <div className="rounded-lg bg-white">
                   <div className="p-4">
                     <div className="flex items-center justify-between">
-                      <Link href="/profile">
+                      <Link href={"/player/"+urlStringEncode(getPlayerNameByPid(
+                                                      players,
+                                                      batsman?.[0]?.batsman_id
+                                                    ))+"/"+batsman?.[0]?.batsman_id}>
                         <div className="flex items-center gap-3">
                           <div>
                             <Image
@@ -225,7 +229,10 @@ Live) {
                         </p>
                         <p>Partnership</p>
                       </div>
-                      <Link href="/profile">
+                      <Link href={"/player/"+urlStringEncode(getPlayerNameByPid(
+                                                      players,
+                                                      batsman?.[1]?.batsman_id
+                                                    ))+"/"+batsman?.[1]?.batsman_id}>
                         <div className="flex items-center justify-end flex-row-reverse gap-3">
                           <div>
                             <Image
@@ -269,7 +276,10 @@ Live) {
               </div>
               <div className="col-span-4 my-4 lg:my-0">
                 <div className="rounded-lg bg-white p-4">
-                  <Link href="/profile">
+                  <Link href={"/player/"+urlStringEncode(getPlayerNameByPid(
+                                                  players,
+                                                  matchinfo?.bowlers?.[0]?.bowler_id
+                                                ))+"/"+matchinfo?.bowlers?.[0]?.bowler_id}>
                     <div className="flex items-center gap-3">
                       <div className="relative">
                         <Image

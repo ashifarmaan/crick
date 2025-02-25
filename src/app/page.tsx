@@ -14,7 +14,7 @@ import CountdownTimer from "./components/countdownTimer";
 import {
   completedMatches,
   liveMatches,
-  upcomingMatches,
+  upcomingMatches, liveSeries
 } from "@/controller/homeController";
 
 interface MatchItem {
@@ -88,11 +88,12 @@ export default async function Home(props: { params: Params }) {
   upcomingMatch = upcomingMatch.filter((item: { commentary: number}) => Number(item.commentary) === 1);
   liveMatch = liveMatch.filter((item: { commentary: number}) => Number(item.commentary) === 1);
 
+  const liveSeriesData = await liveSeries();
   // const  matchData = ChatComponent();
-console.log(liveMatch);
+  // console.log(liveSeriesData);
   
   return (
-    <Layout>
+    <Layout headerData={liveSeriesData}>
       <ChatComponent></ChatComponent>
       <TabButtons></TabButtons>
       <section className="lg:w-[1000px] mx-auto md:mb-0 mb-4 px-2 lg:px-0">
