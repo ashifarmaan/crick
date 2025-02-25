@@ -13,6 +13,7 @@ import ScorecardUpcoming from "./scheduledComponents/Scorecard";
 import MoreInfoUpcoming from "./scheduledComponents/MoreInfo";
 import {  isSameDay, format  } from "date-fns";
 import CountdownTimer from "../components/countdownTimer";
+import {liveSeries} from "@/controller/homeController";
 import {
   MatcheInfo,
   Last10Match,
@@ -112,8 +113,9 @@ export default async function page(props: { params: Params }) {
     ? teambovers.split(" & ")
     : [teambovers, ""];
 
+    const liveSeriesData = await liveSeries();
   return (
-    <Layout>
+    <Layout headerData={liveSeriesData}>
       <ChatComponent></ChatComponent>
       {liveMatch?.match_info?.status_str == "Completed" ? (
         <section className="bg-[#0E2149] border-[1px] border-[#E4E9F01A] lg:px-0 px-3">
