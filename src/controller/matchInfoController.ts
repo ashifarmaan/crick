@@ -142,3 +142,33 @@ export async function SeriesKeyStats(cid: number) {
   }
 }
 
+export async function SeriesMatches(cid: number) {
+  if (!cid) {
+    return { notFound: true }; // Handle undefined ID gracefully
+  }
+
+  const baseUrl = "https://rest.entitysport.com/exchange/competitions";
+  const token = "7b58d13da34a07b0a047e129874fdbf4";
+
+  const endpoints = {
+    scheduledMatch: `${baseUrl}/${cid}/matches?token=${token}&status=1`,
+    resultMatch: `${baseUrl}/${cid}/matches?token=${token}&status=2`,
+    liveMatch: `${baseUrl}/${cid}/matches?token=${token}&status=3`,
+  };
+
+  try {
+    const [scheduledMatch, resultMatch, liveMatch] = await Promise.all(
+      Object.values(endpoints).map((url) => httpGet(url))
+    );
+
+    return {
+      scheduledMatch: scheduledMatch?.response?.items || [],
+      resultMatch: resultMatch?.response?.items || [],
+      liveMatch: liveMatch?.response?.items || [],
+    };
+  } catch (error) {
+    console.error("Error fetching series items:", error);
+    return { error: "Failed to fetch series items" };
+  }
+}
+

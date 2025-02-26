@@ -10,7 +10,7 @@ import PointsTable from './seriesComponents/PointsTable';
 import News from './seriesComponents/News'
 import Stats from './seriesComponents/Stats'
 import { liveSeries, seriesById, seriesUpcomingMatches } from "@/controller/homeController";
-import { SeriesKeyStats } from "@/controller/matchInfoController";
+import { SeriesKeyStats, SeriesMatches } from "@/controller/matchInfoController";
 
 type Params = Promise<{ seriesName: string; seriesId: number; seriesTap: string; }>
 
@@ -26,8 +26,9 @@ export default async function page(props: { params: Params }) {
     // const upcomingMatches = await seriesUpcomingMatches(seriesId);
   const urlString = "/series/"+seriesName+"/"+seriesId;
   const seriesKeystats =  await SeriesKeyStats(seriesId);
+  const seriesMatches =  await SeriesMatches(seriesId);
    
-  //  console.log('param', params);
+   console.log('param', seriesMatches);
 
   return (
     <Layout headerData={liveSeriesData}>
@@ -35,7 +36,7 @@ export default async function page(props: { params: Params }) {
           <Banner seriesData={liveSeriesData} seriesInfo={SeriesDetails}></Banner>
 
           {seriesTab === ""  || seriesTab === undefined && <Overview  seriesInfo={SeriesDetails} seriesKeystats={seriesKeystats} urlString={urlString}/>}
-          {seriesTab === "schedule-results" && <ScheduleResults  urlString={urlString}/>}
+          {seriesTab === "schedule-results" && <ScheduleResults seriesMatches={seriesMatches} urlString={urlString}/>}
           {seriesTab === "squads" && <Squads  urlString={urlString}/>}
           {seriesTab === "points-table" && <PointsTable seriesInfo={SeriesDetails} urlString={urlString} />}
           {seriesTab === "news" && <News  urlString={urlString}/>}
