@@ -33,5 +33,9 @@ export  function urlStringEncode(str: string) {
 
 export const getTeamDetailsByTid = async (teamId: number): Promise<string> => {
   const data = await TeamDetails(teamId);
-  return data?.logo_url || '/placeholder.png';
+  if(data?.logo_url !== null && data?.logo_url !=='' && data?.logo_url !== undefined){
+    return data?.logo_url;
+  }else{
+    return "/assets/img/flag/2.png";
+  }
 };

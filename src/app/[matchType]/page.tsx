@@ -82,11 +82,11 @@ export default async function page(props: { params: Params }) {
   const matchStatistics = await MatchStatistics(matchid);
   const cid = liveMatch?.match_info?.competition?.cid;
   const seriesPointsTable = await SeriesPointsTable(cid);
-  const seriesPointsTableMatches = await SeriesPointsTableMatches(cid);
+  const seriesPointsTableMatches = await SeriesPointsTableMatches(Number(cid));
 
   
   let matchCommentary = "";
-  if(liveMatch?.match_info?.status_str !== "Scheduled"){
+  if(liveMatch?.match_info?.status_str !== "Scheduled" && matchid!== undefined) {
      matchCommentary = await MatchCommentary(
       matchid,
       liveMatch?.live?.live_inning_number
@@ -140,7 +140,7 @@ export default async function page(props: { params: Params }) {
                   height={20}
                   alt=""
                 />
-                {format(new Date(liveMatch?.match_info?.date_start_ist), "dd MMM yyyy")}
+                { liveMatch?.match_info?.date_start_ist ? format(new Date(liveMatch?.match_info?.date_start_ist), "dd MMM yyyy") :""}
               </div>
             </div>
           </div>
@@ -148,6 +148,7 @@ export default async function page(props: { params: Params }) {
             <div className="lg:w-[1000px] mx-auto md:py-8 tracking-[1px]">
               <div className="md:flex py-8 justify-between items-center">
                 <div className="flex gap-2 flex-row text-[#BDCCECA8] uppercase items-center w-full">
+                {liveMatch?.match_info?.teama?.logo_url ? (
                   <Image
                     className="lg:h-[42px] lg:w-[42px] h-[30px] w-[30px]"
                     src={liveMatch?.match_info?.teama?.logo_url}
@@ -155,6 +156,7 @@ export default async function page(props: { params: Params }) {
                     height={30}
                     alt="ind"
                   />
+                ):("")}
                   <div className="flex md:flex-col md:items-start items-center md:gap-0 gap-2">
                     <p className="text-[#BDCCECA8] md:text-[17px] lg:text-[19px] text-[14px] font-semibold uppercase">
                       {liveMatch?.match_info?.teama?.short_name}
@@ -244,6 +246,7 @@ export default async function page(props: { params: Params }) {
                       )}
                     </p>
                   </div>
+                  {liveMatch?.match_info?.teamb?.logo_url ? (
                   <Image
                     src={liveMatch?.match_info?.teamb?.logo_url}
                     className="lg:h-[42px] lg:w-[42px] h-[30px] w-[30px]"
@@ -251,6 +254,9 @@ export default async function page(props: { params: Params }) {
                     height={30}
                     alt="ban"
                   />
+                  ) : (
+                    ""
+                  )}
                 </div>
               </div>
             </div>
@@ -285,7 +291,7 @@ export default async function page(props: { params: Params }) {
                   height={20}
                   alt=""
                 />
-                {format(new Date(liveMatch?.match_info?.date_start_ist), "dd MMM yyyy")}
+                {liveMatch?.match_info?.date_start_ist ? format(new Date(liveMatch?.match_info?.date_start_ist), "dd MMM yyyy") :""}
               </div>
             </div>
           </div>
@@ -293,6 +299,7 @@ export default async function page(props: { params: Params }) {
             <div className="lg:w-[1000px] mx-auto md:py-9 tracking-[1px]">
               <div className="hidden md:flex py-8 justify-between items-center">
                 <div className="flex gap-2 flex-row text-[#BDCCECA8] uppercase items-center w-full">
+                {liveMatch?.match_info?.teama?.logo_url ? (
                   <Image
                     className="lg:h-[42px] lg:w-[42px] h-[30px] w-[30px]"
                     src={liveMatch?.match_info?.teama?.logo_url}
@@ -300,6 +307,9 @@ export default async function page(props: { params: Params }) {
                     height={30}
                     alt="ind"
                   />
+                  ) : (
+                    ""
+                  )}
                   <div className="flex md:flex-col md:items-start items-center md:gap-0 gap-2">
                     <p className="text-[#BDCCECA8] md:text-[17px] lg:text-[19px] text-[14px] font-semibold uppercase">
                       {liveMatch?.match_info?.teama?.short_name}
@@ -388,6 +398,7 @@ export default async function page(props: { params: Params }) {
                       )}
                     </p>
                   </div>
+                  {liveMatch?.match_info?.teamb?.logo_url ? (
                   <Image
                     src={liveMatch?.match_info?.teamb?.logo_url}
                     className="lg:h-[42px] lg:w-[42px] h-[30px] w-[30px]"
@@ -395,6 +406,9 @@ export default async function page(props: { params: Params }) {
                     height={30}
                     alt="ban"
                   />
+                  ) : (
+                    ""
+                  )}
                 </div>
               </div>
 
@@ -482,7 +496,7 @@ export default async function page(props: { params: Params }) {
                   height={10}
                   alt=""
                 />
-                {format(new Date(liveMatch?.match_info?.date_start_ist), "dd MMM yyyy")}
+                {liveMatch?.match_info?.date_start_ist ? format(new Date(liveMatch?.match_info?.date_start_ist), "dd MMM yyyy") :""}
               </div>
             </div>
           </div>
@@ -490,6 +504,7 @@ export default async function page(props: { params: Params }) {
             <div className="lg:w-[1000px] mx-auto md:py-8 tracking-[1px]">
               <div className="flex py-8 justify-between items-center">
                 <div className="flex flex-col md:flex-row text-[#FF912C] font-bold uppercase  md:items-center items-start w-full">
+                {liveMatch?.match_info?.teama?.logo_url?(
                   <Image
                     className="md:h-[42px] md:w-[42px] h-[30px] w-[30px]"
                     src={liveMatch?.match_info?.teama?.logo_url}
@@ -497,22 +512,24 @@ export default async function page(props: { params: Params }) {
                     height={30}
                     alt={liveMatch?.match_info?.teama?.short_name}
                   />
+                  ) : (
+                  "")}
                   <p className="text-[#BDCCECA8] md:mx-3 mx-0 md:text-[19px] text-[14px] font-semibold uppercase">
                   {liveMatch?.match_info?.teama?.short_name}
                   </p>
                 </div>
                 <div className="text-[#8192B4] font-normal w-full text-center">
-                <p className="text-[#C1CEEA] text-1xl"> {format(new Date(liveMatch?.match_info?.date_start_ist), "hh:mm:aa")}  </p>
+                <p className="text-[#C1CEEA] text-1xl"> {liveMatch?.match_info?.date_start_ist ?  format(new Date(liveMatch?.match_info?.date_start_ist), "hh:mm:aa") : ""}  </p>
                   
-                  {  isSameDay(new Date(), new Date(liveMatch?.match_info?.date_start_ist))?(
+                  { liveMatch?.match_info?.date_start_ist ? isSameDay(new Date(), new Date(liveMatch?.match_info?.date_start_ist))?(
                                   <CountdownTimer targetTime={liveMatch?.match_info?.date_start_ist} />
                                 
                                 ):(
                                   
                                   <p className="text-[#FFBD71] md:text-[24px] text-[16px] font-semibold">
-                                  {format(new Date(liveMatch?.match_info?.date_start_ist), "dd MMM yyyy")}
+                                  {liveMatch?.match_info?.date_start_ist ? format(new Date(liveMatch?.match_info?.date_start_ist), "dd MMM yyyy") :""}
                                 </p>
-                              )}
+                              ) : ""}
                   
                   
                 </div>
@@ -520,6 +537,7 @@ export default async function page(props: { params: Params }) {
                   <p className="text-[#BDCCECA8] md:block hidden md:text-[19px] text-[14px] md:mx-3 mx-0 font-semibold uppercase">
                   {liveMatch?.match_info?.teamb?.short_name}
                   </p>
+                  {liveMatch?.match_info?.teamb?.logo_url ?(
                   <Image
                     src={liveMatch?.match_info?.teamb?.logo_url}
                     className="md:h-[42px] md:w-[42px] h-[30px] w-[30px]"
@@ -527,6 +545,9 @@ export default async function page(props: { params: Params }) {
                     height={30}
                     alt={liveMatch?.match_info?.teamb?.short_name}
                   />
+                  ) : (
+                  ""
+                  )}
                   <p className="text-[#BDCCECA8] md:hidden md:text-[19px] text-[14px] md:mx-3 mx-0 font-semibold uppercase">
                   {liveMatch?.match_info?.teamb?.short_name}
                   </p>
