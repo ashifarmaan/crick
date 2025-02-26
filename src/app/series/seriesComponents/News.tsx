@@ -2,20 +2,23 @@ import React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 
-export default function News() {
+interface News {
+  urlString: string; 
+}
+export default function News({urlString} : News) {
   return (
 
     <section className="lg:w-[1000px] mx-auto md:mb-0 mb-4 px-2 lg:px-0">
       <div id="tabs" className="my-4">
         <div className="flex text-1xl space-x-8 p-2 bg-[#ffffff] rounded-lg overflow-auto">
-          <Link href="/series/IPL/overview">
+          <Link href={urlString}>
             <button
               className="font-medium py-2 px-3 whitespace-nowrap "
             >
               Overview
             </button>
           </Link>
-          <Link href="/series/IPL/schedule-results">
+          <Link href={urlString+"/schedule-results"}>
             <button
               className="font-medium py-2 px-3 whitespace-nowrap "
             >
@@ -23,28 +26,28 @@ export default function News() {
 
             </button>
           </Link>
-          <Link href="/series/IPL/squads">
+          <Link href={urlString+"/squads"}>
             <button
               className="font-medium py-2 px-3 whitespace-nowrap "
             >
               Squads
             </button>
           </Link>
-          <Link href="/series/IPL/points-table">
+          <Link href={urlString+"/points-table"}>
             <button
               className="font-medium py-2 px-3 whitespace-nowrap"
             >
               Points Table
             </button>
           </Link>
-          <Link href="/series/IPL/news">
+          <Link href={urlString+"/news"}>
             <button
               className="font-medium py-2 px-3 whitespace-nowrap bg-[#1A80F8] text-white rounded-md"
             >
               News
             </button>
           </Link>
-          <Link href="/series/IPL/stats">
+          <Link href={urlString+"/stats"}>
             <button
               className="font-medium py-2 px-3 whitespace-nowrap" >
               Stats

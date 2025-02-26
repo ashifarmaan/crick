@@ -110,3 +110,26 @@ export async function seriesById(cid: number) {
   // console.log("coming from API live_series");
   return series;
 }
+export async function seriesUpcomingMatches(cid: number) {
+  if (!cid) {
+    return { notFound: true }; // Handle undefined ID gracefully
+  }
+  // const CACHE_KEY = "series_info";
+  // const CACHE_TTL = 600;
+  const API_URL =  "https://rest.entitysport.com/exchange/competitions/"+cid+"/matches?token=7b58d13da34a07b0a047e129874fdbf4&status=1";
+
+  // const cachedData = await redis.get(CACHE_KEY);
+  // if (cachedData) {
+  //   // console.log("coming from cache live_series");
+  //   return JSON.parse(cachedData);
+  // }
+
+
+  const data = await httpGet(API_URL);
+  const seriesMatches = data?.response || [];
+  // if (series.length > 0) {
+  //   await redis.setex(CACHE_KEY, CACHE_TTL, JSON.stringify(series));
+  // }
+  // console.log("coming from API live_series");
+  return seriesMatches?.items;
+}

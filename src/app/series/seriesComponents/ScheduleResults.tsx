@@ -5,7 +5,11 @@ import WeeklySlider from '@/app/components/WeeklySlider'
 import Link from 'next/link';
 import Image from 'next/image';
 
-export default function ScheduleResults() {
+interface ScheduleResults {
+    urlString: string; 
+  }
+  export default function ScheduleResults({urlString} : ScheduleResults) {
+
 
     const [activeSubTab, setActiveSubTab] = useState("all");
 
@@ -20,14 +24,14 @@ export default function ScheduleResults() {
         <section className="lg:w-[1000px] mx-auto md:mb-0 mb-4 px-2 lg:px-0">
             <div id="tabs" className="my-4">
                 <div className="flex text-1xl space-x-8 p-2 bg-[#ffffff] rounded-lg overflow-auto">
-                    <Link href="/series/IPL/overview">
+                    <Link href={urlString}>
                         <button
                             className="font-medium py-2 px-3 whitespace-nowrap "
                         >
                             Overview
                         </button>
                     </Link>
-                    <Link href="/series/IPL/schedule-results">
+                    <Link href={urlString+"/schedule-results"}>
                         <button
                             className="font-medium py-2 px-3 whitespace-nowrap bg-[#1A80F8] text-white rounded-md"
                         >
@@ -35,28 +39,28 @@ export default function ScheduleResults() {
 
                         </button>
                     </Link>
-                    <Link href="/series/IPL/squads">
+                    <Link href={urlString+"/squads"}>
                         <button
                             className="font-medium py-2 px-3 whitespace-nowrap "
                         >
                             Squads
                         </button>
                     </Link>
-                    <Link href="/series/IPL/points-table">
+                    <Link href={urlString+"/points-table"}>
                         <button
                             className="font-medium py-2 px-3 whitespace-nowrap"
                         >
                             Points Table
                         </button>
                     </Link>
-                    <Link href="/series/IPL/news">
+                    <Link href={urlString+"/news"}>
                         <button
                             className="font-medium py-2 px-3 whitespace-nowrap"
                         >
                             News
                         </button>
                     </Link>
-                    <Link href="/series/IPL/stats">
+                    <Link href={urlString+"/stats"}>
                         <button
                             className="font-medium py-2 px-3 whitespace-nowrap" >
                             Stats
@@ -203,7 +207,7 @@ export default function ScheduleResults() {
                                         <p className="text-[#909090] font-medium">Schedule</p>
                                     </div>
                                     <div className="flex mt-2 justify-end items-center space-x-2">
-                                        <Image src="/assets/img/home/handshake.png" width={30} height={30} alt="" />
+                                        <Image src="/assets/img/home/handshake.png" width={30} height={30} alt="1" />
                                         <span className="text-[#909090] font-medium">H2H</span>
                                     </div>
                                 </div>
@@ -226,7 +230,7 @@ export default function ScheduleResults() {
                                         </div>
                                         <span className="absolute right-[12px] top-[19px]">
                                             <button className="arro-button">
-                                                <Image src="/assets/img/arrow.png" className="" width={30} height={30} alt="" />
+                                                <Image src="/assets/img/arrow.png" className="" width={30} height={30} alt="1" />
                                             </button>
                                         </span>
                                     </div>
@@ -297,7 +301,7 @@ export default function ScheduleResults() {
                                                 <Image
                                                     src="/assets/img/home/handshake.png"
                                                     className="h-[15px]"
-                                                    width={30} height={30} alt=""
+                                                    width={30} height={30} alt="1"
                                                 />
                                                 <span className="text-[#909090] text-[11px] font-medium">
                                                     H2H
@@ -457,7 +461,7 @@ export default function ScheduleResults() {
                                         </div>
                                         <div className="h-[100px] border-l-[1px] border-[#d0d3d7]" />
                                         <div className=" font-semibold flex flex-col items-center">
-                                            <Image src="/assets/img/home/win.png" width={30} height={30} alt="" />
+                                            <Image src="/assets/img/home/win.png" width={30} height={30} alt="1" />
                                             <p className="text-[#0B773C] text-1xl w-[75%] text-center">
                                                 SA won by 7 wickets
                                             </p>
@@ -465,7 +469,7 @@ export default function ScheduleResults() {
                                         <div className="h-[100px] border-l-[1px] border-[#d0d3d7]" />
                                         <Link href="/player/playername/overview">
                                             <div className="flex flex-col items-center">
-                                                <Image src="/assets/img/player/g-5.png" width={40} height={40} alt="" />
+                                                <Image src="/assets/img/player/g-5.png" width={40} height={40} alt="1" />
                                                 <p className=" font-semibold">Anneke Bosch</p>
                                                 <p>Man of the match</p>
                                             </div>
@@ -491,7 +495,7 @@ export default function ScheduleResults() {
                                         </div>
                                         <span className="absolute right-4 top-[19px]">
                                             <button className="arro-button">
-                                                <Image src="/assets/img/arrow.png" className="" width={30} height={30} alt="" />
+                                                <Image src="/assets/img/arrow.png" className="" width={30} height={30} alt="1" />
                                             </button>
                                         </span>
                                     </div>
@@ -554,7 +558,7 @@ export default function ScheduleResults() {
                                             </div>
                                             {/* <div className="h-[100px] border-l-[1px] border-[#d0d3d7]"></div> */}
                                             <div className=" font-semibold flex flex-col items-center">
-                                                <Image src="/assets/img/home/win.png" width={30} height={30} alt="" />
+                                                <Image src="/assets/img/home/win.png" width={30} height={30} alt="1" />
                                                 <p className="text-[#0B773C] font-semibold mt-1 text-[13px] w-[75%] text-center">
                                                     SA won by 7 wickets
                                                 </p>
@@ -573,7 +577,7 @@ export default function ScheduleResults() {
                                                 <Image
                                                     src="/assets/img/home/handshake.png"
                                                     className="h-[15px]"
-                                                    width={30} height={30} alt=""
+                                                    width={30} height={30} alt="1"
                                                 />
                                                 <span className="text-[#909090] text-[11px] font-medium">
                                                     H2H
@@ -586,7 +590,7 @@ export default function ScheduleResults() {
                                                     <Image
                                                         src="/assets/img/player/g-5.png"
                                                         className="h-[32px]"
-                                                        width={40} height={40} alt=""
+                                                        width={40} height={40} alt="1"
                                                     />
                                                     <div>
                                                         <p className=" font-semibold">Anneke Bosch</p>
@@ -707,7 +711,7 @@ export default function ScheduleResults() {
                                         </div>
                                         <div className="h-[100px] border-l-[1px] border-[#d0d3d7]" />
                                         <div className=" font-semibold flex flex-col items-center">
-                                            <Image src="/assets/img/home/win.png" width={30} height={30} alt="" />
+                                            <Image src="/assets/img/home/win.png" width={30} height={30} alt="1" />
                                             <p className="text-[#0B773C] text-1xl w-[75%] text-center">
                                                 SA won by 7 wickets
                                             </p>
@@ -715,7 +719,7 @@ export default function ScheduleResults() {
                                         <div className="h-[100px] border-l-[1px] border-[#d0d3d7]" />
                                         <Link href="/player/playername/overview">
                                             <div className="flex flex-col items-center">
-                                                <Image src="/assets/img/player/g-6.png" width={40} height={40} alt="" />
+                                                <Image src="/assets/img/player/g-6.png" width={40} height={40} alt="1" />
                                                 <p className=" font-semibold">Tazmin Brits</p>
                                                 <p>Man of the match</p>
                                             </div>
@@ -741,7 +745,7 @@ export default function ScheduleResults() {
                                         </div>
                                         <span className="absolute right-4 top-[19px]">
                                             <button className="arro-button">
-                                                <Image src="/assets/img/arrow.png" className="" width={30} height={30} alt="" />
+                                                <Image src="/assets/img/arrow.png" className="" width={30} height={30} alt="1" />
                                             </button>
                                         </span>
                                     </div>
@@ -804,7 +808,7 @@ export default function ScheduleResults() {
                                             </div>
                                             {/* <div className="h-[100px] border-l-[1px] border-[#d0d3d7]"></div> */}
                                             <div className=" font-semibold flex flex-col items-center">
-                                                <Image src="/assets/img/home/win.png" width={30} height={30} alt="" />
+                                                <Image src="/assets/img/home/win.png" width={30} height={30} alt="1" />
                                                 <p className="text-[#0B773C] font-semibold mt-1 text-[13px] w-[75%] text-center">
                                                     SA won by 7 wickets
                                                 </p>
@@ -823,7 +827,7 @@ export default function ScheduleResults() {
                                                 <Image
                                                     src="/assets/img/home/handshake.png"
                                                     className="h-[15px]"
-                                                    width={30} height={30} alt=""
+                                                    width={30} height={30} alt="1"
                                                 />
                                                 <span className="text-[#909090] text-[11px] font-medium">
                                                     H2H
@@ -836,7 +840,7 @@ export default function ScheduleResults() {
                                                     <Image
                                                         src="/assets/img/player/g-6.png"
                                                         className="h-[32px]"
-                                                        width={40} height={40} alt=""
+                                                        width={40} height={40} alt="1"
                                                     />
                                                     <div>
                                                         <p className=" font-semibold">Tazmin Brits</p>
@@ -957,7 +961,7 @@ export default function ScheduleResults() {
                                         <p className="text-[#909090] font-medium">Schedule</p>
                                     </div>
                                     <div className="flex mt-2 justify-end items-center space-x-2">
-                                        <Image src="/assets/img/home/handshake.png" width={30} height={30} alt="" />
+                                        <Image src="/assets/img/home/handshake.png" width={30} height={30} alt="1" />
                                         <span className="text-[#909090] font-medium">H2H</span>
                                     </div>
                                 </div>
@@ -980,7 +984,7 @@ export default function ScheduleResults() {
                                         </div>
                                         <span className="absolute right-[12px] top-[19px]">
                                             <button className="arro-button">
-                                                <Image src="/assets/img/arrow.png" className="" width={30} height={30} alt="" />
+                                                <Image src="/assets/img/arrow.png" className="" width={30} height={30} alt="1" />
                                             </button>
                                         </span>
                                     </div>
@@ -1051,7 +1055,7 @@ export default function ScheduleResults() {
                                                 <Image
                                                     src="/assets/img/home/handshake.png"
                                                     className="h-[15px]"
-                                                    width={30} height={30} alt=""
+                                                    width={30} height={30} alt="1"
                                                 />
                                                 <span className="text-[#909090] text-[11px] font-medium">
                                                     H2H
@@ -1216,7 +1220,7 @@ export default function ScheduleResults() {
                                         </div>
                                         <div className="h-[100px] border-l-[1px] border-[#d0d3d7]" />
                                         <div className=" font-semibold flex flex-col items-center">
-                                            <Image src="/assets/img/home/win.png" width={30} height={30} alt="" />
+                                            <Image src="/assets/img/home/win.png" width={30} height={30} alt="1" />
                                             <p className="text-[#0B773C] text-1xl w-[75%] text-center">
                                                 SA won by 7 wickets
                                             </p>
@@ -1224,7 +1228,7 @@ export default function ScheduleResults() {
                                         <div className="h-[100px] border-l-[1px] border-[#d0d3d7]" />
                                         <Link href="/player/playername/overview">
                                             <div className="flex flex-col items-center">
-                                                <Image src="/assets/img/player/g-5.png" width={40} height={40} alt="" />
+                                                <Image src="/assets/img/player/g-5.png" width={40} height={40} alt="1" />
                                                 <p className=" font-semibold">Anneke Bosch</p>
                                                 <p>Man of the match</p>
                                             </div>
@@ -1250,7 +1254,7 @@ export default function ScheduleResults() {
                                         </div>
                                         <span className="absolute right-4 top-[19px]">
                                             <button className="arro-button">
-                                                <Image src="/assets/img/arrow.png" className="" width={30} height={30} alt="" />
+                                                <Image src="/assets/img/arrow.png" className="" width={30} height={30} alt="1" />
                                             </button>
                                         </span>
                                     </div>
@@ -1313,7 +1317,7 @@ export default function ScheduleResults() {
                                             </div>
                                             {/* <div className="h-[100px] border-l-[1px] border-[#d0d3d7]"></div> */}
                                             <div className=" font-semibold flex flex-col items-center">
-                                                <Image src="/assets/img/home/win.png" width={30} height={30} alt="" />
+                                                <Image src="/assets/img/home/win.png" width={30} height={30} alt="1" />
                                                 <p className="text-[#0B773C] font-semibold mt-1 text-[13px] w-[75%] text-center">
                                                     SA won by 7 wickets
                                                 </p>
@@ -1332,7 +1336,7 @@ export default function ScheduleResults() {
                                                 <Image
                                                     src="/assets/img/home/handshake.png"
                                                     className="h-[15px]"
-                                                    width={30} height={30} alt=""
+                                                    width={30} height={30} alt="1"
                                                 />
                                                 <span className="text-[#909090] text-[11px] font-medium">
                                                     H2H
@@ -1345,7 +1349,7 @@ export default function ScheduleResults() {
                                                     <Image
                                                         src="/assets/img/player/g-5.png"
                                                         className="h-[32px]"
-                                                        width={40} height={40} alt=""
+                                                        width={40} height={40} alt="1"
                                                     />
                                                     <div>
                                                         <p className=" font-semibold">Anneke Bosch</p>
@@ -1466,7 +1470,7 @@ export default function ScheduleResults() {
                                         </div>
                                         <div className="h-[100px] border-l-[1px] border-[#d0d3d7]" />
                                         <div className=" font-semibold flex flex-col items-center">
-                                            <Image src="/assets/img/home/win.png" width={30} height={30} alt="" />
+                                            <Image src="/assets/img/home/win.png" width={30} height={30} alt="1" />
                                             <p className="text-[#0B773C] text-1xl w-[75%] text-center">
                                                 SA won by 7 wickets
                                             </p>
@@ -1474,7 +1478,7 @@ export default function ScheduleResults() {
                                         <div className="h-[100px] border-l-[1px] border-[#d0d3d7]" />
                                         <Link href="/player/playername/overview">
                                             <div className="flex flex-col items-center">
-                                                <Image src="/assets/img/player/g-6.png" width={40} height={40} alt="" />
+                                                <Image src="/assets/img/player/g-6.png" width={40} height={40} alt="1" />
                                                 <p className=" font-semibold">Tazmin Brits</p>
                                                 <p>Man of the match</p>
                                             </div>
@@ -1500,7 +1504,7 @@ export default function ScheduleResults() {
                                         </div>
                                         <span className="absolute right-4 top-[19px]">
                                             <button className="arro-button">
-                                                <Image src="/assets/img/arrow.png" className="" width={30} height={30} alt="" />
+                                                <Image src="/assets/img/arrow.png" className="" width={30} height={30} alt="1" />
                                             </button>
                                         </span>
                                     </div>
@@ -1563,7 +1567,7 @@ export default function ScheduleResults() {
                                             </div>
                                             {/* <div className="h-[100px] border-l-[1px] border-[#d0d3d7]"></div> */}
                                             <div className=" font-semibold flex flex-col items-center">
-                                                <Image src="/assets/img/home/win.png" width={30} height={30} alt="" />
+                                                <Image src="/assets/img/home/win.png" width={30} height={30} alt="1" />
                                                 <p className="text-[#0B773C] font-semibold mt-1 text-[13px] w-[75%] text-center">
                                                     SA won by 7 wickets
                                                 </p>
@@ -1582,7 +1586,7 @@ export default function ScheduleResults() {
                                                 <Image
                                                     src="/assets/img/home/handshake.png"
                                                     className="h-[15px]"
-                                                    width={30} height={30} alt=""
+                                                    width={30} height={30} alt="1"
                                                 />
                                                 <span className="text-[#909090] text-[11px] font-medium">
                                                     H2H
@@ -1595,7 +1599,7 @@ export default function ScheduleResults() {
                                                     <Image
                                                         src="/assets/img/player/g-6.png"
                                                         className="h-[32px]"
-                                                        width={40} height={40} alt=""
+                                                        width={40} height={40} alt="1"
                                                     />
                                                     <div>
                                                         <p className=" font-semibold">Tazmin Brits</p>
@@ -1643,7 +1647,7 @@ export default function ScheduleResults() {
                             <div className="flex gap-1 items-center justify-between">
                                 <div className="flex gap-1 items-center">
                                     <div className="col-span-4 relative">
-                                        <Image src="/assets/img/home/trofi.png" className="h-[75px]" width={75} height={75} alt="" />
+                                        <Image src="/assets/img/home/trofi.png" className="h-[75px]" width={75} height={75} alt="1" />
                                     </div>
                                     <div className="col-span-8 relative">
                                         <h3 className="font-semibold text-[19px] mb-1">
@@ -1741,7 +1745,7 @@ export default function ScheduleResults() {
                                 <Link href="/t20series">
                                     <div className="bg-[#ffffff] text-[14px] rounded-lg px-4 flex items-center space-x-3 py-3 mb-2">
                                         <div>
-                                            <Image src="/assets/img/1.png" width={20} height={20} alt="" />
+                                            <Image src="/assets/img/1.png" width={20} height={20} alt="1" />
                                         </div>
                                         <div className="font-medium text-[#394351]">
                                             ICC World cup
@@ -1751,7 +1755,7 @@ export default function ScheduleResults() {
                                 <Link href="/t20series">
                                     <div className="bg-[#ffffff] text-[14px] rounded-lg px-4 flex items-center space-x-3 py-3 mb-2 ">
                                         <div>
-                                            <Image src="/assets/img/2.png" width={20} height={20} alt="" />
+                                            <Image src="/assets/img/2.png" width={20} height={20} alt="1" />
                                         </div>
                                         <div className="font-medium text-[#394351]">
                                             ICC Champion Trophy
@@ -1761,7 +1765,7 @@ export default function ScheduleResults() {
                                 <Link href="/t20series">
                                     <div className="bg-[#ffffff] text-[14px] rounded-lg px-4 flex items-center space-x-3 py-3 mb-2 ">
                                         <div>
-                                            <Image src="/assets/img/3.png" width={20} height={20} alt="" />
+                                            <Image src="/assets/img/3.png" width={20} height={20} alt="1" />
                                         </div>
                                         <div className="font-medium text-[#394351]">
                                             T20 World Cup
@@ -1771,7 +1775,7 @@ export default function ScheduleResults() {
                                 <Link href="/t20series">
                                     <div className="bg-[#ffffff] text-[14px] rounded-lg px-4 flex items-center space-x-3 py-3 mb-2 ">
                                         <div>
-                                            <Image src="/assets/img/4.png" width={20} height={20} alt="" />
+                                            <Image src="/assets/img/4.png" width={20} height={20} alt="1" />
                                         </div>
                                         <div className="font-medium text-[#394351]">
                                             Indian Premium League
@@ -1781,7 +1785,7 @@ export default function ScheduleResults() {
                                 <Link href="/t20series">
                                     <div className="bg-[#ffffff] text-[14px] rounded-lg px-4 flex items-center space-x-3 py-3 mb-2 ">
                                         <div>
-                                            <Image src="/assets/img/5.png" width={20} height={20} alt="" />
+                                            <Image src="/assets/img/5.png" width={20} height={20} alt="1" />
                                         </div>
                                         <div className="font-medium text-[#394351]">
                                             Pakistan Super League
@@ -1791,7 +1795,7 @@ export default function ScheduleResults() {
                                 <Link href="/t20series">
                                     <div className="bg-[#ffffff] text-[14px] rounded-lg px-4 flex items-center space-x-3 py-3 mb-2 ">
                                         <div>
-                                            <Image src="/assets/img/6.png" width={20} height={20} alt="" />
+                                            <Image src="/assets/img/6.png" width={20} height={20} alt="1" />
                                         </div>
                                         <div className="font-medium text-[#394351]">
                                             Bangladesh Premium Leaguge
@@ -1801,7 +1805,7 @@ export default function ScheduleResults() {
                                 <Link href="/t20series">
                                     <div className="bg-[#ffffff] text-[14px] rounded-lg px-4 flex items-center space-x-3 py-3 mb-2 ">
                                         <div>
-                                            <Image src="/assets/img/7.png" width={20} height={20} alt="" />
+                                            <Image src="/assets/img/7.png" width={20} height={20} alt="1" />
                                         </div>
                                         <div className="font-medium text-[#394351]">
                                             Big Bash Leaguge
@@ -1811,7 +1815,7 @@ export default function ScheduleResults() {
                                 <Link href="/t20series">
                                     <div className="bg-[#ffffff] text-[14px] rounded-lg px-4 flex items-center space-x-3 py-3">
                                         <div>
-                                            <Image src="/assets/img/8.png" width={20} height={20} alt="" />
+                                            <Image src="/assets/img/8.png" width={20} height={20} alt="1" />
                                         </div>
                                         <div className="font-medium text-[#394351]">
                                             Super Smash

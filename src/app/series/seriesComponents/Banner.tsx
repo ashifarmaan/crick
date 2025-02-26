@@ -111,6 +111,7 @@ export default function IplBanner({seriesData = [], seriesInfo} : HeaderProps) {
                                 </div>
                             </div>
                             {/* Right Section */}
+                            {result?.next?.title ? (
                             <div className="flex items-center space-x-4">
                                 <p className="text-sm">
                                     {result?.next?.title}
@@ -121,6 +122,7 @@ export default function IplBanner({seriesData = [], seriesInfo} : HeaderProps) {
                                     <Image src="/assets/img/vs-img.png" width={40} height={40} alt="BAN vs IND" className="" />
                                 </div>
                             </div>
+                            ):("")}
                         </div>
                         {/* Content Section mobile screen  */}
                         <div className="md:hidden">

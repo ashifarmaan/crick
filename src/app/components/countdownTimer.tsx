@@ -16,7 +16,7 @@ const CountdownTimer = ({ targetTime }: { targetTime: string }) => {
       if (updatedTimeLeft.isFinished && !hasRefreshed) {
         sessionStorage.setItem("hasRefreshed", "true");
         clearInterval(timer); // Stop the timer
-        window.location.reload(); // Refresh the page
+        // window.location.reload(); // Refresh the page
       }
     }, 1000);
 

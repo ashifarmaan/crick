@@ -109,3 +109,36 @@ export async function SeriesPointsTableMatches(cid: number) {
 
   return matches;
 }
+
+export async function SeriesKeyStats(cid: number) {
+  if (!cid) {
+    return { notFound: true }; // Handle undefined ID gracefully
+  }
+
+  const baseUrl = "https://rest.entitysport.com/exchange/competitions";
+  const token = "7b58d13da34a07b0a047e129874fdbf4";
+
+  const endpoints = {
+    mostRuns: `${baseUrl}/${cid}/stats/batting_most_runs?token=${token}`,
+    highStrike: `${baseUrl}/${cid}/stats/batting_highest_strikerate?token=${token}`,
+    topWickets: `${baseUrl}/${cid}/stats/bowling_top_wicket_takers?token=${token}`,
+    bestBowling: `${baseUrl}/${cid}/stats/bowling_best_bowling_figures?token=${token}`,
+  };
+
+  try {
+    const [mostRuns, highStrike, topWickets, bestBowling] = await Promise.all(
+      Object.values(endpoints).map((url) => httpGet(url))
+    );
+
+    return {
+      mostRuns: mostRuns?.response?.stats?.[0] || [],
+      highStrike: highStrike?.response?.stats?.[0] || [],
+      topWickets: topWickets?.response?.stats?.[0] || [],
+      bestBowling: bestBowling?.response?.stats?.[0] || [],
+    };
+  } catch (error) {
+    console.error("Error fetching series stats:", error);
+    return { error: "Failed to fetch series stats" };
+  }
+}
+

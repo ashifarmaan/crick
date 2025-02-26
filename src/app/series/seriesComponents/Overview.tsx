@@ -4,11 +4,18 @@ import React, { useState } from "react";
 import Link from 'next/link'
 import WeeklySlider from '@/app/components/WeeklySlider'
 import Image from "next/image";
+import { format  } from "date-fns";
 
-export default function Overview() {
+interface Overview {
+    //seriesData: any[]; // Adjust type based on your data
+    seriesInfo: any;
+    seriesKeystats: any;
+    urlString: string; 
+  }
+export default function Overview({seriesInfo, seriesKeystats, urlString} : Overview) {
 
-
-    
+    const standings = seriesInfo?.standing?.standings;
+    // console.log("seriesKeystats",seriesKeystats);
 
     const [open, setOpen] = useState({
         mostRuns: false,
@@ -33,14 +40,14 @@ export default function Overview() {
         <section className="lg:w-[1000px] mx-auto md:mb-0 mb-4 px-2 lg:px-0">
             <div id="tabs" className="my-4">
                 <div className="flex text-1xl space-x-8 p-2 bg-[#ffffff] rounded-lg overflow-auto">
-                    <Link href="/series/IPL/overview">
+                    <Link href={urlString}>
                         <button
                             className="font-medium py-2 px-3 whitespace-nowrap bg-[#1A80F8] text-white rounded-md"
                         >
                             Overview
                         </button>
                     </Link>
-                    <Link href="/series/IPL/schedule-results">
+                    <Link href={urlString+"/schedule-results"}>
                         <button
                             className="font-medium py-2 px-3 whitespace-nowrap "
                         >
@@ -48,28 +55,28 @@ export default function Overview() {
 
                         </button>
                     </Link>
-                    <Link href="/series/IPL/squads">
+                    <Link href={urlString+"/squads"}>
                         <button
                             className="font-medium py-2 px-3 whitespace-nowrap "
                         >
                             Squads
                         </button>
                     </Link>
-                    <Link href="/series/IPL/points-table">
+                    <Link href={urlString+"/points-table"}>
                         <button
                             className="font-medium py-2 px-3 whitespace-nowrap"
                         >
                             Points Table
                         </button>
                     </Link>
-                    <Link href="/series/IPL/news">
+                    <Link href={urlString+"/news"}>
                         <button
                             className="font-medium py-2 px-3 whitespace-nowrap"
                         >
                             News
                         </button>
                     </Link>
-                    <Link href="/series/IPL/stats">
+                    <Link href={urlString+"/stats"}>
                         <button
                             className="font-medium py-2 px-3 whitespace-nowrap" >
                             Stats
@@ -96,22 +103,22 @@ export default function Overview() {
                                         <div className="flex items-center gap-16">
                                             <h2 className="font-normal text-[#586577]">Series :</h2>
                                             <p className="text-[14px] font-medium">
-                                                Indian Premier League 2024{" "}
+                                                {seriesInfo?.title} {seriesInfo?.season}{" "}
                                             </p>
                                         </div>
                                         <div className="flex items-center gap-12">
                                             <h2 className="font-normal text-[#586577]">Duration :</h2>
                                             <p className="text-[14px] font-medium">
-                                                Mar 22 - May 26, 2024
+                                                {seriesInfo.datestart ? format(new Date(seriesInfo.datestart), "dd MMM") : ""} - {seriesInfo.datestart ? format(new Date(seriesInfo.dateend), "dd MMM, yyyy") : ""}
                                             </p>
                                         </div>
                                         <div className="flex items-center gap-14">
                                             <h2 className="font-normal text-[#586577]">Format :</h2>
-                                            <p className="text-[14px] font-medium"> 74 T20s</p>
+                                            <p className="text-[14px] font-medium"> {seriesInfo?.game_format}</p>
                                         </div>
                                         <div className="flex items-center gap-14">
                                             <h2 className="font-normal text-[#586577]">Teams :</h2>
-                                            <p className="text-[14px] font-medium">10 (Teams)</p>
+                                            <p className="text-[14px] font-medium">{seriesInfo?.total_teams} (Teams)</p>
                                         </div>
                                     </div>
                                 </div>
@@ -369,11 +376,11 @@ export default function Overview() {
                                     </div>
                                 </div>
                             </div>
-
-
-                           <div className="rounded-lg bg-[#ffffff] mb-2 p-4">
+                            {seriesInfo?.title === "Indian Premier League" &&
+                            standings.map((rounds : any, index:number) => ( 
+                           <div className="rounded-lg bg-[#ffffff] mb-2 p-4"  key={index}>
                     <h3 className="text-1xl font-semibold mb-3 pl-[7px] border-l-[3px] border-[#229ED3]">
-                        IPl 2024 Pointe Table
+                    {rounds?.round?.name}
                     </h3>
                     <div>
                         <div
@@ -411,48 +418,40 @@ export default function Overview() {
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-200">
-                                    <tr className="hover:bg-[#fffae5]">
-                                        <td className="md:px-2 pl-[14px] py-3 w-[10px]">1</td>
+                                {rounds.standings.map((point : any, index:number) => ( 
+                                    <tr className="hover:bg-[#fffae5]"  key={index}>
+                                        <td className="md:px-2 pl-[14px] py-3 w-[10px]">{index + 1}</td>
                                         <td className="md:px-2 pl-[14px] py-3 text-[#217AF7]">
                                             <Link href="/team/kkr/overview">
                                                 <div className="flex items-center gap-[5px] w-[120px]">
                                                     <div>
                                                         <Image
-                                                            src="/assets/img/ipl/1.png"
+                                                            src={point?.team?.thumb_url}
                                                             className="h-[20px]"
-                                                            width={20} height={20} alt=""
+                                                            width={20} height={20} alt={point?.team?.abbr}
                                                         />
                                                     </div>
                                                     <p>
-                                                        KKR<span className="text-[#00B564]"> (Q)</span>
+                                                    {point?.team?.abbr} {point?.quality === "true" ? <span className="text-[#00B564]"> (Q)</span> : ""}
                                                     </p>
                                                 </div>
                                             </Link>
                                         </td>
-                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                        <td className="md:px-2 pl-[14px] py-3">123</td>
-                                        <td className="md:px-2 pl-[14px] py-3">45.50</td>
-                                        <td className="md:px-2 pl-[14px] py-3">9</td>
-                                        <td className="md:px-2 pl-[14px] py-3">0</td>
-                                        <td className="md:px-2 pl-[14px] py-3">74.65</td>
+                                        <td className="md:px-2 pl-[14px] py-3">{point?.played}</td>
+                                        <td className="md:px-2 pl-[14px] py-3">{point?.win}</td>
+                                        <td className="md:px-2 pl-[14px] py-3">{point?.loss}</td>
+                                        <td className="md:px-2 pl-[14px] py-3">{point?.draw}</td>
+                                        <td className="md:px-2 pl-[14px] py-3">{point?.nr}</td>
+                                        <td className="md:px-2 pl-[14px] py-3">{point?.points}</td>
+                                        <td className="md:px-2 pl-[14px] py-3">{point?.netrr}</td>
                                         <td className="md:px-2 pl-[14px] py-3">
                                             <div className="ml-auto flex gap-1 items-center">
-                                                <span className="bg-[#13b76dbd] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    W
-                                                </span>
-                                                <span className="bg-[#13b76dbd] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    W
-                                                </span>
-                                                <span className="bg-[#f63636c2] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    L
-                                                </span>
-                                                <span className="bg-[#f63636c2] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    L
-                                                </span>
-                                                <span className="bg-[#13b76dbd] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    W
-                                                </span>
+                                            {point?.lastfivematchresult.split(",").map((item: string, index:number) => (
+                                                <span className={`${item === "W" ? "bg-[#13b76dbd]" : "bg-[#f63636c2]" } text-white text-[13px] px-[4px] py-[0px] rounded`} key={index}>
+                                                {item}
+                                            </span>
+                                            ))}
+                                                
                                                 <span className="flex">
                                                     <button className="arro-button">
                                                         <svg
@@ -474,568 +473,16 @@ export default function Overview() {
                                             </div>
                                         </td>
                                     </tr>
-                                    <tr>
-                                        <td className="md:px-2 pl-[14px] py-3 w-[10px]">2</td>
-                                        <td className="md:px-2 pl-[14px] py-3 text-[#217AF7]">
-                                            <Link href="/team/kkr/overview">
-                                                <div className="flex items-center gap-[5px]">
-                                                    <div>
-                                                        <Image
-                                                            src="/assets/img/ipl/2.png"
-                                                            className="h-[20px]"
-                                                            width={20} height={20} alt=""
-                                                        />
-                                                    </div>
-                                                    <p>
-                                                        SH<span className="text-[#00B564]"> (Q)</span>
-                                                    </p>
-                                                </div>
-                                            </Link>
-                                        </td>
-                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                        <td className="md:px-2 pl-[14px] py-3">123</td>
-                                        <td className="md:px-2 pl-[14px] py-3">45.50</td>
-                                        <td className="md:px-2 pl-[14px] py-3">9</td>
-                                        <td className="md:px-2 pl-[14px] py-3">0</td>
-                                        <td className="md:px-2 pl-[14px] py-3">74.65</td>
-                                        <td className="md:px-2 pl-[14px] py-3">
-                                            <div className="ml-auto flex gap-1 items-center">
-                                                <span className="bg-[#13b76dbd] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    W
-                                                </span>
-                                                <span className="bg-[#13b76dbd] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    W
-                                                </span>
-                                                <span className="bg-[#f63636c2] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    L
-                                                </span>
-                                                <span className="bg-[#f63636c2] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    L
-                                                </span>
-                                                <span className="bg-[#13b76dbd] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    W
-                                                </span>
-                                                <span className="flex">
-                                                    <button className="arro-button">
-                                                        <svg
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            fill="none"
-                                                            viewBox="0 0 24 24"
-                                                            strokeWidth="1.5"
-                                                            stroke="currentColor"
-                                                            className="size-4"
-                                                        >
-                                                            <path
-                                                                strokeLinecap="round"
-                                                                strokeLinejoin="round"
-                                                                d="m19.5 8.25-7.5 7.5-7.5-7.5"
-                                                            />
-                                                        </svg>
-                                                    </button>
-                                                </span>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className="md:px-2 pl-[14px] py-3 w-[10px]">3</td>
-                                        <td className="md:px-2 pl-[14px] py-3 text-[#217AF7]">
-                                            <Link href="/team/kkr/overview">
-                                                <div className="flex items-center gap-[5px]">
-                                                    <div>
-                                                        <Image
-                                                            src="/assets/img/ipl/3.png"
-                                                            className="h-[20px]"
-                                                            width={20} height={20} alt=""
-                                                        />
-                                                    </div>
-                                                    <p>
-                                                        RR<span className="text-[#00B564]"> (Q)</span>
-                                                    </p>
-                                                </div>
-                                            </Link>
-                                        </td>
-                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                        <td className="md:px-2 pl-[14px] py-3">123</td>
-                                        <td className="md:px-2 pl-[14px] py-3">45.50</td>
-                                        <td className="md:px-2 pl-[14px] py-3">9</td>
-                                        <td className="md:px-2 pl-[14px] py-3">0</td>
-                                        <td className="md:px-2 pl-[14px] py-3">74.65</td>
-                                        <td className="md:px-2 pl-[14px] py-3">
-                                            <div className="ml-auto flex gap-1 items-center">
-                                                <span className="bg-[#13b76dbd] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    W
-                                                </span>
-                                                <span className="bg-[#13b76dbd] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    W
-                                                </span>
-                                                <span className="bg-[#f63636c2] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    L
-                                                </span>
-                                                <span className="bg-[#f63636c2] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    L
-                                                </span>
-                                                <span className="bg-[#13b76dbd] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    W
-                                                </span>
-                                                <span className="flex">
-                                                    <button className="arro-button">
-                                                        <svg
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            fill="none"
-                                                            viewBox="0 0 24 24"
-                                                            strokeWidth="1.5"
-                                                            stroke="currentColor"
-                                                            className="size-4"
-                                                        >
-                                                            <path
-                                                                strokeLinecap="round"
-                                                                strokeLinejoin="round"
-                                                                d="m19.5 8.25-7.5 7.5-7.5-7.5"
-                                                            />
-                                                        </svg>
-                                                    </button>
-                                                </span>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className="md:px-2 pl-[14px] py-3 w-[10px]">4</td>
-                                        <td className="md:px-2 pl-[14px] py-3 text-[#217AF7]">
-                                            <Link href="/team/kkr/overview">
-                                                <div className="flex items-center gap-[5px]">
-                                                    <div>
-                                                        <Image
-                                                            src="/assets/img/ipl/4.png"
-                                                            className="h-[20px]"
-                                                            width={20} height={20} alt=""
-                                                        />
-                                                    </div>
-                                                    <p>
-                                                        RCB<span className="text-[#00B564]"> (Q)</span>
-                                                    </p>
-                                                </div>
-                                            </Link>
-                                        </td>
-                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                        <td className="md:px-2 pl-[14px] py-3">123</td>
-                                        <td className="md:px-2 pl-[14px] py-3">45.50</td>
-                                        <td className="md:px-2 pl-[14px] py-3">9</td>
-                                        <td className="md:px-2 pl-[14px] py-3">0</td>
-                                        <td className="md:px-2 pl-[14px] py-3">74.65</td>
-                                        <td className="md:px-2 pl-[14px] py-3">
-                                            <div className="ml-auto flex gap-1 items-center">
-                                                <span className="bg-[#13b76dbd] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    W
-                                                </span>
-                                                <span className="bg-[#13b76dbd] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    W
-                                                </span>
-                                                <span className="bg-[#f63636c2] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    L
-                                                </span>
-                                                <span className="bg-[#f63636c2] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    L
-                                                </span>
-                                                <span className="bg-[#13b76dbd] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    W
-                                                </span>
-                                                <span className="flex">
-                                                    <button className="arro-button">
-                                                        <svg
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            fill="none"
-                                                            viewBox="0 0 24 24"
-                                                            strokeWidth="1.5"
-                                                            stroke="currentColor"
-                                                            className="size-4"
-                                                        >
-                                                            <path
-                                                                strokeLinecap="round"
-                                                                strokeLinejoin="round"
-                                                                d="m19.5 8.25-7.5 7.5-7.5-7.5"
-                                                            />
-                                                        </svg>
-                                                    </button>
-                                                </span>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className="md:px-2 pl-[14px] py-3 w-[10px]">5</td>
-                                        <td className="md:px-2 pl-[14px] py-3 text-[#217AF7]">
-                                            <Link href="/team/kkr/overview">
-                                                <div className="flex items-center gap-[5px]">
-                                                    <div>
-                                                        <Image
-                                                            src="/assets/img/ipl/5.png"
-                                                            className="h-[20px]"
-                                                            width={20} height={20} alt=""
-                                                        />
-                                                    </div>
-                                                    <p>CSK</p>
-                                                </div>
-                                            </Link>
-                                        </td>
-                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                        <td className="md:px-2 pl-[14px] py-3">123</td>
-                                        <td className="md:px-2 pl-[14px] py-3">45.50</td>
-                                        <td className="md:px-2 pl-[14px] py-3">9</td>
-                                        <td className="md:px-2 pl-[14px] py-3">0</td>
-                                        <td className="md:px-2 pl-[14px] py-3">74.65</td>
-                                        <td className="md:px-2 pl-[14px] py-3">
-                                            <div className="ml-auto flex gap-1 items-center">
-                                                <span className="bg-[#13b76dbd] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    W
-                                                </span>
-                                                <span className="bg-[#13b76dbd] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    W
-                                                </span>
-                                                <span className="bg-[#f63636c2] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    L
-                                                </span>
-                                                <span className="bg-[#f63636c2] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    L
-                                                </span>
-                                                <span className="bg-[#13b76dbd] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    W
-                                                </span>
-                                                <span className="flex">
-                                                    <button className="arro-button">
-                                                        <svg
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            fill="none"
-                                                            viewBox="0 0 24 24"
-                                                            strokeWidth="1.5"
-                                                            stroke="currentColor"
-                                                            className="size-4"
-                                                        >
-                                                            <path
-                                                                strokeLinecap="round"
-                                                                strokeLinejoin="round"
-                                                                d="m19.5 8.25-7.5 7.5-7.5-7.5"
-                                                            />
-                                                        </svg>
-                                                    </button>
-                                                </span>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className="md:px-2 pl-[14px] py-3 w-[10px]">6</td>
-                                        <td className="md:px-2 pl-[14px] py-3 text-[#217AF7]">
-                                            <Link href="/team/kkr/overview">
-                                                <div className="flex items-center gap-[5px]">
-                                                    <div>
-                                                        <Image
-                                                            src="/assets/img/ipl/6.png"
-                                                            className="h-[20px]"
-                                                            width={20} height={20} alt=""
-                                                        />
-                                                    </div>
-                                                    <p>DC</p>
-                                                </div>
-                                            </Link>
-                                        </td>
-                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                        <td className="md:px-2 pl-[14px] py-3">123</td>
-                                        <td className="md:px-2 pl-[14px] py-3">45.50</td>
-                                        <td className="md:px-2 pl-[14px] py-3">9</td>
-                                        <td className="md:px-2 pl-[14px] py-3">0</td>
-                                        <td className="md:px-2 pl-[14px] py-3">74.65</td>
-                                        <td className="md:px-2 pl-[14px] py-3">
-                                            <div className="ml-auto flex gap-1 items-center">
-                                                <span className="bg-[#13b76dbd] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    W
-                                                </span>
-                                                <span className="bg-[#13b76dbd] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    W
-                                                </span>
-                                                <span className="bg-[#f63636c2] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    L
-                                                </span>
-                                                <span className="bg-[#f63636c2] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    L
-                                                </span>
-                                                <span className="bg-[#13b76dbd] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    W
-                                                </span>
-                                                <span className="flex">
-                                                    <button className="arro-button">
-                                                        <svg
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            fill="none"
-                                                            viewBox="0 0 24 24"
-                                                            strokeWidth="1.5"
-                                                            stroke="currentColor"
-                                                            className="size-4"
-                                                        >
-                                                            <path
-                                                                strokeLinecap="round"
-                                                                strokeLinejoin="round"
-                                                                d="m19.5 8.25-7.5 7.5-7.5-7.5"
-                                                            />
-                                                        </svg>
-                                                    </button>
-                                                </span>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className="md:px-2 pl-[14px] py-3 w-[10px]">7</td>
-                                        <td className="md:px-2 pl-[14px] py-3 text-[#217AF7]">
-                                            <Link href="/team/kkr/overview">
-                                                <div className="flex items-center gap-[5px]">
-                                                    <div>
-                                                        <Image
-                                                            src="/assets/img/ipl/7.png"
-                                                            className="h-[20px]"
-                                                            width={20} height={20} alt=""
-                                                        />
-                                                    </div>
-                                                    <p>LSG</p>
-                                                </div>
-                                            </Link>
-                                        </td>
-                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                        <td className="md:px-2 pl-[14px] py-3">123</td>
-                                        <td className="md:px-2 pl-[14px] py-3">45.50</td>
-                                        <td className="md:px-2 pl-[14px] py-3">9</td>
-                                        <td className="md:px-2 pl-[14px] py-3">0</td>
-                                        <td className="md:px-2 pl-[14px] py-3">74.65</td>
-                                        <td className="md:px-2 pl-[14px] py-3">
-                                            <div className="ml-auto flex gap-1 items-center">
-                                                <span className="bg-[#13b76dbd] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    W
-                                                </span>
-                                                <span className="bg-[#13b76dbd] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    W
-                                                </span>
-                                                <span className="bg-[#f63636c2] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    L
-                                                </span>
-                                                <span className="bg-[#f63636c2] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    L
-                                                </span>
-                                                <span className="bg-[#13b76dbd] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    W
-                                                </span>
-                                                <span className="flex">
-                                                    <button className="arro-button">
-                                                        <svg
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            fill="none"
-                                                            viewBox="0 0 24 24"
-                                                            strokeWidth="1.5"
-                                                            stroke="currentColor"
-                                                            className="size-4"
-                                                        >
-                                                            <path
-                                                                strokeLinecap="round"
-                                                                strokeLinejoin="round"
-                                                                d="m19.5 8.25-7.5 7.5-7.5-7.5"
-                                                            />
-                                                        </svg>
-                                                    </button>
-                                                </span>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className="md:px-2 pl-[14px] py-3 w-[10px]">8</td>
-                                        <td className="md:px-2 pl-[14px] py-3 text-[#217AF7]">
-                                            <Link href="/team/kkr/overview">
-                                                <div className="flex items-center gap-[5px]">
-                                                    <div>
-                                                        <Image
-                                                            src="/assets/img/ipl/8.png"
-                                                            className="h-[20px]"
-                                                            width={20} height={20} alt=""
-                                                        />
-                                                    </div>
-                                                    <p>GT</p>
-                                                </div>
-                                            </Link>
-                                        </td>
-                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                        <td className="md:px-2 pl-[14px] py-3">123</td>
-                                        <td className="md:px-2 pl-[14px] py-3">45.50</td>
-                                        <td className="md:px-2 pl-[14px] py-3">9</td>
-                                        <td className="md:px-2 pl-[14px] py-3">0</td>
-                                        <td className="md:px-2 pl-[14px] py-3">74.65</td>
-                                        <td className="md:px-2 pl-[14px] py-3">
-                                            <div className="ml-auto flex gap-1 items-center">
-                                                <span className="bg-[#13b76dbd] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    W
-                                                </span>
-                                                <span className="bg-[#13b76dbd] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    W
-                                                </span>
-                                                <span className="bg-[#f63636c2] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    L
-                                                </span>
-                                                <span className="bg-[#f63636c2] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    L
-                                                </span>
-                                                <span className="bg-[#13b76dbd] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    W
-                                                </span>
-                                                <span className="flex">
-                                                    <button className="arro-button">
-                                                        <svg
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            fill="none"
-                                                            viewBox="0 0 24 24"
-                                                            strokeWidth="1.5"
-                                                            stroke="currentColor"
-                                                            className="size-4"
-                                                        >
-                                                            <path
-                                                                strokeLinecap="round"
-                                                                strokeLinejoin="round"
-                                                                d="m19.5 8.25-7.5 7.5-7.5-7.5"
-                                                            />
-                                                        </svg>
-                                                    </button>
-                                                </span>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className="md:px-2 pl-[14px] py-3 w-[10px]">9</td>
-                                        <td className="md:px-2 pl-[14px] py-3 text-[#217AF7]">
-                                            <Link href="/team/kkr/overview">
-                                                <div className="flex items-center gap-[5px]">
-                                                    <div>
-                                                        <Image
-                                                            src="/assets/img/ipl/9.png"
-                                                            className="h-[20px]"
-                                                            width={20} height={20} alt=""
-                                                        />
-                                                    </div>
-                                                    <p>PK</p>
-                                                </div>
-                                            </Link>
-                                        </td>
-                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                        <td className="md:px-2 pl-[14px] py-3">123</td>
-                                        <td className="md:px-2 pl-[14px] py-3">45.50</td>
-                                        <td className="md:px-2 pl-[14px] py-3">9</td>
-                                        <td className="md:px-2 pl-[14px] py-3">0</td>
-                                        <td className="md:px-2 pl-[14px] py-3">74.65</td>
-                                        <td className="md:px-2 pl-[14px] py-3">
-                                            <div className="ml-auto flex gap-1 items-center">
-                                                <span className="bg-[#13b76dbd] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    W
-                                                </span>
-                                                <span className="bg-[#13b76dbd] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    W
-                                                </span>
-                                                <span className="bg-[#f63636c2] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    L
-                                                </span>
-                                                <span className="bg-[#f63636c2] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    L
-                                                </span>
-                                                <span className="bg-[#13b76dbd] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    W
-                                                </span>
-                                                <span className="flex">
-                                                    <button className="arro-button">
-                                                        <svg
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            fill="none"
-                                                            viewBox="0 0 24 24"
-                                                            strokeWidth="1.5"
-                                                            stroke="currentColor"
-                                                            className="size-4"
-                                                        >
-                                                            <path
-                                                                strokeLinecap="round"
-                                                                strokeLinejoin="round"
-                                                                d="m19.5 8.25-7.5 7.5-7.5-7.5"
-                                                            />
-                                                        </svg>
-                                                    </button>
-                                                </span>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className="md:px-2 pl-[14px] py-3 w-[10px]">10</td>
-                                        <td className="md:px-2 pl-[14px] py-3 text-[#217AF7]">
-                                            <Link href="/team/kkr/overview">
-                                                <div className="flex items-center gap-[5px]">
-                                                    <div>
-                                                        <Image
-                                                            src="/assets/img/ipl/10.png"
-                                                            className="h-[20px]"
-                                                            width={20} height={20} alt=""
-                                                        />
-                                                    </div>
-                                                    <p>MI</p>
-                                                </div>
-                                            </Link>
-                                        </td>
-                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                        <td className="md:px-2 pl-[14px] py-3">123</td>
-                                        <td className="md:px-2 pl-[14px] py-3">45.50</td>
-                                        <td className="md:px-2 pl-[14px] py-3">9</td>
-                                        <td className="md:px-2 pl-[14px] py-3">0</td>
-                                        <td className="md:px-2 pl-[14px] py-3">74.65</td>
-                                        <td className="md:px-2 pl-[14px] py-3">
-                                            <div className="ml-auto flex gap-1 items-center">
-                                                <span className="bg-[#13b76dbd] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    W
-                                                </span>
-                                                <span className="bg-[#13b76dbd] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    W
-                                                </span>
-                                                <span className="bg-[#f63636c2] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    L
-                                                </span>
-                                                <span className="bg-[#f63636c2] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    L
-                                                </span>
-                                                <span className="bg-[#13b76dbd] text-white text-[13px] px-[4px] py-[0px] rounded">
-                                                    W
-                                                </span>
-                                                <span className="flex">
-                                                    <button className="arro-button">
-                                                        <svg
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            fill="none"
-                                                            viewBox="0 0 24 24"
-                                                            strokeWidth="1.5"
-                                                            stroke="currentColor"
-                                                            className="size-4"
-                                                        >
-                                                            <path
-                                                                strokeLinecap="round"
-                                                                strokeLinejoin="round"
-                                                                d="m19.5 8.25-7.5 7.5-7.5-7.5"
-                                                            />
-                                                        </svg>
-                                                    </button>
-                                                </span>
-                                            </div>
-                                        </td>
-                                    </tr>
+                                    ))}
+                                    
                                 </tbody>
                             </table>
                         </div>
                     </div>
-                </div>
-
-
+                            </div>
+                            ))}
+                            {seriesInfo?.title === "Indian Premier League" &&
+                            <>
                             <div className="rounded-lg bg-[#ffffff] mb-4 p-4">
                                 <h3 className="text-1xl font-semibold mb-3 pl-[7px] border-l-[3px] border-[#229ED3]">
                                     Orange Cap-Most Runs
@@ -1076,7 +523,7 @@ export default function Overview() {
                                                                 <Image
                                                                     src="/assets/img/player/8.png"
                                                                     className="h-[33px]"
-                                                                    width={33} height={33} alt=""
+                                                                    width={33} height={33} alt="1"
                                                                 />
                                                             </div>
                                                             <Link href="/player/playername/overview">
@@ -1101,7 +548,7 @@ export default function Overview() {
                                                                 <Image
                                                                     src="/assets/img/player/8.png"
                                                                     className="h-[33px]"
-                                                                    width={33} height={33} alt=""
+                                                                    width={33} height={33} alt="1"
                                                                 />
                                                             </div>
                                                             <Link href="/player/playername/overview">
@@ -1128,7 +575,7 @@ export default function Overview() {
                                                                 <Image
                                                                     src="/assets/img/player/8.png"
                                                                     className="h-[33px]"
-                                                                    width={33} height={33} alt=""
+                                                                    width={33} height={33} alt="1"
                                                                 />
                                                             </div>
                                                             <Link href="/player/playername/overview">
@@ -1191,7 +638,7 @@ export default function Overview() {
                                                                 <Image
                                                                     src="/assets/img/player/8.png"
                                                                     className="h-[33px]"
-                                                                    width={33} height={33} alt=""
+                                                                    width={33} height={33} alt="1"
                                                                 />
                                                             </div>
                                                             <Link href="/player/playername/overview">
@@ -1216,7 +663,7 @@ export default function Overview() {
                                                                 <Image
                                                                     src="/assets/img/player/8.png"
                                                                     className="h-[33px]"
-                                                                    width={33} height={33} alt=""
+                                                                    width={33} height={33} alt="1"
                                                                 />
                                                             </div>
                                                             <Link href="/player/playername/overview">
@@ -1243,7 +690,7 @@ export default function Overview() {
                                                                 <Image
                                                                     src="/assets/img/player/8.png"
                                                                     className="h-[33px]"
-                                                                    width={33} height={33} alt=""
+                                                                    width={33} height={33} alt="1"
                                                                 />
                                                             </div>
                                                             <Link href="/player/playername/overview">
@@ -1268,6 +715,9 @@ export default function Overview() {
                                     </div>
                                 </div>
                             </div>
+                            </>
+                            
+                            }
                             <div className="flex justify-between items-center pb-4">
                                 <div>
                                     <h3 className="text-1xl font-semibold pl-[4px] border-l-[3px] border-[#2182F8]">
@@ -1285,14 +735,14 @@ export default function Overview() {
                                                 <Image
                                                     src="/assets/img/player/g-1.png"
                                                     className="h-[45px]"
-                                                    width={45} height={45} alt="A Kerr"
+                                                    width={45} height={45} alt={seriesKeystats?.mostRuns?.player?.short_name}
                                                 />
                                                 <h3 className="mt-2 text-[14px] font-semibold">
-                                                    L Wolvaardt
+                                                {seriesKeystats?.mostRuns?.player?.short_name}
                                                 </h3>
-                                                <p className="text-[#909090]">South Africa-W</p>
+                                                <p className="text-[#909090]">{seriesKeystats?.mostRuns?.team?.title}</p>
                                                 <div className="flex items-center gap-2 mt-2">
-                                                    <p className="text-[18px] font-semibold">190</p>
+                                                    <p className="text-[18px] font-semibold">{seriesKeystats?.mostRuns?.runs}</p>
                                                     <p className="text-gray-600 text-sm">Runs</p>
                                                 </div>
                                             </div>
@@ -1301,19 +751,19 @@ export default function Overview() {
                                     <div className="col-span-1">
                                         <Link href="/player/playername/overview">
                                             <div className="rounded-lg bg-[#ffffff] p-4 flex flex-col items-center">
-                                                <p className="mb-2 font-medium">Highest Score</p>
+                                                <p className="mb-2 font-medium">Highest Strike</p>
                                                 <Image
                                                     src="/assets/img/player/g-3.png"
                                                     className="h-[45px]"
-                                                    width={45} height={45} alt="A Kerr"
+                                                    width={45} height={45} alt={seriesKeystats?.highStrike?.player?.short_name}
                                                 />
                                                 <h3 className="mt-2 text-[14px] font-semibold">
-                                                    L Wolvaardt
+                                                {seriesKeystats?.highStrike?.player?.short_name}
                                                 </h3>
-                                                <p className="text-[#909090]">A Bosch - SA-W</p>
+                                                <p className="text-[#909090]">{seriesKeystats?.highStrike?.team?.title}</p>
                                                 <div className="flex items-center gap-2 mt-2">
-                                                    <p className="text-[18px] font-semibold">74</p>
-                                                    <p className="text-gray-600 text-sm">Runs</p>
+                                                    <p className="text-[18px] font-semibold">{seriesKeystats?.highStrike?.strike}</p>
+                                                    <p className="text-gray-600 text-sm"></p>
                                                 </div>
                                             </div>
                                         </Link>
@@ -1325,12 +775,12 @@ export default function Overview() {
                                                 <Image
                                                     src="/assets/img/player/g-2.png"
                                                     className="h-[45px]"
-                                                    width={45} height={45} alt="A Kerr"
+                                                    width={45} height={45} alt={seriesKeystats?.topWickets?.player?.short_name}
                                                 />
-                                                <h3 className="mt-2 text-[14px] font-semibold">A Kerr</h3>
-                                                <p className="text-[#909090]">New Zealand-W</p>
+                                                <h3 className="mt-2 text-[14px] font-semibold">{seriesKeystats?.topWickets?.player?.short_name}</h3>
+                                                <p className="text-[#909090]">{seriesKeystats?.topWickets?.team?.title}</p>
                                                 <div className="flex items-center gap-2 mt-2">
-                                                    <p className="text-[18px] font-semibold">12</p>
+                                                    <p className="text-[18px] font-semibold">{seriesKeystats?.topWickets?.wickets}</p>
                                                     <p className="text-gray-600 text-sm">Wickets</p>
                                                 </div>
                                             </div>
@@ -1343,12 +793,12 @@ export default function Overview() {
                                                 <Image
                                                     src="/assets/img/player/g-4.png"
                                                     className="h-[45px]"
-                                                    width={45} height={45} alt="A Kerr"
+                                                    width={45} height={45} alt={seriesKeystats?.bestBowling?.player?.short_name}
                                                 />
-                                                <h3 className="mt-2 text-[14px] font-semibold">K Ramhar</h3>
-                                                <p className="text-[#909090]">West Indies-W</p>
+                                                <h3 className="mt-2 text-[14px] font-semibold">{seriesKeystats?.bestBowling?.player?.short_name}</h3>
+                                                <p className="text-[#909090]">{seriesKeystats?.bestBowling?.team?.title}</p>
                                                 <div className="flex items-center gap-2 mt-2">
-                                                    <p className="text-[18px] font-semibold">17/4</p>
+                                                    <p className="text-[18px] font-semibold">{seriesKeystats?.bestBowling?.bestmatch}</p>
                                                 </div>
                                             </div>
                                         </Link>
@@ -1361,115 +811,22 @@ export default function Overview() {
                                 </h3>
                                 <div className="border-t-[1px] border-[#E4E9F0]" />
                                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mt-5">
-                                    <Link href="/team/india/test">
+                                {seriesInfo?.teams?.map((teams:any, index: number) =>(
+                                    <Link href="#" key={index}>
 
                                         <div className="border-[1px] border-[##E2E2E2] rounded-md py-4 px-2 flex flex-col items-center">
+                                        {teams?.thumb_url ? (
                                             <Image
-                                                src="/assets/img/flag/b-1.png"
-                                                width={42} height={42} alt="Pakistan-W"
+                                                src={teams?.thumb_url}
+                                                width={42} height={42} alt={teams?.alt_name ? teams?.alt_name : "1"}
                                                 className="h-[42px] mb-2"
                                             />
-                                            <p className="font-medium">Pakistan-W</p>
+                                        ):("")}
+                                            <p className="font-medium">{teams?.abbr}</p>
                                         </div>
                                     </Link>
-                                    <Link href="/team/india/test">
-
-                                        <div className="border-[1px] border-[##E2E2E2] rounded-md py-4 px-2 flex flex-col items-center">
-                                            <Image
-                                                src="/assets/img/flag/b-2.png"
-                                                width={42} height={42} alt="West Indies-W"
-                                                className="h-[42px] mb-2"
-                                            />
-                                            <p className="font-medium">West Indies-W</p>
-                                        </div>
-                                    </Link>
-                                    <Link href="/team/india/test">
-                                        <div className="border-[1px] border-[##E2E2E2] rounded-md py-4 px-2 flex flex-col items-center">
-                                            <Image
-                                                src="/assets/img/flag/b-3.png"
-                                                width={42} height={42} alt="Australia-W"
-                                                className="h-[42px] mb-2"
-                                            />
-                                            <p className="font-medium">Australia-W</p>
-                                        </div>
-                                    </Link>
-                                    <Link href="/team/india/test">
-
-                                        <div className="border-[1px] border-[##E2E2E2] rounded-md py-4 px-2 flex flex-col items-center">
-                                            <Image
-                                                src="/assets/img/flag/b-4.png"
-                                                width={42} height={42} alt="Scotland-W"
-                                                className="h-[42px] mb-2"
-                                            />
-                                            <p className="font-medium">Scotland-W</p>
-                                        </div>
-                                    </Link>
-                                    <Link href="/team/india/test">
-
-                                        <div className="border-[1px] border-[##E2E2E2] rounded-md py-4 px-2 flex flex-col items-center">
-                                            <Image
-                                                src="/assets/img/flag/b-5.png"
-                                                width={42} height={42} alt="South Africa-W"
-                                                className="h-[42px] mb-2"
-                                            />
-                                            <p className="font-medium">South Africa-W</p>
-                                        </div>
-                                    </Link>
-                                    <Link href="/team/india/test">
-
-                                        <div className="border-[1px] border-[##E2E2E2] rounded-md py-4 px-2 flex flex-col items-center">
-                                            <Image
-                                                src="/assets/img/flag/b-6.png"
-                                                width={42} height={42} alt="New Zealand-W"
-                                                className="h-[42px] mb-2"
-                                            />
-                                            <p className="font-medium">New Zealand-W</p>
-                                        </div>
-                                    </Link>
-                                    <Link href="/team/india/test">
-
-                                        <div className="border-[1px] border-[##E2E2E2] rounded-md py-4 px-2 flex flex-col items-center">
-                                            <Image
-                                                src="/assets/img/flag/b-7.png"
-                                                width={42} height={42} alt="Sri Lanka-W"
-                                                className="h-[42px] mb-2"
-                                            />
-                                            <p className="font-medium">Sri Lanka-W</p>
-                                        </div>
-                                    </Link>
-                                    <Link href="/team/india/test">
-
-                                        <div className="border-[1px] border-[##E2E2E2] rounded-md py-4 px-2 flex flex-col items-center">
-                                            <Image
-                                                src="/assets/img/flag/b-8.png"
-                                                width={42} height={42} alt="India-W"
-                                                className="h-[42px] mb-2"
-                                            />
-                                            <p className="font-medium">India-W</p>
-                                        </div>
-                                    </Link>
-                                    <Link href="/team/india/test">
-
-                                        <div className="border-[1px] border-[##E2E2E2] rounded-md py-4 px-2 flex flex-col items-center">
-                                            <Image
-                                                src="/assets/img/flag/b-9.png"
-                                                width={42} height={42} alt="England-W"
-                                                className="h-[42px] mb-2"
-                                            />
-                                            <p className="font-medium">England-W</p>
-                                        </div>
-                                    </Link>
-                                    <Link href="/team/india/test">
-
-                                        <div className="border-[1px] border-[##E2E2E2] rounded-md py-4 px-2 flex flex-col items-center">
-                                            <Image
-                                                src="/assets/img/flag/b-10.png"
-                                                width={42} height={42} alt="Bangladesh-W"
-                                                className="h-[42px] mb-2"
-                                            />
-                                            <p className="font-medium">Bangladesh-W</p>
-                                        </div>
-                                    </Link>
+                                    ))}
+                                    
                                 </div>
 
 
@@ -1696,7 +1053,7 @@ export default function Overview() {
                                 <div className="flex gap-1 items-center justify-between">
                                     <div className="flex gap-1 items-center">
                                         <div className="col-span-4 relative">
-                                            <Image src="/assets/img/home/trofi.png" className="h-[75px]" width={75} height={75} alt="" />
+                                            <Image src="/assets/img/home/trofi.png" className="h-[75px]" width={75} height={75} alt="1" />
                                         </div>
                                         <div className="col-span-8 relative">
                                             <h3 className="font-semibold text-[19px] mb-1">
@@ -1727,6 +1084,8 @@ export default function Overview() {
                             </div>
                             {/* Slider 1 */}
                             <WeeklySlider />
+                            {seriesInfo?.title === "Indian Premier League" &&
+                            <>
                             <div className="my-4">
                                 <div className="mb-2">
                                     <h3 className="text-1xl font-semibold pl-[5px] border-l-[3px] border-[#1a80f8]">
@@ -1962,7 +1321,7 @@ export default function Overview() {
                                     <Link href="/t20series">
                                         <div className="bg-[#ffffff] text-[14px] rounded-lg px-4 flex items-center space-x-3 py-3 mb-2">
                                             <div>
-                                                <Image src="/assets/img/1.png" width={20} height={20} alt="" />
+                                                <Image src="/assets/img/1.png" width={20} height={20} alt="1" />
                                             </div>
                                             <div className="font-medium text-[#394351]">
                                                 ICC World cup
@@ -1972,7 +1331,7 @@ export default function Overview() {
                                     <Link href="/t20series">
                                         <div className="bg-[#ffffff] text-[14px] rounded-lg px-4 flex items-center space-x-3 py-3 mb-2 ">
                                             <div>
-                                                <Image src="/assets/img/2.png" width={20} height={20} alt="" />
+                                                <Image src="/assets/img/2.png" width={20} height={20} alt="1" />
                                             </div>
                                             <div className="font-medium text-[#394351]">
                                                 ICC Champion Trophy
@@ -1982,7 +1341,7 @@ export default function Overview() {
                                     <Link href="/t20series">
                                         <div className="bg-[#ffffff] text-[14px] rounded-lg px-4 flex items-center space-x-3 py-3 mb-2 ">
                                             <div>
-                                                <Image src="/assets/img/3.png" width={20} height={20} alt="" />
+                                                <Image src="/assets/img/3.png" width={20} height={20} alt="1" />
                                             </div>
                                             <div className="font-medium text-[#394351]">
                                                 T20 World Cup
@@ -1992,7 +1351,7 @@ export default function Overview() {
                                     <Link href="/t20series">
                                         <div className="bg-[#ffffff] text-[14px] rounded-lg px-4 flex items-center space-x-3 py-3 mb-2 ">
                                             <div>
-                                                <Image src="/assets/img/4.png" width={20} height={20} alt="" />
+                                                <Image src="/assets/img/4.png" width={20} height={20} alt="1" />
                                             </div>
                                             <div className="font-medium text-[#394351]">
                                                 Indian Premium League
@@ -2002,7 +1361,7 @@ export default function Overview() {
                                     <Link href="/t20series">
                                         <div className="bg-[#ffffff] text-[14px] rounded-lg px-4 flex items-center space-x-3 py-3 mb-2 ">
                                             <div>
-                                                <Image src="/assets/img/5.png" width={20} height={20} alt="" />
+                                                <Image src="/assets/img/5.png" width={20} height={20} alt="1" />
                                             </div>
                                             <div className="font-medium text-[#394351]">
                                                 Pakistan Super League
@@ -2012,7 +1371,7 @@ export default function Overview() {
                                     <Link href="/t20series">
                                         <div className="bg-[#ffffff] text-[14px] rounded-lg px-4 flex items-center space-x-3 py-3 mb-2 ">
                                             <div>
-                                                <Image src="/assets/img/6.png" width={20} height={20} alt="" />
+                                                <Image src="/assets/img/6.png" width={20} height={20} alt="1" />
                                             </div>
                                             <div className="font-medium text-[#394351]">
                                                 Bangladesh Premium Leaguge
@@ -2022,7 +1381,7 @@ export default function Overview() {
                                     <Link href="/t20series">
                                         <div className="bg-[#ffffff] text-[14px] rounded-lg px-4 flex items-center space-x-3 py-3 mb-2 ">
                                             <div>
-                                                <Image src="/assets/img/7.png" width={20} height={20} alt="" />
+                                                <Image src="/assets/img/7.png" width={20} height={20} alt="1" />
                                             </div>
                                             <div className="font-medium text-[#394351]">
                                                 Big Bash Leaguge
@@ -2032,7 +1391,7 @@ export default function Overview() {
                                     <Link href="/t20series">
                                         <div className="bg-[#ffffff] text-[14px] rounded-lg px-4 flex items-center space-x-3 py-3">
                                             <div>
-                                                <Image src="/assets/img/8.png" width={20} height={20} alt="" />
+                                                <Image src="/assets/img/8.png" width={20} height={20} alt="1" />
                                             </div>
                                             <div className="font-medium text-[#394351]">
                                                 Super Smash
@@ -2043,6 +1402,8 @@ export default function Overview() {
                                 </div>
 
                             </div>
+                            </>
+                            }
 
                             <div className=" my-4">
                                 <div className="py-2 mb-2">
