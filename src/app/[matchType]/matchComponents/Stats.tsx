@@ -186,14 +186,14 @@ export default async function Stats({
                             <div id="team-buttons" className="">
                                 <Link href={"/stats/"+matchUrl+"/"+ match_id+"/most-wicket"}>
                                     <button
-                                        className="state-btn new-class border-t px-2 py-3 w-full font-medium active text-left rounded-md hover:bg-[#ecf2fd] hover:text-[#1a80f8]"
+                                        className={`state-btn new-class border-t px-2 py-3 w-full font-medium active text-left rounded-md ${matchTitle == 'most-wicket' ? "bg-[#ecf2fd] text-[#1a80f8]" : "hover:bg-[#ecf2fd] hover:text-[#1a80f8]" } `}
                                     >
                                         Most Wickets
                                     </button>
                                 </Link>
                                 <Link href={"/stats/"+matchUrl+"/"+ match_id+"/best-average"}>
                                     <button
-                                        className="state-btn new-class border-t px-2 py-3 w-full font-medium active text-left rounded-md hover:bg-[#ecf2fd] hover:text-[#1a80f8]"
+                                        className={`state-btn new-class border-t px-2 py-3 w-full font-medium active text-left rounded-md ${matchTitle == 'best-average' ? "bg-[#ecf2fd] text-[#1a80f8]" : "hover:bg-[#ecf2fd] hover:text-[#1a80f8]" } `}
                                     >
                                         Best Bowling Average
                                     </button>
@@ -201,7 +201,7 @@ export default async function Stats({
 
                                 <Link href={"/stats/"+matchUrl+"/"+ match_id+"/best-bowling"}>
                                     <button
-                                        className="state-btn new-class border-t px-2 py-3 w-full font-medium active text-left rounded-md hover:bg-[#ecf2fd] hover:text-[#1a80f8]"
+                                        className={`state-btn new-class border-t px-2 py-3 w-full font-medium active text-left rounded-md ${matchTitle == 'best-bowling' ? "bg-[#ecf2fd] text-[#1a80f8]" : "hover:bg-[#ecf2fd] hover:text-[#1a80f8]" } `}
                                     >
                                         Best Bowling
                                     </button>
@@ -209,7 +209,7 @@ export default async function Stats({
 
                                 <Link href={"/stats/"+matchUrl+"/"+ match_id+"/most-five_wickets"}>
                                     <button
-                                        className="state-btn new-class border-t px-2 py-3 w-full font-medium active text-left rounded-md hover:bg-[#ecf2fd] hover:text-[#1a80f8]"
+                                        className={`state-btn new-class border-t px-2 py-3 w-full font-medium active text-left rounded-md ${matchTitle == 'most-five_wickets' ? "bg-[#ecf2fd] text-[#1a80f8]" : "hover:bg-[#ecf2fd] hover:text-[#1a80f8]" } `}
                                     >
                                         Most 5 Wickets Haul
                                     </button>
@@ -217,7 +217,7 @@ export default async function Stats({
 
                                 <Link href={"/stats/"+matchUrl+"/"+ match_id+"/best-economy"}>
                                     <button
-                                        className="state-btn new-class border-t px-2 py-3 w-full font-medium active text-left rounded-md hover:bg-[#ecf2fd] hover:text-[#1a80f8]"
+                                        className={`state-btn new-class border-t px-2 py-3 w-full font-medium active text-left rounded-md ${matchTitle == 'best-economy' ? "bg-[#ecf2fd] text-[#1a80f8]" : "hover:bg-[#ecf2fd] hover:text-[#1a80f8]" } `}
                                     >
                                         Best Economy
                                     </button>
@@ -225,7 +225,7 @@ export default async function Stats({
 
                                 <Link href={"/stats/"+matchUrl+"/"+ match_id+"/best-strike"}>
                                     <button
-                                        className="state-btn new-class border-t px-2 py-3 w-full font-medium active text-left rounded-md hover:bg-[#ecf2fd] hover:text-[#1a80f8]"
+                                        className={`state-btn new-class border-t px-2 py-3 w-full font-medium active text-left rounded-md ${matchTitle == 'best-strike' ? "bg-[#ecf2fd] text-[#1a80f8]" : "hover:bg-[#ecf2fd] hover:text-[#1a80f8]" } `}
                                     >
                                         Best Bowling Strike Rate
                                     </button>
@@ -272,7 +272,7 @@ export default async function Stats({
                                                 </thead>
                                                 <tbody className="divide-y divide-gray-200">
                                                     {matchStats.map((stats:any, index:number) => (
-                                                    <tr>
+                                                    <tr key={index}>
                                                         <td className="md:px-2 pl-[14px] py-3 w-[10px]">{index+1}</td>
                                                         <td className="md:px-2 py-3 text-[#217AF7]">
                                                             <Link href={"/player/"+urlStringEncode(stats?.player?.first_name)+"/"+stats?.player?.pid}> {stats?.player?.short_name}</Link>
@@ -330,7 +330,7 @@ export default async function Stats({
                                                 </thead>
                                                 <tbody className="divide-y divide-gray-200">
                                                     {matchStats.map((stats:any, index:number) => (
-                                                    <tr>
+                                                    <tr key={index}>
                                                         <td className="md:px-2 pl-[14px] py-3 w-[10px]">{index+1}</td>
                                                         <td className="md:px-2 py-3 text-[#217AF7]">
                                                             <Link href={"/player/"+urlStringEncode(stats?.player?.first_name)+"/"+stats?.player?.pid}> {stats?.player?.short_name}</Link>

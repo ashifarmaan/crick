@@ -1,10 +1,55 @@
 import React from 'react'
 import Link from 'next/link';
+import { MatcheStats } from "@/controller/matchInfoController";
+import { urlStringEncode } from "@/utils/utility";
 
 interface Stats {
     urlString: string; 
+    statsType :string | null;
+    seriesId: number;
   }
-  export default function Stats({urlString} : Stats) {
+  export default async function Stats({seriesId, urlString, statsType} : Stats) {
+
+
+    const renderStatus = () => {
+        switch (statsType) {
+            case "most-run":
+              return "batting_most_runs";
+            case "highest-average":
+              return "batting_highest_average";
+            case "highest-strikerate":
+              return "batting_highest_strikerate";
+            case "most-hundreds":
+              return "batting_most_run100";
+            case "most-fifties":
+              return "batting_most_run50";
+            case "most-fours":
+              return "batting_most_run4";
+            case "most-sixes":
+              return "batting_most_run6";       
+            
+    
+            case "most-wicket":
+              return "bowling_top_wicket_takers";
+            case "best-average":
+              return "bowling_best_averages";
+            case "best-bowling":
+              return "bowling_best_bowling_figures";
+            case "most-five_wickets":
+              return "bowling_five_wickets";
+            case "best-economy":
+              return "bowling_best_economy_rates";
+            case "best-strike":
+              return "bowling_best_strike_rates";
+            default:
+              return "batting_most_runs";
+          }
+        };
+        const statType = renderStatus();
+        const statsMatch =  await MatcheStats(seriesId, statType);
+        const matchStats= statsMatch.stats;
+        // console.log("renderStatus",matchStats);
+
     return (
         <section className="lg:w-[1000px] mx-auto md:mb-0 mb-4 px-2 lg:px-0">
             <div id="tabs" className="my-4">
@@ -63,76 +108,63 @@ interface Stats {
                                 </h3>
                             </div>
                             <div id="team-buttons" className="">
-                                <Link href="/live-stats/most-runs-stats">
+                                <Link href={urlString+"/stats/most-run"}>
                                     <button
 
-                                        className="state-btn new-class border-t px-2 py-3 w-full font-medium active text-left bg-[#ecf2fd] text-[#1a80f8] rounded-md "
+                                        className={`state-btn new-class border-t px-2 py-3 w-full font-medium active text-left rounded-md ${statsType == 'most-run' || statsType == undefined ? "bg-[#ecf2fd] text-[#1a80f8]" : "hover:bg-[#ecf2fd] hover:text-[#1a80f8]" } `}
                                     >
                                         Most Runs
                                     </button>
                                 </Link>
-                                <Link href="/live-stats/most-scors">
+                                <Link href={urlString+"/stats/highest-average"}>
                                     <button
-                                        className="state-btn new-class border-t px-2 py-3 w-full font-medium active text-left rounded-md hover:bg-[#ecf2fd] hover:text-[#1a80f8]"
-                                    >
-                                        Highest Scores
-                                    </button>
-                                </Link>
-                                <Link href="/live-stats/best-batting-average">
-                                    <button
-
-                                        className="state-btn new-class border-t px-2 py-3 w-full font-medium active text-left rounded-md hover:bg-[#ecf2fd] hover:text-[#1a80f8]"
-
+                                        className={`state-btn new-class border-t px-2 py-3 w-full font-medium active text-left rounded-md ${statsType == 'highest-average' ? "bg-[#ecf2fd] text-[#1a80f8]" : "hover:bg-[#ecf2fd] hover:text-[#1a80f8]" } `}
                                     >
                                         Best Batting Average
                                     </button>
                                 </Link>
-                                <button
-
-                                    className=" state-btn new-class border-t px-2 py-3 w-full font-medium active text-left rounded-md hover:bg-[#ecf2fd] hover:text-[#1a80f8]"
-
-                                >
-                                    Best Batting Strike Rate
-                                </button>
-                                <Link href="/live-stats/most-hundreds">
+                                <Link href={urlString+"/stats/highest-strikerate"}>
                                     <button
-                                        className="state-btn new-class border-t px-2 py-3 w-full font-medium active text-left rounded-md hover:bg-[#ecf2fd] hover:text-[#1a80f8]"
+
+                                        className={`state-btn new-class border-t px-2 py-3 w-full font-medium active text-left rounded-md ${statsType == 'highest-strikerate' ? "bg-[#ecf2fd] text-[#1a80f8]" : "hover:bg-[#ecf2fd] hover:text-[#1a80f8]" } `}
+
+                                    >
+                                        Best Batting Strike Rate
+                                    </button>
+                                </Link>
+                               
+                                <Link href={urlString+"/stats/most-hundreds"}>
+                                    <button
+                                        className={`state-btn new-class border-t px-2 py-3 w-full font-medium active text-left rounded-md ${statsType == 'most-hundreds' ? "bg-[#ecf2fd] text-[#1a80f8]" : "hover:bg-[#ecf2fd] hover:text-[#1a80f8]" } `}
                                     >
                                         Most Hundreds
                                     </button>
                                 </Link>
 
-                                <Link href="/live-stats/most-fifties">
+                                <Link href={urlString+"/stats/most-fifties"}>
                                     <button
-                                        className="state-btn new-class border-t px-2 py-3 w-full font-medium active text-left rounded-md hover:bg-[#ecf2fd] hover:text-[#1a80f8]"
+                                        className={`state-btn new-class border-t px-2 py-3 w-full font-medium active text-left rounded-md ${statsType == 'most-fifties' ? "bg-[#ecf2fd] text-[#1a80f8]" : "hover:bg-[#ecf2fd] hover:text-[#1a80f8]" } `}
                                     >
                                         Most Fifties
                                     </button>
                                 </Link>
 
-                                <Link href="/live-stats/most-fours">
+                                <Link href={urlString+"/stats/most-fours"}>
                                     <button
-                                        className="state-btn new-class border-t px-2 py-3 w-full font-medium active text-left rounded-md hover:bg-[#ecf2fd] hover:text-[#1a80f8]"
+                                        className={`state-btn new-class border-t px-2 py-3 w-full font-medium active text-left rounded-md ${statsType == 'most-fours' ? "bg-[#ecf2fd] text-[#1a80f8]" : "hover:bg-[#ecf2fd] hover:text-[#1a80f8]" } `}
                                     >
                                         Most Fours
                                     </button>
                                 </Link>
 
-                                <Link href="/live-stats/most-sixes">
+                                <Link href={urlString+"/stats/most-sixes"}>
                                     <button
-                                        className="state-btn new-class border-t px-2 py-3 w-full font-medium active text-left rounded-md hover:bg-[#ecf2fd] hover:text-[#1a80f8]"
+                                        className={`state-btn new-class border-t px-2 py-3 w-full font-medium active text-left rounded-md ${statsType == 'most-sixes' ? "bg-[#ecf2fd] text-[#1a80f8]" : "hover:bg-[#ecf2fd] hover:text-[#1a80f8]" } `}
                                     >
                                         Most Sixes
                                     </button>
                                 </Link>
 
-                                <Link href="/live-stats/most-nineties">
-                                    <button
-                                        className="state-btn new-class border-t px-2 py-3 w-full font-medium active text-left rounded-md hover:bg-[#ecf2fd] hover:text-[#1a80f8]"
-                                    >
-                                        Most Nineties
-                                    </button>
-                                </Link>
                             </div>
                         </div>
                         <div className="rounded-lg p-2 mb-4 bg-[#ffffff]">
@@ -142,48 +174,48 @@ interface Stats {
                                 </h3>
                             </div>
                             <div id="team-buttons" className="">
-                                <Link href="/live-stats/most-wickets">
+                                <Link href={urlString+"/stats/most-wicket"}>
                                     <button
-                                        className="state-btn new-class border-t px-2 py-3 w-full font-medium active text-left rounded-md hover:bg-[#ecf2fd] hover:text-[#1a80f8]"
+                                        className={`state-btn new-class border-t px-2 py-3 w-full font-medium active text-left rounded-md ${statsType == 'most-wicket' ? "bg-[#ecf2fd] text-[#1a80f8]" : "hover:bg-[#ecf2fd] hover:text-[#1a80f8]" } `}
                                     >
                                         Most Wickets
                                     </button>
                                 </Link>
-                                <Link href="/live-stats/best-bowling-average">
+                                <Link href={urlString+"/stats/best-average"}>
                                     <button
-                                        className="state-btn new-class border-t px-2 py-3 w-full font-medium active text-left rounded-md hover:bg-[#ecf2fd] hover:text-[#1a80f8]"
+                                        className={`state-btn new-class border-t px-2 py-3 w-full font-medium active text-left rounded-md ${statsType == 'best-average' ? "bg-[#ecf2fd] text-[#1a80f8]" : "hover:bg-[#ecf2fd] hover:text-[#1a80f8]" } `}
                                     >
                                         Best Bowling Average
                                     </button>
                                 </Link>
 
-                                <Link href="/live-stats/best-bowling">
+                                <Link href={urlString+"/stats/best-bowling"}>
                                     <button
-                                        className="state-btn new-class border-t px-2 py-3 w-full font-medium active text-left rounded-md hover:bg-[#ecf2fd] hover:text-[#1a80f8]"
+                                        className={`state-btn new-class border-t px-2 py-3 w-full font-medium active text-left rounded-md ${statsType == 'best-bowling' ? "bg-[#ecf2fd] text-[#1a80f8]" : "hover:bg-[#ecf2fd] hover:text-[#1a80f8]" } `}
                                     >
                                         Best Bowling
                                     </button>
                                 </Link>
 
-                                <Link href="/live-stats/most5wickets-haul">
+                                <Link href={urlString+"/stats/most-five_wickets"}>
                                     <button
-                                        className="state-btn new-class border-t px-2 py-3 w-full font-medium active text-left rounded-md hover:bg-[#ecf2fd] hover:text-[#1a80f8]"
+                                        className={`state-btn new-class border-t px-2 py-3 w-full font-medium active text-left rounded-md ${statsType == 'most-five_wickets' ? "bg-[#ecf2fd] text-[#1a80f8]" : "hover:bg-[#ecf2fd] hover:text-[#1a80f8]" } `}
                                     >
                                         Most 5 Wickets Haul
                                     </button>
                                 </Link>
 
-                                <Link href="/live-stats/best-economy">
+                                <Link href={urlString+"/stats/best-economy"}>
                                     <button
-                                        className="state-btn new-class border-t px-2 py-3 w-full font-medium active text-left rounded-md hover:bg-[#ecf2fd] hover:text-[#1a80f8]"
+                                        className={`state-btn new-class border-t px-2 py-3 w-full font-medium active text-left rounded-md ${statsType == 'best-economy' ? "bg-[#ecf2fd] text-[#1a80f8]" : "hover:bg-[#ecf2fd] hover:text-[#1a80f8]" } `}
                                     >
                                         Best Economy
                                     </button>
                                 </Link>
 
-                                <Link href="/live-stats/best-bowling-strike-rate">
+                                <Link href={urlString+"/stats/best-strike"}>
                                     <button
-                                        className="state-btn new-class border-t px-2 py-3 w-full font-medium active text-left rounded-md hover:bg-[#ecf2fd] hover:text-[#1a80f8]"
+                                        className={`state-btn new-class border-t px-2 py-3 w-full font-medium active text-left rounded-md ${statsType == 'best-strike' ? "bg-[#ecf2fd] text-[#1a80f8]" : "hover:bg-[#ecf2fd] hover:text-[#1a80f8]" } `}
                                     >
                                         Best Bowling Strike Rate
                                     </button>
@@ -194,9 +226,9 @@ interface Stats {
                     <div className="lg:col-span-9 md:col-span-8">
                         <div id="most-runs" className={`state-content most-runs" ? "" : "hidden"}`} >
                             <div>
-                                <div className="rounded-lg bg-[#ffffff] mb-4 p-4">
+                            <div className={`rounded-lg bg-[#ffffff] mb-4 p-4 ${statsType == "most-wicket" || statsType == "best-average" || statsType == "best-bowling" || statsType == "most-five_wickets" || statsType == "best-economy" || statsType == "best-strike" ? "hidden" : ""}`}>
                                     <h3 className="text-1xl font-semibold mb-3 pl-[7px] border-l-[3px] border-[#229ED3]">
-                                        Bowling
+                                    Batting
                                     </h3>
                                     <div>
                                         <div className="overflow-x-auto">
@@ -229,228 +261,79 @@ interface Stats {
                                                     </tr>
                                                 </thead>
                                                 <tbody className="divide-y divide-gray-200">
-                                                    <tr>
-                                                        <td className="md:px-2 pl-[14px] py-3 w-[10px]">1</td>
+                                                {matchStats.map((stats:any, index:number) => (
+                                                    <tr key={index}>
+                                                        <td className="md:px-2 pl-[14px] py-3 w-[10px]">{index+1}</td>
                                                         <td className="md:px-2 py-3 text-[#217AF7]">
-                                                            <Link href="/player/playername/overview"> Virat Kohli</Link>
+                                                            <Link href={"/player/"+urlStringEncode(stats?.player?.first_name)+"/"+stats?.player?.pid}> {stats?.player?.short_name}</Link>
                                                         </td>
-                                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">123</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">45.50</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">9</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">0</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">74.65</td>
+                                                        <td className="md:px-2 pl-[14px] py-3">{stats?.matches}</td>
+                                                        <td className="md:px-2 pl-[14px] py-3">{stats?.innings}</td>
+                                                        <td className="md:px-2 pl-[14px] py-3">{stats?.runs}</td>
+                                                        <td className="md:px-2 pl-[14px] py-3">{stats?.average}</td>
+                                                        <td className="md:px-2 pl-[14px] py-3">{stats?.run4}</td>
+                                                        <td className="md:px-2 pl-[14px] py-3">{stats?.run6}</td>
+                                                        <td className="md:px-2 pl-[14px] py-3">{stats?.strike}</td>
                                                     </tr>
+                                                    ))}
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className={`rounded-lg bg-[#ffffff] mb-4 p-4  ${statsType == "most-wicket" || statsType == "best-average" || statsType == "best-bowling" || statsType == "most-five_wickets" || statsType == "best-economy" || statsType == "best-strike" ? "" : "hidden"}`}>
+                                    <h3 className="text-1xl font-semibold mb-3 pl-[7px] border-l-[3px] border-[#229ED3]">
+                                    Bowling
+                                    </h3>
+                                    <div>
+                                        <div className="overflow-x-auto">
+                                            <table className="w-full text-sm text-left text-gray-500 whitespace-nowrap">
+                                                <thead className="bg-blue-50 text-gray-700 ">
                                                     <tr>
-                                                        <td className="md:px-2 pl-[14px] py-3 w-[10px]">2</td>
-                                                        <td className="md:px-2 pl-[14px] py-3 text-[#217AF7]">
-                                                            <Link href="/player/playername/overview"> Rohit Sharma</Link>
-                                                        </td>
-                                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">123</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">45.50</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">9</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">0</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">74.65</td>
+                                                        <th className="px-4 py-3 font-medium w-[10px]" />
+                                                        <th className="px-4 py-3 font-medium">Bowler</th>
+                                                        <th className="md:px-2 pl-[14px] py-3 font-medium">
+                                                            Match
+                                                        </th>
+                                                        <th className="md:px-2 pl-[14px] py-3 font-medium">
+                                                            Inns
+                                                        </th>
+                                                        <th className="md:px-2 pl-[14px] py-3 font-medium">
+                                                            Wickets
+                                                        </th>
+                                                        <th className="md:px-2 pl-[14px] py-3 font-medium">
+                                                            Avg
+                                                        </th>
+                                                        <th className="md:px-2 pl-[14px] py-3 font-medium">
+                                                            Wicket4i
+                                                        </th>
+                                                        <th className="md:px-2 pl-[14px] py-3 font-medium">
+                                                            wicket5i
+                                                        </th>
+                                                        <th className="md:px-2 pl-[14px] py-3 font-medium">
+                                                            SR
+                                                        </th>
                                                     </tr>
-                                                    <tr>
-                                                        <td className="md:px-2 pl-[14px] py-3 w-[10px]">3</td>
-                                                        <td className="md:px-2 pl-[14px] py-3 text-[#217AF7]">
-                                                            <Link href="/player/playername/overview"> Rohit Sharma</Link>
+                                                </thead>
+                                                <tbody className="divide-y divide-gray-200">
+                                                    {matchStats.map((stats:any, index:number) => (
+                                                    <tr key={index}>
+                                                        <td className="md:px-2 pl-[14px] py-3 w-[10px]">{index+1}</td>
+                                                        <td className="md:px-2 py-3 text-[#217AF7]">
+                                                            <Link href={"/player/"+urlStringEncode(stats?.player?.first_name)+"/"+stats?.player?.pid}> {stats?.player?.short_name}</Link>
                                                         </td>
-                                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">123</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">45.50</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">9</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">0</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">74.65</td>
+                                                        <td className="md:px-2 pl-[14px] py-3">{stats?.matches}</td>
+                                                        <td className="md:px-2 pl-[14px] py-3">{stats?.innings}</td>
+                                                        <td className="md:px-2 pl-[14px] py-3">{stats?.wickets}</td>
+                                                        <td className="md:px-2 pl-[14px] py-3">{stats?.average}</td>
+                                                        <td className="md:px-2 pl-[14px] py-3">{stats?.wicket4i}</td>
+                                                        <td className="md:px-2 pl-[14px] py-3">{stats?.wicket5i}</td>
+                                                        <td className="md:px-2 pl-[14px] py-3">{stats?.strike}</td>
                                                     </tr>
-                                                    <tr>
-                                                        <td className="md:px-2 pl-[14px] py-3 w-[10px]">4</td>
-                                                        <td className="md:px-2 pl-[14px] py-3 text-[#217AF7]">
-                                                            <Link href="/player/playername/overview"> Rohit Sharma</Link>
-                                                        </td>
-                                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">123</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">45.50</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">9</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">0</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">74.65</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td className="md:px-2 pl-[14px] py-3 w-[10px]">5</td>
-                                                        <td className="md:px-2 pl-[14px] py-3 text-[#217AF7]">
-                                                            <Link href="/player/playername/overview"> Rohit Sharma</Link>
-                                                        </td>
-                                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">123</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">45.50</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">9</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">0</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">74.65</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td className="md:px-2 pl-[14px] py-3 w-[10px]">6</td>
-                                                        <td className="md:px-2 pl-[14px] py-3 text-[#217AF7]">
-                                                            <Link href="/player/playername/overview"> Rohit Sharma</Link>
-                                                        </td>
-                                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">123</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">45.50</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">9</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">0</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">74.65</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td className="md:px-2 pl-[14px] py-3 w-[10px]">7</td>
-                                                        <td className="md:px-2 pl-[14px] py-3 text-[#217AF7]">
-                                                            <Link href="/player/playername/overview"> Rohit Sharma</Link>
-                                                        </td>
-                                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">123</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">45.50</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">9</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">0</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">74.65</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td className="md:px-2 pl-[14px] py-3 w-[10px]">8</td>
-                                                        <td className="md:px-2 pl-[14px] py-3 text-[#217AF7]">
-                                                            <Link href="/player/playername/overview"> Rohit Sharma</Link>
-                                                        </td>
-                                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">123</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">45.50</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">9</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">0</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">74.65</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td className="md:px-2 pl-[14px] py-3 w-[10px]">9</td>
-                                                        <td className="md:px-2 pl-[14px] py-3 text-[#217AF7]">
-                                                            <Link href="/player/playername/overview"> Rohit Sharma</Link>
-                                                        </td>
-                                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">123</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">45.50</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">9</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">0</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">74.65</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td className="md:px-2 pl-[14px] py-3 w-[10px]">
-                                                            10
-                                                        </td>
-                                                        <td className="md:px-2 pl-[14px] py-3 text-[#217AF7]">
-                                                            <Link href="/player/playername/overview"> Rohit Sharma</Link>
-                                                        </td>
-                                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">123</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">45.50</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">9</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">0</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">74.65</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td className="md:px-2 pl-[14px] py-3 w-[10px]">
-                                                            11
-                                                        </td>
-                                                        <td className="md:px-2 pl-[14px] py-3 text-[#217AF7]">
-                                                            <Link href="/player/playername/overview"> Rohit Sharma</Link>
-                                                        </td>
-                                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">123</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">45.50</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">9</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">0</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">74.65</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td className="md:px-2 pl-[14px] py-3 w-[10px]">
-                                                            12
-                                                        </td>
-                                                        <td className="md:px-2 pl-[14px] py-3 text-[#217AF7]">
-                                                            <Link href="/player/playername/overview"> Rohit Sharma</Link>
-                                                        </td>
-                                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">123</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">45.50</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">9</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">0</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">74.65</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td className="md:px-2 pl-[14px] py-3 w-[10px]">
-                                                            13
-                                                        </td>
-                                                        <td className="md:px-2 pl-[14px] py-3 text-[#217AF7]">
-                                                            <Link href="/player/playername/overview"> Rohit Sharma</Link>
-                                                        </td>
-                                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">123</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">45.50</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">9</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">0</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">74.65</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td className="md:px-2 pl-[14px] py-3 w-[10px]">
-                                                            14
-                                                        </td>
-                                                        <td className="md:px-2 pl-[14px] py-3 text-[#217AF7]">
-                                                            <Link href="/player/playername/overview"> Rohit Sharma</Link>
-                                                        </td>
-                                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">123</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">45.50</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">9</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">0</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">74.65</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td className="md:px-2 pl-[14px] py-3 w-[10px]">
-                                                            15
-                                                        </td>
-                                                        <td className="md:px-2 pl-[14px] py-3 text-[#217AF7]">
-                                                            <Link href="/player/playername/overview"> Rohit Sharma</Link>
-                                                        </td>
-                                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">123</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">45.50</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">9</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">0</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">74.65</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td className="md:px-2 pl-[14px] py-3 w-[10px]">
-                                                            16
-                                                        </td>
-                                                        <td className="md:px-2 pl-[14px] py-3 text-[#217AF7]">
-                                                            <Link href="/player/playername/overview"> Rohit Sharma</Link>
-                                                        </td>
-                                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">5</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">123</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">45.50</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">9</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">0</td>
-                                                        <td className="md:px-2 pl-[14px] py-3">74.65</td>
-                                                    </tr>
+                                                    ))}
+                                                    
 
                                                 </tbody>
                                             </table>

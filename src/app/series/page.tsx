@@ -11,8 +11,9 @@ import News from './seriesComponents/News'
 import Stats from './seriesComponents/Stats'
 import { liveSeries, seriesById, seriesUpcomingMatches } from "@/controller/homeController";
 import { SeriesKeyStats, SeriesMatches } from "@/controller/matchInfoController";
+import { TeamPlayers } from "@/controller/teamController";
 
-type Params = Promise<{ seriesName: string; seriesId: number; seriesTap: string; }>
+type Params = Promise<{ seriesName: string; seriesId: number; seriesTap: string; seriesStatsType: string }>
 
 export default async function page(props: { params: Params }) {
 
@@ -20,6 +21,7 @@ export default async function page(props: { params: Params }) {
   const seriesName = params?.seriesName;
   const seriesId = Number(params?.seriesId);
   const seriesTab = params?.seriesTap;
+  const statsType = params?.seriesStatsType;
 
     const liveSeriesData = await liveSeries();
     const SeriesDetails = await seriesById(seriesId);
@@ -27,8 +29,11 @@ export default async function page(props: { params: Params }) {
   const urlString = "/series/"+seriesName+"/"+seriesId;
   const seriesKeystats =  await SeriesKeyStats(seriesId);
   const seriesMatches =  await SeriesMatches(seriesId);
+
+  const teamIds = SeriesDetails?.teams?.map((series: any) => series.tid) || [];
    
-   console.log('param', seriesMatches);
+  const teamPlayers =  await TeamPlayers(teamIds);
+   console.log('teamIds', teamPlayers);
 
   return (
     <Layout headerData={liveSeriesData}>
@@ -37,10 +42,10 @@ export default async function page(props: { params: Params }) {
 
           {seriesTab === ""  || seriesTab === undefined && <Overview  seriesInfo={SeriesDetails} seriesKeystats={seriesKeystats} urlString={urlString}/>}
           {seriesTab === "schedule-results" && <ScheduleResults seriesMatches={seriesMatches} urlString={urlString}/>}
-          {seriesTab === "squads" && <Squads  urlString={urlString}/>}
+          {seriesTab === "squads" && <Squads teamPlayers={teamPlayers}  seriesInfo={SeriesDetails} urlString={urlString}/>}
           {seriesTab === "points-table" && <PointsTable seriesInfo={SeriesDetails} urlString={urlString} />}
           {seriesTab === "news" && <News  urlString={urlString}/>}
-          {seriesTab === "stats" && <Stats  urlString={urlString}/>}
+          {seriesTab === "stats" && <Stats seriesId={seriesId} urlString={urlString} statsType={statsType} />}
 
        
     </Layout>
