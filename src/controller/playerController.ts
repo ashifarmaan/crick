@@ -74,7 +74,7 @@ export async function PlayerStats(
       // }
   
     const data = await httpGet(API_URL);
-    const ranking = data?.response?.ranks || [];
+    const ranking = data?.response || [];
     // console.log("ranking", ranking);
       // if (ranking.length > 0) {
       //   await redis.setex(CACHE_KEY, CACHE_TTL, JSON.stringify(ranking));

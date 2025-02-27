@@ -131,7 +131,7 @@ if(data){
             <Link href="" className="hover:text-yellow-400">
               Teams
             </Link>
-            <Link href="/iccRanking/man/team" className="hover:text-yellow-400">
+            <Link href="/iccranking/man/team/odis" className="hover:text-yellow-400">
               ICC Ranking
             </Link>
             <Link href="" className="hover:text-yellow-400">

@@ -35,7 +35,7 @@ export default function Overview({playerAdvanceStats, playerStats, urlString, ra
   let odiRank = "",
     testRank = "",
     t20Rank = "";
-  const playerRank = ranking ?? {};
+  const playerRank = ranking?.ranks ?? {};
 
   if (profile?.playing_role === "bat") {
     odiRank =
