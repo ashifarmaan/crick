@@ -108,7 +108,7 @@ if(data){
               <Link
                  href="#"
                 className="hover:text-yellow-400 flex items-center"
-                // id="drop-series-trigger"
+                
                 onClick={toggleDropdown}
               >
                 Series
