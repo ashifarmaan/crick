@@ -27,7 +27,7 @@ export default function Live({
   matchCommentary,
 }: // matchLast,
 Live) {
-  
+  console.log("matchData",matchData);
   const [activeTab, setActiveTab] = useState("tab1");
 
   // const [allCommentries, setAllCommentries] = useState(
@@ -47,7 +47,7 @@ Live) {
     }
   };
 
-  // let matchInningatsmen = matchCommentary?.commentaries[6]?.bowlers?.bowls?.overs;
+  // let matchInningbatsmen = matchCommentary?.commentaries[6]?.bowlers?.bowls?.overs;
   
   // console.log("matchCommentary",matchCommentary);
   
@@ -197,7 +197,7 @@ Live) {
     updatedCommentaries;
   }
 
-  // console.log("allComm1", newCommentary);
+  // console.log("allComm1", updatedCommentaries);
 
   // const playerName = getPlayerNameByPid(players, 117226);
 
@@ -224,9 +224,15 @@ Live) {
     // console.log("bowlerPlayerStats",bowlerPlayerStats);
   }
   if(matchinfo?.batsmen?.[0]?.balls_faced == 0 || matchinfo?.batsmen?.[1]?.balls_faced == 0){
-    // const batsmaPplayerStats =  PlayerStats(matchinfo?.bowlers?.[0]?.bowler_id,matchFormat,"batting");
-    // console.log("batsmaPplayerStats",batsmaPplayerStats);
+    // const batsmanPlayerStats =  PlayerStats(matchinfo?.bowlers?.[0]?.bowler_id,matchFormat,"batting");
+    // console.log("batsmanPlayerStats",batsmanPlayerStats);
   }
+
+  const [visibleCount, setVisibleCount] = useState(20);
+      
+      const loadMore = () => {
+          setVisibleCount((prevCount) => prevCount + 10);
+        };
  
 
   return (
@@ -619,7 +625,7 @@ Live) {
               </div>
             </div>
             <div className="cust-box-click-content" key="testMatch">
-              {updatedCommentaries.map((comment: any, index: number) =>
+              {updatedCommentaries?.slice(0, visibleCount).map((comment: any, index: number) =>
                 comment?.event === "overend" ? (
                   <div className="rounded-t-lg bg-white p-4 mt-4" key={`over-${index}`}>
                     <div className="flex md:flex-row flex-col justify-between md:items-center gap-2">
@@ -863,6 +869,13 @@ Live) {
             </div>
           </div>
         </div>
+        <div className="px-4 text-center">
+          {visibleCount < updatedCommentaries.length && (
+            <button  onClick={loadMore} className="px-8 bg-[#081736] font-semibold text-white py-2 rounded hover:bg-blue-700">
+              View More
+            </button>
+            )}
+          </div>
       </div>
       ):(
         <div className='bg-white p-4 rounded-md mb-8'>

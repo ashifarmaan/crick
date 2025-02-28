@@ -90,7 +90,7 @@ export default async function Home(props: { params: Params }) {
 
   const liveSeriesData = await liveSeries();
   // const  matchData = ChatComponent();
-  // console.log(liveSeriesData);
+  // console.log("liveMatch",liveMatch);
   
   return (
     <Layout headerData={liveSeriesData}>

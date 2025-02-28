@@ -1,16 +1,28 @@
 // lib/fetchMatches.ts
 import { httpGet } from "@/lib/http";
+import redis from "../config/redis";
 
 export async function MatcheInfo(matchid: number) {
   if (!matchid) {
     return { notFound: true };
   }
+  const CACHE_KEY = "match_info_by_id";
+  const CACHE_TTL = 60;
   const API_URL =
     "https://rest.entitysport.com/exchange/matches/" +
     matchid +
     "/info?token=7b58d13da34a07b0a047e129874fdbf4";
+
+  const cachedData = await redis.get(CACHE_KEY);
+  if (cachedData) {
+     
+    return JSON.parse(cachedData);
+  }
   const data = await httpGet(API_URL);
   const matches = data?.response || [];
+  if (matches.length > 0) {
+    await redis.setex(CACHE_KEY, CACHE_TTL, JSON.stringify(matches));
+  }
   return matches;
 }
 
@@ -18,13 +30,26 @@ export async function Last10Match(matchid: number) {
   if (!matchid) {
     return { notFound: true }; // Handle undefined ID gracefully
   }
+
+  const CACHE_KEY = "last_10_match";
+  const CACHE_TTL = 600;
+
   const API_URL =
     "https://rest.entitysport.com/v4/matches/" +
     matchid +
     "/advance?token=7b58d13da34a07b0a047e129874fdbf4";
 
+  const cachedData = await redis.get(CACHE_KEY);
+  if (cachedData) {
+     
+    return JSON.parse(cachedData);
+  }
+
   const data = await httpGet(API_URL);
   const matches = data?.response || [];
+  if (matches.length > 0) {
+    await redis.setex(CACHE_KEY, CACHE_TTL, JSON.stringify(matches));
+  }
   return matches;
 }
 
@@ -32,13 +57,26 @@ export async function MatchStatistics(matchid: number) {
   if (!matchid) {
     return { notFound: true }; // Handle undefined ID gracefully
   }
-  60;
+
+  const CACHE_KEY = "match_statistics";
+  const CACHE_TTL = 60;
+
   const API_URL =
     "https://rest.entitysport.com/exchange/matches/" +
     matchid +
     "/statistics?token=7b58d13da34a07b0a047e129874fdbf4";
+
+  const cachedData = await redis.get(CACHE_KEY);
+  if (cachedData) {
+     
+    return JSON.parse(cachedData);
+  }
+
   const data = await httpGet(API_URL);
   const matches = data?.response || [];
+  if (matches.length > 0) {
+    await redis.setex(CACHE_KEY, CACHE_TTL, JSON.stringify(matches));
+  }
   return matches;
 }
 
@@ -47,6 +85,10 @@ export async function MatchCommentary(matchid: number, inningNumer: number) {
   if (!matchid || !inningNumer) {
     return { notFound: true }; // Handle undefined ID gracefully
   }
+
+  const CACHE_KEY = "match_commentary";
+  const CACHE_TTL = 60;
+
   const API_URL =
     "https://rest.entitysport.com/exchange/matches/" +
     matchid +
@@ -54,8 +96,22 @@ export async function MatchCommentary(matchid: number, inningNumer: number) {
     inningNumer +
     "/commentary?token=7b58d13da34a07b0a047e129874fdbf4";
 
+  const cachedData = await redis.get(CACHE_KEY);
+  if (cachedData) {
+     
+    return JSON.parse(cachedData);
+  }
+
   const data = await httpGet(API_URL);
   const matchInningCommentaries = data?.response || [];
+
+  if (matchInningCommentaries.length > 0) {
+    await redis.setex(
+      CACHE_KEY,
+      CACHE_TTL,
+      JSON.stringify(matchInningCommentaries)
+    );
+  }
 
   return matchInningCommentaries;
 }
@@ -65,6 +121,9 @@ export async function MatcheStats(cid: number, statType: string) {
     return { notFound: true }; // Handle undefined ID gracefully
   }
 
+  const CACHE_KEY = "match_stats";
+  const CACHE_TTL = 60;
+
   const API_URL =
     "https://rest.entitysport.com/exchange/competitions/" +
     cid +
@@ -72,8 +131,18 @@ export async function MatcheStats(cid: number, statType: string) {
     statType +
     "?token=7b58d13da34a07b0a047e129874fdbf4";
 
+  const cachedData = await redis.get(CACHE_KEY);
+  if (cachedData) {
+     
+    return JSON.parse(cachedData);
+  }
+
   const data = await httpGet(API_URL);
   const matches = data?.response || [];
+
+  if (matches.length > 0) {
+    await redis.setex(CACHE_KEY, CACHE_TTL, JSON.stringify(matches));
+  }
 
   return matches;
 }
@@ -83,13 +152,26 @@ export async function SeriesPointsTable(cid: number) {
     return { notFound: true }; // Handle undefined ID gracefully
   }
 
+  const CACHE_KEY = "seriesPointsTableCache";
+  const CACHE_TTL = 60;
+
   const API_URL =
     "https://rest.entitysport.com/exchange/competitions/" +
     cid +
     "/info?token=7b58d13da34a07b0a047e129874fdbf4";
 
+  const cachedData = await redis.get(CACHE_KEY);
+  if (cachedData) {
+     
+    return JSON.parse(cachedData);
+  }
+
   const data = await httpGet(API_URL);
   const matches = data?.response || [];
+
+  if (matches.length > 0) {
+    await redis.setex(CACHE_KEY, CACHE_TTL, JSON.stringify(matches));
+  }
 
   return matches;
 }
@@ -99,13 +181,26 @@ export async function SeriesPointsTableMatches(cid: number) {
     return { notFound: true }; // Handle undefined ID gracefully
   }
 
+  const CACHE_KEY = "seriesPointsTableMatchesCache";
+  const CACHE_TTL = 60;
+
   const API_URL =
     "https://rest.entitysport.com/exchange/competitions/" +
     cid +
     "/matches?token=7b58d13da34a07b0a047e129874fdbf4";
 
+  const cachedData = await redis.get(CACHE_KEY);
+  if (cachedData) {
+     
+    return JSON.parse(cachedData);
+  }
+
   const data = await httpGet(API_URL);
   const matches = data?.response || [];
+
+  if (matches.length > 0) {
+    await redis.setex(CACHE_KEY, CACHE_TTL, JSON.stringify(matches));
+  }
 
   return matches;
 }
@@ -171,4 +266,3 @@ export async function SeriesMatches(cid: number) {
     return { error: "Failed to fetch series items" };
   }
 }
-
