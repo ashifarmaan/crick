@@ -111,7 +111,7 @@ export default function Overview({playerAdvanceStats, playerStats, urlString, ra
       match: match.match_title,
     })) ?? [];
 
-  console.log("Bowling Stats:", slidesBol);
+  // console.log("Bowling Stats:", battingArray);
 
   // Slider State
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -522,7 +522,7 @@ export default function Overview({playerAdvanceStats, playerStats, urlString, ra
                                   scope="row"
                                   className="px-4 py-4 font-medium text-gray-900 bg-[#C3DBFF33] whitespace-nowrap dark:text-white"
                                 >
-                                  {item.format}
+                                  {item.formatType}
                                 </th>
                                 <td className="px-4 py-4">{item.matches}</td>
                                 <td className="px-4 py-4">{item.innings}</td>
@@ -727,7 +727,7 @@ export default function Overview({playerAdvanceStats, playerStats, urlString, ra
                                   scope="row"
                                   className="px-4 py-4 font-medium text-gray-900 bg-[#C3DBFF33] whitespace-nowrap dark:text-white"
                                 >
-                                  {item.format}
+                                  {item.formatType}
                                 </th>
                                 <td className="px-4 py-4">{item.matches}</td>
                                 <td className="px-4 py-4">{item.innings}</td>

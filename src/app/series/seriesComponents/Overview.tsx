@@ -114,7 +114,7 @@ export default function Overview({seriesInfo, seriesKeystats, urlString} : Overv
                                         </div>
                                         <div className="flex items-center gap-14">
                                             <h2 className="font-normal text-[#586577]">Format :</h2>
-                                            <p className="text-[14px] font-medium"> {seriesInfo?.game_format}</p>
+                                            <p className="text-[14px] font-medium"> {seriesInfo?.game_format?.toUpperCase()}</p>
                                         </div>
                                         <div className="flex items-center gap-14">
                                             <h2 className="font-normal text-[#586577]">Teams :</h2>
@@ -728,6 +728,7 @@ export default function Overview({seriesInfo, seriesKeystats, urlString} : Overv
                             </div>
                             <div className="mb-4">
                                 <div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-2 items-center gap-2">
+                                    {seriesKeystats?.mostRuns?.player?.short_name &&
                                     <div className="col-span-1">
                                         <Link href="/player/playername/overview">
                                             <div className="rounded-lg bg-[#ffffff] p-4 flex flex-col items-center">
@@ -748,6 +749,8 @@ export default function Overview({seriesInfo, seriesKeystats, urlString} : Overv
                                             </div>
                                         </Link>
                                     </div>
+                                    }
+                                    {seriesKeystats?.highStrike?.player?.short_name &&
                                     <div className="col-span-1">
                                         <Link href="/player/playername/overview">
                                             <div className="rounded-lg bg-[#ffffff] p-4 flex flex-col items-center">
@@ -768,6 +771,8 @@ export default function Overview({seriesInfo, seriesKeystats, urlString} : Overv
                                             </div>
                                         </Link>
                                     </div>
+                                    }
+                                    {seriesKeystats?.topWickets?.player?.short_name &&
                                     <div className="col-span-1">
                                         <Link href="/player/playername/overview">
                                             <div className="rounded-lg bg-[#ffffff] p-4 flex flex-col items-center">
@@ -786,6 +791,8 @@ export default function Overview({seriesInfo, seriesKeystats, urlString} : Overv
                                             </div>
                                         </Link>
                                     </div>
+                                    }
+                                    {seriesKeystats?.bestBowling?.player?.short_name &&
                                     <div className="col-span-1">
                                         <Link href="/player/playername/overview">
                                             <div className="rounded-lg bg-[#ffffff] p-4 flex flex-col items-center">
@@ -803,6 +810,7 @@ export default function Overview({seriesInfo, seriesKeystats, urlString} : Overv
                                             </div>
                                         </Link>
                                     </div>
+                                    }
                                 </div>
                             </div>
                             <div className="rounded-lg bg-[#ffffff] p-4 mb-4">

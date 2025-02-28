@@ -96,15 +96,15 @@ if(data){
           </button>
           {/* Navbar Links */}
           <nav id="menu" className="hidden lg:flex space-x-4 text-1xl">
-            <Link href="/" className="hover:text-yellow-400">
+            <Link href="/" className="hover:text-yellow-400"  prefetch={true}>
               Home
             </Link>
-            <Link href="#" className="hover:text-yellow-400">
+            <Link href="#" className="hover:text-yellow-400"  prefetch={true}>
               Fixtures
             </Link>
-            <Link href="#" className="hover:text-yellow-400"></Link>
+            <Link href="#" className="hover:text-yellow-400"  prefetch={true}></Link>
             <div className="group">
-              <Link href="" className="hover:text-yellow-400"></Link>
+              <Link href="" className="hover:text-yellow-400"  prefetch={true}></Link>
               <Link
                  href="#"
                 className="hover:text-yellow-400 flex items-center"
@@ -128,21 +128,21 @@ if(data){
                 </svg>
               </Link>
             </div>
-            <Link href="" className="hover:text-yellow-400">
+            <Link href="" className="hover:text-yellow-400"  prefetch={true}>
               Teams
             </Link>
-            <Link href="/iccranking/man/team/odis" className="hover:text-yellow-400">
+            <Link href="/iccranking/man/team/odis" className="hover:text-yellow-400"  prefetch={true}>
               ICC Ranking
             </Link>
-            <Link href="" className="hover:text-yellow-400">
+            <Link href="" className="hover:text-yellow-400"  prefetch={true}>
               News
             </Link>
-            <Link href="" className="hover:text-yellow-400">
+            <Link href="" className="hover:text-yellow-400"  prefetch={true}>
               Fantasy Tips
             </Link>
-            <Link href="" className="hover:text-yellow-400">
+            {/* <Link href="" className="hover:text-yellow-400">
               Point Table
-            </Link>
+            </Link> */}
           </nav>
         </div>
         {/* Mobile Menu */}

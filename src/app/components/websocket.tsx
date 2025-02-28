@@ -154,14 +154,14 @@ class MatchWebSocket extends Component<object, MatchData> { // Changed from {} t
     });
 
     // more info page 
-    const matchInfoelements = document.querySelectorAll(
-      `.matchinfo${this.state.matchId}-${this.state.matchBattingTeam}`
-    ); // Select elements with class `match-info`
-    matchInfoelements.forEach((element) => {
-      element.innerHTML = `${this.state.matchRuns}/${this.state.matchWikets}
-                        <span className="text-[13px] font-medium"  style="font-weight: 500; font-size: 13px">(${this.state.matchOvers})</span>
-                      `;
-    });
+    // const matchInfoelements = document.querySelectorAll(
+    //   `.matchinfo${this.state.matchId}-${this.state.matchBattingTeam}`
+    // ); // Select elements with class `match-info`
+    // matchInfoelements.forEach((element) => {
+    //   element.innerHTML = `${this.state.matchRuns}/${this.state.matchWikets}
+    //                     <span className="text-[13px] font-medium"  style="font-weight: 500; font-size: 13px">(${this.state.matchOvers})</span>
+    //                   `;
+    // });
 
     const crrelements = document.querySelectorAll(
       `.crr${this.state.matchId}`
