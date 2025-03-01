@@ -105,13 +105,16 @@ if(data){
             <Link href="#" className="hover:text-yellow-400"  prefetch={true}></Link>
             <div className="group">
               <Link href="" className="hover:text-yellow-400"  prefetch={true}></Link>
+              <div className="flex items-center">
               <Link
-                 href="#"
+                 href="/series"
                 className="hover:text-yellow-400 flex items-center"
-                
-                onClick={toggleDropdown}
               >
                 Series
+                </Link>
+                <Link
+                 href="#" className="hover:text-yellow-400" onClick={toggleDropdown}
+                 >
                 <svg
                   className="w-4 h-4 ml-1"
                   xmlns="http://www.w3.org/2000/svg"
@@ -127,6 +130,7 @@ if(data){
                   />
                 </svg>
               </Link>
+              </div>
             </div>
             <Link href="" className="hover:text-yellow-400"  prefetch={true}>
               Teams
