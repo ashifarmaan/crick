@@ -126,10 +126,67 @@ export async function seriesUpcomingMatches(cid: number) {
 
 
   const data = await httpGet(API_URL);
-  const seriesMatches = data?.response || [];
+  const seriesMatches = data?.response?.items || [];
   if (seriesMatches.length > 0) {
     await redis.setex(CACHE_KEY, CACHE_TTL, JSON.stringify(seriesMatches));
   }
   // console.log("coming from API live_series");
-  return seriesMatches?.items;
+  return seriesMatches;
+}
+
+export async function TournamentsList() {
+  const CACHE_KEY = "tournamentsListCache";
+  const CACHE_TTL = 60;
+  const API_URL =  "https://rest.entitysport.com/v4/tournaments?token=7b58d13da34a07b0a047e129874fdbf4";
+
+  const cachedData = await redis.get(CACHE_KEY);
+  if (cachedData) {
+    // console.log("coming from cache live_series");
+    return JSON.parse(cachedData);
+  }
+
+
+  const data = await httpGet(API_URL);
+  const tournaments = data?.response?.items || [];
+  if (tournaments.length > 0) {
+    await redis.setex(CACHE_KEY, CACHE_TTL, JSON.stringify(tournaments));
+  }
+  // console.log("coming from API live_series");
+  return tournaments;
+}
+export async function AllSeriesList() {
+  const CACHE_KEY = "tournamentsListCache";
+  const CACHE_TTL = 60;
+
+  const API_URL_FIXTURE = "https://rest.entitysport.com/exchange/competitions?token=7b58d13da34a07b0a047e129874fdbf4&status=fixture&per_page=100";
+  const API_URL_RESULT = "https://rest.entitysport.com/exchange/competitions?token=7b58d13da34a07b0a047e129874fdbf4&status=result&per_page=100";
+  const API_URL_LIVE = "https://rest.entitysport.com/exchange/competitions?token=7b58d13da34a07b0a047e129874fdbf4&status=live&per_page=100";
+
+  // Check Redis cache
+  const cachedData = await redis.get(CACHE_KEY);
+  if (cachedData) {
+    return JSON.parse(cachedData);
+  }
+
+  // Fetch data from both URLs simultaneously
+  const [fixtureData, resultData, liveData] = await Promise.all([
+    httpGet(API_URL_FIXTURE),
+    httpGet(API_URL_RESULT),
+    httpGet(API_URL_LIVE),
+  ]);
+
+  // Extract items from responses
+  const tournamentsFixture = fixtureData?.response?.items || [];
+  const tournamentsResult = resultData?.response?.items || [];
+  const tournamentsLive = liveData?.response?.items || [];
+
+  // Combine both datasets
+  const combinedTournaments = [...tournamentsFixture, ...tournamentsResult, ...tournamentsLive];
+// console.log("ss",combinedTournaments);
+  // Store in Redis cache
+  if (combinedTournaments.length > 0) {
+    await redis.setex(CACHE_KEY, CACHE_TTL, JSON.stringify(combinedTournaments));
+  }
+
+  return combinedTournaments;
 }

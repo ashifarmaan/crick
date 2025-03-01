@@ -2,14 +2,15 @@ import React from 'react'
 import Layout from "@/app/components/Layout";
 
 
-import Overview from './seriesComponents/Overview'
-import Banner from './seriesComponents/Banner'
-import ScheduleResults from './seriesComponents/ScheduleResults'
-import Squads from './seriesComponents/Squads'
+import Overview from './seriesComponents/Overview';
+import Banner from './seriesComponents/Banner';
+import ScheduleResults from './seriesComponents/ScheduleResults';
+import Squads from './seriesComponents/Squads';
 import PointsTable from './seriesComponents/PointsTable';
-import News from './seriesComponents/News'
-import Stats from './seriesComponents/Stats'
-import { liveSeries, seriesById, seriesUpcomingMatches } from "@/controller/homeController";
+import News from './seriesComponents/News';
+import Stats from './seriesComponents/Stats';
+import SeriesList from './seriesComponents/SeriesList';
+import { liveSeries, seriesById, TournamentsList, AllSeriesList } from "@/controller/homeController";
 import { SeriesKeyStats, SeriesMatches } from "@/controller/matchInfoController";
 import { TeamPlayers } from "@/controller/teamController";
 
@@ -33,11 +34,15 @@ export default async function page(props: { params: Params }) {
   const teamIds = SeriesDetails?.teams?.map((series: any) => series.tid) || [];
    
   const teamPlayers =  await TeamPlayers(teamIds);
+  const tournamentsList = await AllSeriesList();
    console.log('teamIds', teamPlayers);
 
   return (
     <Layout headerData={liveSeriesData}>
-
+          {seriesName === '' || seriesName === undefined ? (
+          <SeriesList tournamentsList={tournamentsList}></SeriesList>
+          ):(
+            <>
           <Banner seriesData={liveSeriesData} seriesInfo={SeriesDetails}></Banner>
 
           {seriesTab === ""  || seriesTab === undefined && <Overview  seriesInfo={SeriesDetails} seriesKeystats={seriesKeystats} urlString={urlString}/>}
@@ -46,8 +51,10 @@ export default async function page(props: { params: Params }) {
           {seriesTab === "points-table" && <PointsTable seriesInfo={SeriesDetails} urlString={urlString} />}
           {seriesTab === "news" && <News  urlString={urlString}/>}
           {seriesTab === "stats" && <Stats seriesId={seriesId} urlString={urlString} statsType={statsType} />}
-
-       
+          
+          </>
+          )
+        }
     </Layout>
   )
 }
