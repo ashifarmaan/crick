@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import eventEmitter from "@/utils/eventEmitter";
 import { calculateRemainingOvers, getPlayerNameByPid } from "@/utils/utility";
@@ -229,10 +229,32 @@ Live) {
   }
 
   const [visibleCount, setVisibleCount] = useState(20);
-      
-      const loadMore = () => {
-          setVisibleCount((prevCount) => prevCount + 10);
-        };
+  const loaderRef = useRef(null);
+
+  const loadMore = () => {
+    setVisibleCount((prevCount) => prevCount + 10);
+  };
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          loadMore();
+        }
+      },
+      { threshold: 1.0 } // Trigger when fully visible
+    );
+
+    if (loaderRef.current) {
+      observer.observe(loaderRef.current);
+    }
+
+    return () => {
+      if (loaderRef.current) {
+        observer.unobserve(loaderRef.current);
+      }
+    };
+  }, []);
  
 
   return (
@@ -871,10 +893,8 @@ Live) {
         </div>
         <div className="px-4 text-center">
           {visibleCount < updatedCommentaries.length && (
-            <button  onClick={loadMore} className="px-8 bg-[#081736] font-semibold text-white py-2 rounded hover:bg-blue-700">
-              View More
-            </button>
-            )}
+          <div ref={loaderRef} className="h-10 w-full"></div>
+        )}
           </div>
       </div>
       ):(

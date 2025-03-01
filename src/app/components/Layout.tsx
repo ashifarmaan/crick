@@ -13,7 +13,7 @@ const Layout = ({ children, headerData  }: LayoutProps) => {
       <Header  data={headerData}/>
       {children}
       <Footer />
-      <PhoneMenu /> 
+      <PhoneMenu  data={headerData} /> 
     </>
   );
 };

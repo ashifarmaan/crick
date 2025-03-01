@@ -41,3 +41,29 @@ export async function TeamDetails(
 
   return teamProfiles;
   }
+
+  export async function TeamPlayersById(
+    tid: number
+  ) {
+  const API_URL =
+      "https://rest.entitysport.com/exchange/teams/"+tid+"/player?token=7b58d13da34a07b0a047e129874fdbf4";
+  
+
+  const data = await httpGet(API_URL);
+  const teamPlayers = data?.response?.items  || [];
+
+  return teamPlayers;
+  }
+  export async function TeamLast5match(
+    tid: number,
+    status: number
+  ) {
+  const API_URL =
+      "https://rest.entitysport.com/exchange/teams/"+tid+"/matches?token=7b58d13da34a07b0a047e129874fdbf4&&status="+status+"&per_page=5";
+  
+
+  const data = await httpGet(API_URL);
+  const teamMatches = data?.response?.items  || [];
+
+  return teamMatches;
+  }

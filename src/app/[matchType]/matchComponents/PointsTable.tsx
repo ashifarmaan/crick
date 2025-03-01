@@ -20,6 +20,7 @@ export default function PointsTable({
     seriesPointsTableMatches
   }: PointsTable) {
 
+    console.log("matchUC",seriesPointsTableMatches);
         const pointTable = seriesPointsTable;
         // const cid = matchData?.match_info?.competition?.cid;
         const standings = pointTable?.standing?.standings;

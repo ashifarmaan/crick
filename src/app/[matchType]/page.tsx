@@ -95,7 +95,7 @@ export default async function page(props: { params: Params }) {
       liveMatch?.live?.live_inning_number
     );
   }
-  // console.log("matchCommentary",matchCommentary);
+  // console.log("matchCommentary",matchTab);
 
   const teamascores = liveMatch?.match_info?.teama?.scores ?? "";
   const teambscores = liveMatch?.match_info?.teamb?.scores ?? "";
@@ -203,8 +203,8 @@ export default async function page(props: { params: Params }) {
           match_id={matchid}
           matchData={liveMatch}
           matchUrl={matchTab}
-          seriesPointsTable={SeriesPointsTable}
-          seriesPointsTableMatches={SeriesPointsTableMatches}
+          seriesPointsTable={seriesPointsTable}
+          seriesPointsTableMatches={seriesPointsTableMatches}
         />
       ) : null}
     </Layout>

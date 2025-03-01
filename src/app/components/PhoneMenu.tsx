@@ -1,7 +1,13 @@
 "use client";
 import React, { useState } from 'react'
+import Link from 'next/link'
+import Image from "next/image";
+import {urlStringEncode}  from "./../../utils/utility";
 
-const PhoneMenu = () => {
+interface HeaderProps {
+  data: any; // Adjust type based on your data
+}
+const PhoneMenu = ({ data }: HeaderProps) => {
   const [isOpen, setIsOpen] = useState(false);
   
   const openNav = () => {
@@ -11,6 +17,20 @@ const PhoneMenu = () => {
   const closeNav = () => {
     setIsOpen(false);
   };
+
+  let items = [];
+  if(data){
+     items = data.map((item: any) => ({
+      href: "/series/"+urlStringEncode(item.title+"-"+item.season)+"/"+item.cid,
+      imgSrc: "/assets/img/series/series-1.png",
+      alt: item.abbr,
+      label: item.abbr,
+    }));
+  }else{
+     items = [];
+  }
+  
+// console.log(items[0].href);
 
   return ( 
     <>
@@ -28,20 +48,20 @@ const PhoneMenu = () => {
           &times;
         </button>
         <div className="text-1xl text-white space-y-4 p-5">
-          <a href="#" className="block hover:text-yellow-400">Home</a>
-          <a href="#" className="block hover:text-yellow-400">Fixtures</a>
-          <a href="#" className="block hover:text-yellow-400">Series</a>
-          <a href="#" className="block hover:text-yellow-400">Teams</a>
-          <a href="#" className="block hover:text-yellow-400">ICC Ranking</a>
-          <a href="#" className="block hover:text-yellow-400">News</a>
-          <a href="#" className="block hover:text-yellow-400">Fantasy Tips</a>
-          <a href="#" className="block hover:text-yellow-400">Point Table</a>
+           <Link href="/" className="block hover:text-yellow-400">Home </Link>
+           <Link href="#" className="block hover:text-yellow-400">Fixtures </Link>
+           <Link href={items[0].href} className="block hover:text-yellow-400">Series </Link>
+           <Link href="#" className="block hover:text-yellow-400">Teams </Link>
+           <Link href="/iccranking/man/team/odis" className="block hover:text-yellow-400">ICC Ranking </Link>
+           <Link href="#" className="block hover:text-yellow-400">News </Link>
+           <Link href="#" className="block hover:text-yellow-400">Fantasy Tips </Link>
+           {/* <Link href="#" className="block hover:text-yellow-400">Point Table </Link> */}
         </div>
       </div>
 
       <div className="md:hidden sticky bottom-0 bg-[#0e2149] text-white text-1xl py-2 flex justify-around items-center">
-        <a
-          href="#"
+         <Link
+          href="/"
           className="block flex flex-col items-center py-[4px] px-[9px] bg-[#ffffffdb] text-black rounded-lg font-semibold"
         >
           <span>
@@ -54,8 +74,8 @@ const PhoneMenu = () => {
             </svg>
           </span>
           <span>Home</span>
-        </a>
-        <a href="#" className="block flex flex-col items-center">
+         </Link>
+         <Link href="#" className="block flex flex-col items-center">
           <span>
             <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
               <g id="schedule-icon" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd" fillOpacity="0.87">
@@ -69,8 +89,8 @@ const PhoneMenu = () => {
             </svg>
           </span>
           Fixtures
-        </a>
-        <a href="#" className="block flex flex-col items-center">
+         </Link>
+         <Link href={items[0].href} className="block flex flex-col items-center">
           <span>
             <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
               <g id="cup-icon" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
@@ -84,8 +104,8 @@ const PhoneMenu = () => {
             </svg>
           </span>
           Series
-        </a>
-        <a href="#" className="block flex flex-col items-center">
+         </Link>
+         <Link href="#" className="block flex flex-col items-center">
           <span>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
               <path
@@ -96,9 +116,9 @@ const PhoneMenu = () => {
             </svg>
           </span>
           News
-        </a>
+         </Link>
 
-        <a
+         <Link
           href="#"
           onClick={openNav}
           className="block flex flex-col items-center"
@@ -109,7 +129,7 @@ const PhoneMenu = () => {
             </svg>
           </span>
           More
-        </a>
+         </Link>
       </div>
     </>
   );
