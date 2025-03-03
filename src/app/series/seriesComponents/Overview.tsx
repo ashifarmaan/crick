@@ -5,6 +5,7 @@ import Link from 'next/link'
 import WeeklySlider from '@/app/components/WeeklySlider'
 import Image from "next/image";
 import { format  } from "date-fns";
+import { urlStringEncode } from "@/utils/utility";
 
 interface Overview {
     //seriesData: any[]; // Adjust type based on your data
@@ -730,7 +731,7 @@ export default function Overview({seriesInfo, seriesKeystats, urlString} : Overv
                                 <div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-2 items-center gap-2">
                                     {seriesKeystats?.mostRuns?.player?.short_name &&
                                     <div className="col-span-1">
-                                        <Link href="/player/playername/overview">
+                                        <Link href={"/player/"+urlStringEncode(seriesKeystats?.mostRuns?.player?.first_name)+"/"+seriesKeystats?.mostRuns?.player?.pid}>
                                             <div className="rounded-lg bg-[#ffffff] p-4 flex flex-col items-center">
                                                 <p className="mb-2 font-medium">Most Runs</p>
                                                 <Image
@@ -752,7 +753,7 @@ export default function Overview({seriesInfo, seriesKeystats, urlString} : Overv
                                     }
                                     {seriesKeystats?.highStrike?.player?.short_name &&
                                     <div className="col-span-1">
-                                        <Link href="/player/playername/overview">
+                                        <Link href={"/player/"+urlStringEncode(seriesKeystats?.highStrike?.player?.first_name)+"/"+seriesKeystats?.highStrike?.player?.pid}>
                                             <div className="rounded-lg bg-[#ffffff] p-4 flex flex-col items-center">
                                                 <p className="mb-2 font-medium">Highest Strike</p>
                                                 <Image
@@ -774,7 +775,7 @@ export default function Overview({seriesInfo, seriesKeystats, urlString} : Overv
                                     }
                                     {seriesKeystats?.topWickets?.player?.short_name &&
                                     <div className="col-span-1">
-                                        <Link href="/player/playername/overview">
+                                        <Link href={"/player/"+urlStringEncode(seriesKeystats?.topWickets?.player?.first_name)+"/"+seriesKeystats?.topWickets?.player?.pid}>
                                             <div className="rounded-lg bg-[#ffffff] p-4 flex flex-col items-center">
                                                 <p className="mb-2 font-medium">Most Wickets</p>
                                                 <Image
@@ -794,7 +795,7 @@ export default function Overview({seriesInfo, seriesKeystats, urlString} : Overv
                                     }
                                     {seriesKeystats?.bestBowling?.player?.short_name &&
                                     <div className="col-span-1">
-                                        <Link href="/player/playername/overview">
+                                        <Link href={"/player/"+urlStringEncode(seriesKeystats?.bestBowling?.player?.first_name)+"/"+seriesKeystats?.bestBowling?.player?.pid}>
                                             <div className="rounded-lg bg-[#ffffff] p-4 flex flex-col items-center">
                                                 <p className="mb-2 font-medium">Best Figures</p>
                                                 <Image
@@ -820,7 +821,7 @@ export default function Overview({seriesInfo, seriesKeystats, urlString} : Overv
                                 <div className="border-t-[1px] border-[#E4E9F0]" />
                                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mt-5">
                                 {seriesInfo?.teams?.map((teams:any, index: number) =>(
-                                    <Link href="#" key={index}>
+                                    <Link href={"/team/"+urlStringEncode(teams.alt_name)+"/"+teams.tid} key={index}>
 
                                         <div className="border-[1px] border-[##E2E2E2] rounded-md py-4 px-2 flex flex-col items-center">
                                         {teams?.thumb_url ? (

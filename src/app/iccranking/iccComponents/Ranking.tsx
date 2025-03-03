@@ -149,7 +149,7 @@ interface Team {
                           </div>
                           </Link>
                           :
-                          <Link href="/player/playername/overview">
+                          <Link href={"/team/"+urlStringEncode(rankDetails.team)+"/"+rankDetails.tid}>
                           <div className="flex items-center">
                             <Image
                               src={rankDetails.logo_url}

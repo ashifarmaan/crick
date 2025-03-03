@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react'
 import Image from 'next/image';
 import Link from 'next/link';
 import { getTeamDetailsByTid} from "@/utils/utility";
+import { urlStringEncode } from '@/utils/utility';
 interface Stats {
     urlString: string;
     playerAdvanceStats: any | null;
@@ -133,7 +134,7 @@ export default function Stats({urlString, playerAdvanceStats}: Stats) {
                                                         <tr key={index}>
                                                             <td className="px-3 py-3 w-[10px] font-medium">VS</td>
                                                             <td className="px-3 py-3">
-                                                                <Link href="/team/india/test">
+                                                                <Link href={"/team/"+urlStringEncode(teams.team_name)+"/"+teams.teamid}>
                                                                     <div className="flex space-x-1 w-[114px]">
                                                                         <div className="flex items-center space-x-1 flex-col">
                                                                         {teamLogos[teams.teamid] ? (
@@ -200,7 +201,7 @@ export default function Stats({urlString, playerAdvanceStats}: Stats) {
                                                         <tr key={index}>
                                                             <td className="px-3 py-3 w-[10px] font-medium">VS</td>
                                                             <td className="px-3 py-3">
-                                                                <Link href="/team/india/test">
+                                                                <Link href={"/team/"+urlStringEncode(teams.team_name)+"/"+teams.teamid}>
                                                                     <div className="flex space-x-1 w-[114px]">
                                                                         <div className="flex items-center space-x-1 flex-col">
                                                                         {teamLogos[teams.teamid] ? (
@@ -270,7 +271,7 @@ export default function Stats({urlString, playerAdvanceStats}: Stats) {
                                                         <tr key={index}>
                                                             <td className="px-3 py-3 w-[10px] font-medium">VS</td>
                                                             <td className="px-3 py-3">
-                                                                <Link href="/team/india/test">
+                                                                <Link href={"/team/"+urlStringEncode(teams.team_name)+"/"+teams.teamid}>
                                                                     <div className="flex space-x-1 w-[114px]">
                                                                         <div className="flex items-center space-x-1 flex-col">
                                                                         {teamLogos[teams.teamid] ? (
@@ -337,7 +338,7 @@ export default function Stats({urlString, playerAdvanceStats}: Stats) {
                                                         <tr key={index}>
                                                             <td className="px-3 py-3 w-[10px] font-medium">VS</td>
                                                             <td className="px-3 py-3">
-                                                                <Link href="/team/india/test">
+                                                                <Link href={"/team/"+urlStringEncode(teams.team_name)+"/"+teams.teamid}>
                                                                     <div className="flex space-x-1 w-[114px]">
                                                                         <div className="flex items-center space-x-1 flex-col">
                                                                         {teamLogos[teams.teamid] ? (
@@ -406,7 +407,7 @@ export default function Stats({urlString, playerAdvanceStats}: Stats) {
                                                         <tr key={index}>
                                                             <td className="px-3 py-3 w-[10px] font-medium">VS</td>
                                                             <td className="px-3 py-3">
-                                                                <Link href="/team/india/test">
+                                                                <Link href={"/team/"+urlStringEncode(teams.team_name)+"/"+teams.teamid}>
                                                                     <div className="flex space-x-1 w-[114px]">
                                                                         <div className="flex items-center space-x-1 flex-col">
                                                                         {teamLogos[teams.teamid] ? (
@@ -473,7 +474,7 @@ export default function Stats({urlString, playerAdvanceStats}: Stats) {
                                                         <tr key={index}>
                                                             <td className="px-3 py-3 w-[10px] font-medium">VS</td>
                                                             <td className="px-3 py-3">
-                                                                <Link href="/team/india/test">
+                                                                <Link href={"/team/"+urlStringEncode(teams.team_name)+"/"+teams.teamid}>
                                                                     <div className="flex space-x-1 w-[114px]">
                                                                         <div className="flex items-center space-x-1 flex-col">
                                                                         {teamLogos[teams.teamid] ? (

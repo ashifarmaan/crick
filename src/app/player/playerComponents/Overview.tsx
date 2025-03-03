@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import {   format  } from "date-fns";
 import {getAgeDetails } from "@/utils/timerUtils";
+import { urlStringEncode } from "@/utils/utility";
 
 interface Overview {
   playerAdvanceStats: any | null;
@@ -549,7 +550,7 @@ export default function Overview({playerAdvanceStats, playerStats, urlString, ra
                         <div className="grid md:grid-cols-5 grid-cols-2 gap-4">
                         {teamsPlayedFor.map((teams:any, index: number) => (
                           <div className="col-span-1" key={index}>
-                            <Link href="/team/india/test">
+                            <Link href={"/team/"+urlStringEncode(teams.abbr)+"/"+teams.tid}>
                             <div className="bg-white p-2 rounded-lg border-[1px] border-[#ebebeb] text-center mb-2">
                               <div className="flex items-center justify-center">
                               {teams.logo_url ? (
@@ -753,7 +754,7 @@ export default function Overview({playerAdvanceStats, playerStats, urlString, ra
                         <div className="grid md:grid-cols-5 grid-cols-2 gap-4">
                         {teamsPlayedFor.map((teams:any, index: number) => (
                           <div className="col-span-1" key={index}>
-                            <Link href="/team/india/test">
+                            <Link href={"/team/"+urlStringEncode(teams.abbr)+"/"+teams.tid}>
                             <div className="bg-white p-2 rounded-lg border-[1px] border-[#ebebeb] text-center mb-2">
                               <div className="flex items-center justify-center">
                                 {teams.logo_url ? (

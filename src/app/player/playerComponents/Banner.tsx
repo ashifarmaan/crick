@@ -29,7 +29,7 @@ export default function Banner({playerStats}: Banner) {
                             <h2 className="text-2xl font-medium mb-3">{profile?.first_name}</h2>
                             <div className="lg:flex items-center lg:space-x-5">
                                 <div className="flex items-center space-x-2 md:mb-2 lg:mb-0 mb-0 ">
-                                    <Link href="/team/india/test">
+                                    <Link href="#">
                                     <Image src="/assets/img/india.png" alt="" className="h-[1.5rem]" width={24} height={24}/>
                                     </Link>
                                     <span>{profile?.nationality} - {profile?.birthdate !== undefined && profile?.birthdate !== '' ? getAge(profile?.birthdate):""}</span>

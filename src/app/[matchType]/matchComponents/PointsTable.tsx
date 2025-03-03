@@ -3,6 +3,7 @@ import React, {useState} from 'react';
 import Image from "next/image";
 import Link from 'next/link';
 import WeeklySlider from "@/app/components/WeeklySlider";
+import { urlStringEncode } from '@/utils/utility';
 
 interface PointsTable {
     match_id: number;  
@@ -178,7 +179,7 @@ export default function PointsTable({
                                     <tr className="" key={index}>
                                         <td className="md:px-2 pl-[14px] py-3 w-[10px]">{index + 1}</td>
                                         <td className="md:px-2 pl-[14px] py-3 text-[#217AF7]">
-                                            <Link href="/kkrseries">
+                                            <Link href={"/team/"+urlStringEncode(point?.team.title)+"/"+point?.team.tid}>
                                                 <div className="flex items-center gap-[5px] w-[120px]">
                                                     <div>
                                                         <Image
