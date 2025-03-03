@@ -25,13 +25,13 @@ export default function SeriesList({ tournamentsList }: SeriesList) {
         (tournament: { status: any }) => tournament.status
       )
     ),
-  ];
+  ].reverse();
   const [statusFilter, setStatusFilter] = useState('All');
   const seriesList = tournamentsList.filter(
     (item: { category: string, status: string }) => item.category === filter && (statusFilter === "All" || item.status === statusFilter)
   );
 
-  console.log(tournamentsList);
+  console.log(statusTypes);
   return (
     <section className="lg:w-[1000px] mx-auto md:mb-0 my-4 px-2 lg:px-0">
       <div className="md:grid grid-cols-12 gap-4">

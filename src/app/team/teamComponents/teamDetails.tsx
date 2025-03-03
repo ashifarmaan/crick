@@ -30,6 +30,7 @@ export default function Team({
         <div className="lg:col-span-8 md:col-span-7">
           <Banner teamDetails={teamDetails}></Banner>
         </div>
+        
         <div className="lg:col-span-8 md:col-span-7">
           {/* <div className="rounded-lg bg-[#ffffff] my-4 p-4"> */}
           <div className="upcomingMatch">

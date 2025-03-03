@@ -3,7 +3,6 @@ import Layout from "@/app/components/Layout";
 import { liveSeries } from "@/controller/homeController";
 import { TeamDetails, TeamLast5match } from "@/controller/teamController";
 
-
 import Teams from './teamComponents/teamDetails';
 
 type Params = Promise<{ teamType: string; teamName: string; teamId: number }>

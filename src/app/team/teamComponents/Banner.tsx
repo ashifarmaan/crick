@@ -5,6 +5,7 @@ import Image from "next/image";
 interface Banner {
   teamDetails: any | null;
 }
+
 export default function Banner({ teamDetails }: Banner) {
   return (
     <div>
