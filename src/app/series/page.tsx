@@ -35,7 +35,7 @@ export default async function page(props: { params: Params }) {
    
   const teamPlayers =  await TeamPlayers(teamIds);
   const tournamentsList = await AllSeriesList();
-   console.log('teamIds', teamPlayers);
+   console.log('teamIds', params);
 
   return (
     <Layout headerData={liveSeriesData}>
@@ -46,7 +46,7 @@ export default async function page(props: { params: Params }) {
           <Banner seriesData={liveSeriesData} seriesInfo={SeriesDetails}></Banner>
 
           {seriesTab === ""  || seriesTab === undefined && <Overview  seriesInfo={SeriesDetails} seriesKeystats={seriesKeystats} urlString={urlString}/>}
-          {seriesTab === "schedule-results" && <ScheduleResults seriesMatches={seriesMatches} urlString={urlString}/>}
+          {seriesTab === "schedule-results" && <ScheduleResults seriesMatches={seriesMatches} urlString={urlString} statsType={statsType}/>}
           {seriesTab === "squads" && <Squads teamPlayers={teamPlayers}  seriesInfo={SeriesDetails} urlString={urlString}/>}
           {seriesTab === "points-table" && <PointsTable seriesInfo={SeriesDetails} urlString={urlString} />}
           {seriesTab === "news" && <News  urlString={urlString}/>}

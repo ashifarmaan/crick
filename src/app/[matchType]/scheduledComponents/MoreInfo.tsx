@@ -49,13 +49,13 @@ export default function MoreInfo({
   
     return truePlayers.length > 0 ? truePlayers : allPlayers;
   })();
-  // console.log("test1",matchLast.items.teama_last10_match[0].winning_team_id);
+  
   const matchlistA = matchLast?.items?.teama_last10_match;
   const matchlistB = matchLast?.items?.teamb_last10_match;
   const matchlistAB = matchLast?.items?.teama_vs_teamb_last10_match ?? "";
-  const matchlistSameVenue =
-    matchLast?.items?.teama_vs_teamb_last10_match_same_venue ?? "";
-
+  const matchlistSameVenue =  matchLast?.items?.teama_vs_teamb_last10_match_same_venue ?? "";
+  const matchVenueStats =  matchLast?.items?.venue_stats ?? "";
+  // console.log("test1",matchVenueStats?.average_score_for_venue?.[0]?.avgruns);
   let teamaWinMatch = 0;
   let teambWinMatch = 0;
   const matchPlayed = matchlistAB.length;
@@ -1744,41 +1744,42 @@ export default function MoreInfo({
                 {/* full screen view */}
                 <div className="lg:flex hidden justify-between items-center py-4">
                   <div className="col-span-1 relative">
-                    <Image
-                      src="/assets/img/ring.png"
-                      className="h-[90px]"
-                      width={90}
-                      height={90}
-                      alt=""
-                    />
-                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
-                      <p className="font-bold text-[18px]">7</p>
-                      <p className="text-[10px]">Matches</p>
-                    </div>
+                  <div
+                        className="flex justify-center items-center w-[81px] h-[81px] rounded-full"
+                        style={{
+                          background:
+                            "conic-gradient(#3e436d 0 0%, #b7132b 0 "+matchVenueStats?.first_batting_match_won+"%, #13b76dbd 0 "+matchVenueStats?.first_bowling_match_won+"%)",
+                        }}
+                      >
+                        <div className="flex flex-col items-center w-[65px] h-[64px] p-4 rounded-full bg-white">
+                          {/* <p className="font-bold text-[18px]">8</p> */}
+                          <p className="text-[10px]">Matches</p>
+                        </div>
+                      </div>
                   </div>
                   <div className="col-span-1 relative">
                     <div className="pb-5">
-                      <p className="text-[#13b76dbd] font-semibold">43%</p>
+                      <p className="text-[#13b76dbd] font-semibold">{matchVenueStats?.first_batting_match_won}%</p>
                       <p className="text-[13px] text-[#3E436D]">
                         Win Bat first{" "}
                       </p>
                     </div>
                     <div className="">
-                      <p className="text-[#B7132B] font-semibold">29%</p>
+                      <p className="text-[#B7132B] font-semibold">{matchVenueStats?.first_bowling_match_won}%</p>
                       <p className="text-[13px] text-[#3E436D]">
-                        Win Bat first{" "}
+                        Win Bowl first{" "}
                       </p>
                     </div>
                   </div>
                   <div className="col-span-1 relative">
                     <div className="pb-5">
-                      <p className="font-semibold">398</p>
+                      <p className="font-semibold">{matchVenueStats?.average_score_for_venue?.[0]?.avgruns}</p>
                       <p className="text-[13px] text-[#3E436D]">
                         Avg 1st Innings
                       </p>
                     </div>
                     <div className="">
-                      <p className="font-semibold">405</p>
+                      <p className="font-semibold">{matchVenueStats?.average_score_for_venue?.[1]?.avgruns}</p>
                       <p className="text-[13px] text-[#3E436D]">
                         Avg 2st Innings
                       </p>
@@ -1786,38 +1787,33 @@ export default function MoreInfo({
                   </div>
                   <div className="col-span-1 relative">
                     <div className="pb-5">
-                      <p className="font-semibold">222</p>
+                      <p className="font-semibold">{matchVenueStats?.team_toss_win_choose_batting}%</p>
                       <p className="text-[13px] text-[#3E436D]">
-                        Avg 3st Innings
+                      Toss Win First Bat
                       </p>
                     </div>
                     <div className="">
-                      <p>43%</p>
+                      <p className="font-semibold">{matchVenueStats?.team_toss_win_choose_fieldeding}%</p>
                       <p className="text-[13px] text-[#3E436D]">
-                        Avg 4st Innings
+                      Toss Win FIrst Bowl
                       </p>
                     </div>
                   </div>
                   <div className="col-span-1 relative">
-                    <p className="text-[13px] text-center font-semibold  pb-5">
-                      Highest Total
-                    </p>
-                    <p className="text-[13px] text-center font-semibold ">
-                      Lowest Total
-                    </p>
+                    <div className="pb-5">
+                      <p className="font-semibold">{matchVenueStats?.team_toss_win_choose_batting_match_won}%</p>
+                      <p className="text-[13px] text-[#3E436D]">
+                      Toss Win First Bat Won
+                      </p>
+                    </div>
+                    <div className="">
+                      <p className="font-semibold">{matchVenueStats?.team_toss_win_choose_fielding_match_won}%</p>
+                      <p className="text-[13px] text-[#3E436D]">
+                      Toss Win First Bowl Won
+                      </p>
+                    </div>
                   </div>
-                  <div className="col-span-1 relative">
-                    <p className="text-[13px] text-center text-[#3E436D] pb-5">
-                      by ENG vs IND
-                    </p>
-                    <p className="text-[13px] text-center text-[#3E436D]">
-                      by AUS vs IND
-                    </p>
-                  </div>
-                  <div className="col-span-1 relative text-center">
-                    <p className="font-bold pb-5">759-7</p>
-                    <p className="font-bold">50-2</p>
-                  </div>
+                  
                 </div>
                 {/* responsive screen view */}
                 <div className="lg:hidden">
@@ -1827,11 +1823,11 @@ export default function MoreInfo({
                         className="flex justify-center items-center w-[81px] h-[81px] rounded-full"
                         style={{
                           background:
-                            "conic-gradient(#3e436d 0 29%, #b7132b 0 50%, #13b76dbd 0 100%)",
+                            "conic-gradient(#3e436d 0 0%, #b7132b 0 "+matchVenueStats?.first_batting_match_won+"%, #13b76dbd 0 "+matchVenueStats?.first_bowling_match_won+"%)",
                         }}
                       >
                         <div className="flex flex-col items-center w-[65px] h-[64px] p-4 rounded-full bg-white">
-                          <p className="font-bold text-[18px]">7</p>
+                          {/* <p className="font-bold text-[18px]">7</p> */}
                           <p className="text-[10px]">Matches</p>
                         </div>
                       </div>
@@ -1842,15 +1838,15 @@ export default function MoreInfo({
                           Win Bat first{" "}
                         </p>
                         <p className="text-[#13b76dbd] font-semibold text-1xl">
-                          43%
+                        {matchVenueStats?.first_batting_match_won}%
                         </p>
                       </div>
                       <div className="flex items-center space-x-8">
                         <p className="text-[13px] text-[#3E436D]">
-                          Win Bat first{" "}
+                          Win Bowl first{" "}
                         </p>
                         <p className="text-[#B7132B] font-semibold text-1xl">
-                          29%
+                        {matchVenueStats?.first_bowling_match_won}%
                         </p>
                       </div>
                     </div>
@@ -1860,55 +1856,41 @@ export default function MoreInfo({
                       <p className="text-[13px] text-[#3E436D]">
                         Avg 1st Innings
                       </p>
-                      <p className="font-medium text-1xl">398</p>
+                      <p className="font-medium text-1xl">{matchVenueStats?.average_score_for_venue?.[0]?.avgruns}</p>
                     </div>
                     <div className="flex flex-col items-end space-y-1">
                       <p className="text-[13px] text-[#3E436D]">
                         Avg 2st Innings
                       </p>
-                      <p className="font-medium text-1xl">405</p>
+                      <p className="font-medium text-1xl">{matchVenueStats?.average_score_for_venue?.[1]?.avgruns}</p>
                     </div>
                   </div>
-                  <div className="flex justify-between items-center pb-3 mb-3 border-b border-[#e4e9f0]">
+                  <div className="flex justify-between items-center py-2 mb-3 pb-3 border-b border-[#e4e9f0]">
                     <div className="flex flex-col items-start space-y-1">
                       <p className="text-[13px] text-[#3E436D]">
-                        Avg 3st Innings
+                      Toss Win First Bat
                       </p>
-                      <p className="font-medium text-1xl">222</p>
+                      <p className="font-medium text-1xl">{matchVenueStats?.team_toss_win_choose_batting}</p>
                     </div>
                     <div className="flex flex-col items-end space-y-1">
                       <p className="text-[13px] text-[#3E436D]">
-                        Avg 4st Innings
+                      Toss Win First Bowl
                       </p>
-                      <p className="font-medium text-1xl">43%</p>
+                      <p className="font-medium text-1xl">{matchVenueStats?.team_toss_win_choose_fieldeding}</p>
                     </div>
                   </div>
-                  <div className="flex justify-between items-end pb-3 mb-3 border-b border-[#e4e9f0]">
+                  <div className="flex justify-between items-center py-2 mb-3 pb-3 border-b border-[#e4e9f0]">
                     <div className="flex flex-col items-start space-y-1">
-                      <p className="text-[13px] text-[#3E436D]">Highest</p>
-                      <p className="font-medium text-1xl">
-                        759-7{" "}
-                        <span className="text-[13px] text-[#3E436D]">
-                          by ENG
-                        </span>
+                      <p className="text-[13px] text-[#3E436D]">
+                      Toss Win First Bat Won
                       </p>
+                      <p className="font-medium text-1xl">{matchVenueStats?.team_toss_win_choose_batting_match_won}</p>
                     </div>
                     <div className="flex flex-col items-end space-y-1">
-                      <p className="text-[13px] text-[#3E436D]">ENG vs IND</p>
-                    </div>
-                  </div>
-                  <div className="flex justify-between items-end pb-3 mb-3 border-b border-[#e4e9f0]">
-                    <div className="flex flex-col items-start space-y-1">
-                      <p className="text-[13px] text-[#3E436D]">Lowest</p>
-                      <p className="font-medium text-1xl">
-                        50-2{" "}
-                        <span className="text-[13px] text-[#3E436D]">
-                          by AUS
-                        </span>
+                      <p className="text-[13px] text-[#3E436D]">
+                      Toss Win First Bowl Won
                       </p>
-                    </div>
-                    <div className="flex flex-col items-end space-y-1">
-                      <p className="text-[13px] text-[#3E436D]">AUS vs IND</p>
+                      <p className="font-medium text-1xl">{matchVenueStats?.team_toss_win_choose_fielding_match_won}</p>
                     </div>
                   </div>
                 </div>

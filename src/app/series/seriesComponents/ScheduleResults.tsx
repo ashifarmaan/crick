@@ -11,10 +11,12 @@ import CountdownTimer from "../../components/countdownTimer";
 interface ScheduleResults {
   urlString: string;
   seriesMatches: any;
+  statsType: string;
 }
 export default function ScheduleResults({
   urlString,
   seriesMatches,
+  statsType,
 }: ScheduleResults) {
    
 
@@ -65,6 +67,12 @@ export default function ScheduleResults({
       // Add event listeners
       elements.forEach((element) => element.addEventListener("click", handleClick));
   
+      if(statsType === 'schedule'){
+        const upcomingTab = document.querySelector("#upcoming-tab") as HTMLElement;
+        if (upcomingTab) {
+          upcomingTab.click();
+        } 
+      }
       // Cleanup function to remove event listeners when component unmounts
       return () => {
         elements.forEach((element) => element.removeEventListener("click", handleClick));

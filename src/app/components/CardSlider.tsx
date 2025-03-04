@@ -2,76 +2,55 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
 
-const images = [
-  { id: 1, src: '/assets/img/home/img-2.png', title: 'The number 10 position for the Fastest fifty' },
-  { id: 2, src: '/assets/img/home/img-3.png', title: 'Yuvraj Singh (India)12 balls vs England, 2007' },
-  { id: 3, src: '/assets/img/home/img-4.png', title: 'Marcus Stoinis Australian player hit his fastest' },
-  { id: 4, src: '/assets/img/home/img-5.png', title: 'Stephan Myburgh (Netherlands)' },
-  { id: 5, src: '/assets/img/home/img-6.png', title: 'South Africa vs India Match Preview, 4th T20I' },
-  { id: 6, src: '/assets/img/home/img-2.png', title: 'Stephan Myburgh (Netherlands)' },
-  { id: 7, src: '/assets/img/home/img-3.png', title: 'Yuvraj Singh (India)12 balls vs England, 2007' },
-  { id: 8, src: '/assets/img/home/img-4.png', title: 'AB de Villiers' },
-  { id: 9, src: '/assets/img/home/img-5.png', title: 'Yuvraj Singh (India)12 balls vs England, 2007' },
-  { id: 10, src: '/assets/img/home/img-6.png', title: 'Marcus Stoinis Australian player hit his fastest' },
-];
-
-const stories = [
-  {
-    id: 1,
-    image: "/assets/img/home/img-6.png",
-    title: "CRICKET",
-    subtitle: "Most expensive cars owned by Marnus Labuschagne",
-  },
-  {
-    id: 2,
-    image: "/assets/img/home/img-5.png",
-    title: "FOOTBALL",
-    subtitle: "Top goals of the season",
-  },
-  {
-    id: 3,
-    image: "/assets/img/home/img-4.png",
-    title: "TENNIS",
-    subtitle: "Grand Slam Highlights",
-  },
-];
-
+interface Story {
+  title: string;
+  link: string;
+  description: string;
+  image?: string;
+}
 
 export default function Slider() {
+
+  const [images, setImages] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchStories = async () => {
+      try {
+        const response = await fetch("/api"); // Your API route
+        const text = await response.text();
+        const parser = new DOMParser();
+        const xml = parser.parseFromString(text, "text/xml");
+
+        const items = xml.querySelectorAll("item");
+        const storiesArray = Array.from(items).map((item) => {
+          const title = item.querySelector("title")?.textContent || "";
+          const link = item.querySelector("link")?.textContent || "";
+          const description = item.querySelector("description")?.textContent || "";
+
+          // Extract image URL from description using regex
+          const imgMatch = description.match(/<img[^>]+src=["'](.*?)["']/);
+          const image = imgMatch ? imgMatch[1] : "";
+        
+          return { title, link, image };
+        });
+
+        setImages(storiesArray);
+      } catch (error) {
+        console.error("Error fetching stories:", error);
+      }
+    };
+
+    fetchStories();
+  }, []);
+
+  console.log("yes",images);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [modalOpen, setModalOpen] = useState(false);
   const [currentStory, setCurrentStory] = useState(0);
   const [progress, setProgress] = useState(0);
 
-
-  // ***********************************************************
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setProgress((prev) => prev + 10);
-      if (progress >= 100) {
-        nextStory();
-      }
-    }, 300);
-
-    return () => clearInterval(interval);
-  }, [progress]);
-
-  const nextStory = () => {
-    setProgress(0);
-    setCurrentStory((prev) => (prev + 1) % stories.length);
-  };
-
-  const previousStory = () => {
-    setProgress(0);
-    setCurrentStory((prev) =>
-      prev === 0 ? stories.length - 1 : prev - 1
-    );
-  };
-
-
-  // ***********************************************************
 
 
 
@@ -89,36 +68,39 @@ export default function Slider() {
     }
   };
 
-  const openModal = (index: number) => {
-    setCurrentStory(index); // Store the index if needed
-    setModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setModalOpen(false);
-  };
-
-
-
-
+ 
 
   return (
-    <div className="relative w-full max-w-5xl mx-auto overflow-hidden">
+    <>
+    <div className="flex justify-between items-center py-4">
+            <div>
+              <h3 className="text-1xl font-semibold pl-[4px] border-l-[3px] border-[#2182F8]">
+                Web Stories
+              </h3>
+            </div>
+          </div>
+    <div className="relative w-full max-w-5xl mx-auto overflow-hidden pb-2">
       {/* Main Slider */}
       <div
         className="flex gap-4 transition-transform duration-500"
         style={{ transform: `translateX(-${currentIndex * (100 / itemsPerPage)}%)` }}
       >
-        {images.map((image, index) => ( 
+        
+
+{images.map((image, index) => ( 
+        
           <div
-            key={image.id}
+            key={index}
             className="md:w-1/5 w-1/2 flex-shrink-0 relative"
             style={{ minWidth: '20%' }}
-            onClick={() => openModal(index)}
+           
           >
-            <Image src={image.src} alt={image.title} className="rounded-lg w-full" width={200} height={30} />
+            <Link href={image.link}>
+            <Image src={image.image} alt={image.title} className="rounded-lg w-full" width={200} height={30} />
             <p className="absolute bottom-[12px] text-white font-semibold text-center px-2 text-[14px] md:text-[13px]">{image.title}</p>
-          </div>
+            </Link>
+            </div>
+            
         ))}
       </div>
 
@@ -146,80 +128,8 @@ export default function Slider() {
         </span>
       </button>
 
-      {/* Modal */}
-      {modalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="relative w-full max-w-xl bg-[#d1d1d1] p-4 rounded-lg ">
-
-
-            {/* ********************************************************************* */}
-
-            <div className="flex flex-col items-center justify-center w-full ">
-              {/* Progress Bar */}
-              <div className="absolute top-4 left-4 right-4 flex space-x-2">
-                {stories.map((_, index) => (
-                  <div
-                    key={index}
-                    className="h-1 bg-gray-700 rounded-lg overflow-hidden flex-grow"
-                  >
-                    <div
-                      className={`h-full bg-blue-500 transition-all`}
-                      style={{
-                        width: `${currentStory === index ? progress : currentStory > index ? 100 : 0
-                          }%`,
-                      }}
-                    ></div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Story Content */}
-              <div className="relative w-full flex items-center justify-center top-[7px]">
-                <Image
-                  src={stories[currentStory].image}
-                  alt="Story"
-                  className=""
-                />
-                <div className="absolute bottom-10 px-6 text-white text-center">
-                  <h1 className="text-2xl font-bold">{stories[currentStory].title}</h1>
-                  <p className="mt-2">{stories[currentStory].subtitle}</p>
-                </div>
-              </div>
-
-              {/* Navigation Buttons */}
-              <div className="absolute w-full flex justify-between items-center px-4">
-                <button
-                  onClick={previousStory}
-                  className="bg-black bg-opacity-50 text-white p-3 rounded-full"
-                >
-                  ◀
-                </button>
-                <button
-                  onClick={nextStory}
-                  className="bg-black bg-opacity-50 text-white p-3 rounded-full"
-                >
-                  ▶
-                </button>
-              </div>
-            </div>
-
-
-
-            {/* ********************************************************************* */}
-
-
-
-
-
-            <button
-              className="absolute top-2 right-2 text-white bg-black bg-opacity-50 py-1 px-3 rounded-full"
-              onClick={closeModal}
-            >
-              ×
-            </button>
-          </div>
-        </div>
-      )}
+      
     </div>
+    </>
   );
 }

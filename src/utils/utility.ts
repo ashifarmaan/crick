@@ -39,3 +39,7 @@ export const getTeamDetailsByTid = async (teamId: number): Promise<string> => {
     return "/assets/img/flag/2.png";
   }
 };
+
+export const truncateText = (text: string, wordLimit: number) => {
+  return text.split(" ").slice(0, wordLimit).join(" ") + "...";
+};

@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
 
 module.exports = {
   images: {
-    domains: ['images.entitysport.com'],
+    domains: ['images.entitysport.com','gcdnimages.entitysport.com','uccricket.live','fantasykhiladi.com'],
   },
 };
 
