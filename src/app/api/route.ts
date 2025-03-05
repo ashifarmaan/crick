@@ -9,7 +9,7 @@ export async function GET() {
     if (!response.ok) throw new Error("Failed to fetch RSS feed");
 
     const text = await response.text(); // Get XML data as text
-    console.log(text);
+    // console.log(text);
     return new NextResponse(text, {
       headers: { "Content-Type": "application/xml" },
     });

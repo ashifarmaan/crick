@@ -26,6 +26,9 @@ import {
 } from "@/controller/matchInfoController";
 
 import ChatComponent from "../components/websocket";
+
+import { Metadata } from "next";
+
 // interface MatchInfo {
 //   match_id: number;
 //   matchid: number;
@@ -69,6 +72,19 @@ type Params = Promise<{
   matchId: number;
   matchTitle: string;
 }>;
+
+export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
+  const matchType = params;
+  const  matchId = params;
+  const matchTitle  = params;
+
+  return {
+    title: `${matchTitle} - ${matchType} Match Live | UCCricket`,
+    description: `Get live updates, scores, and stats for ${matchTitle}. Stay updated on ${matchType} matches on UCCricket.`,
+    keywords: `${matchType}, cricket live, ${matchTitle}, match updates, cricket scores`,
+  };
+}
+
 export default async function page(props: { params: Params }) {
   // Example server-side event
 

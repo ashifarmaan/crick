@@ -17,6 +17,17 @@ import {
   liveMatches,
   upcomingMatches, liveSeries
 } from "@/controller/homeController";
+import type { Metadata } from "next";
+
+
+export const metadata: Metadata = {
+  title: "UC Cricket - Live Scores, IPL 2025, T20, ODI, Test News &amp; Stats",
+  description: "Stay updated with UC Cricket live cricket scores, match schedules, news, stats, and videos on UcCricket.live. Follow all the action from IPL, T20 World Cup, and your favorite cricket tournaments.",
+  robots: "nofollow, noindex",
+  alternates: {
+    canonical: "https://uccricket.live/",
+  },
+};
 
 interface MatchItem {
   match_number: string;
@@ -1847,7 +1858,7 @@ export default async function Home(props: { params: Params }) {
 
           <CardSlider></CardSlider>
 
-          <div className="items-center justify-center py-4 hidden">
+          <div className="flex items-center justify-center py-4">
             <div className="flex items-center space-x-4 w-full">
               <div className="flex-grow h-0.5 bg-gray-300"></div>
               <h2 className="md:text-[24px] text-[18px] text-black font-bold whitespace-nowrap">
@@ -1858,7 +1869,7 @@ export default async function Home(props: { params: Params }) {
           </div>
         </div>
 
-        <div className="hidden grid-cols-12 gap-4">
+        <div className="flex grid-cols-12 gap-4">
           <div className="col-span-2"></div>
 
           <div className="col-span-8">
