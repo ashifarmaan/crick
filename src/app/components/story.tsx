@@ -57,7 +57,7 @@ const StorySlider = () => {
         <div className="flex flex-col items-center justify-center w-full h-screen bg-gray-900">
             {/* Progress Bar */}
             <div className="absolute top-4 left-4 right-4 flex space-x-2">
-                {stories.map((_, index) => (
+                {stories?.map((_, index) => (
                     <div
                         key={index}
                         className="h-1 bg-gray-700 rounded-lg overflow-hidden flex-grow"
@@ -75,7 +75,7 @@ const StorySlider = () => {
 
             {/* Story Content */}
             <div className="relative">
-                <Image
+                <Image  loading="lazy" 
                     src={stories[currentStory].image}
                     alt="Story"
                     className="absolute w-full h-full object-cover"

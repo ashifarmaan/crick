@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from 'next/link';
 import eventEmitter from "@/utils/eventEmitter";
 import { urlStringEncode} from "@/utils/utility";
+import PlayerImage from "@/app/components/PlayerImage";
 
 interface Scorecard {
   match_id: number;
@@ -15,16 +16,18 @@ interface Scorecard {
   matchStates:any | null;
 
   matchUrl :string | null;
+  isPointTable: boolean;
 }
 export default function Scorecard({
   match_id,
   matchData,
   // matchLast,
   matchStates,
-  matchUrl
+  matchUrl,
+  isPointTable
 }: Scorecard) {
 
-  
+  const matchDetails = matchData?.match_info;
   const [matchLiveData, setmatchLiveData] = useState(matchData);
 
   
@@ -50,10 +53,10 @@ export default function Scorecard({
 
   let matchscorecard = matchLiveData?.scorecard?.innings;
   let matchinning = matchLiveData?.scorecard?.innings[tabIndex];
-  let batsman = matchinning.batsmen;
-  let bowlers = matchinning.bowlers;
-  let fows = matchinning.fows;
-  let yetTobat = matchinning.did_not_bat;
+  let batsman = matchinning?.batsmen;
+  let bowlers = matchinning?.bowlers;
+  let fows = matchinning?.fows;
+  let yetTobat = matchinning?.did_not_bat;
   
   
 
@@ -63,17 +66,17 @@ export default function Scorecard({
 
   // const liveData = matchLiveData;
 
-  console.log("partnership",players.find((p: { player_id: number; }) => p.player_id === 77)?.name );
+  //console.log("partnership",players.find((p: { player_id: number; }) => p.player_id === 77)?.name );
   
   if(matchLiveData !== undefined && matchLiveData?.match_id == match_id && matchLiveData?.scorecard?.innings[tabIndex] !== undefined && matchLiveData?.scorecard?.innings[tabIndex] !== ''){
     console.log(tabIndex, "new",matchLiveData);    
     matchData = matchLiveData;
     matchscorecard = matchLiveData?.scorecard?.innings;
     matchinning = matchLiveData?.scorecard?.innings[tabIndex];
-    batsman = matchinning.batsmen;
-    bowlers = matchinning.bowlers;
-    fows = matchinning.fows;
-    yetTobat = matchinning.did_not_bat;
+    batsman = matchinning?.batsmen;
+    bowlers = matchinning?.bowlers;
+    fows = matchinning?.fows;
+    yetTobat = matchinning?.did_not_bat;
     // let currPartnership = matchinning.current_partnership;
     
   }
@@ -116,17 +119,15 @@ export default function Scorecard({
               Squad
             </button>
           </Link>
-          <Link href={"/points-table/"+matchUrl+"/"+ match_id}>
-            <button
-              className="font-medium py-2 px-3 whitespace-nowrap"
-            >
+          {isPointTable && (
+          <Link href={"/series/"+urlStringEncode(matchDetails?.competition?.title+"-"+matchDetails?.competition?.season)+"/"+matchDetails?.competition?.cid+"/points-table"}>
+            <button className="font-medium py-2 px-3 whitespace-nowrap">
               Points Table
             </button>
           </Link>
-          <Link href={"/stats/"+matchUrl+"/"+ match_id}>
-            <button
-              className="font-medium py-2 px-3 whitespace-nowrap"
-            >
+          )}
+          <Link href={"/series/"+urlStringEncode(matchDetails?.competition?.title+"-"+matchDetails?.competition?.season)+"/"+matchDetails?.competition?.cid+"/stats/most-run"}>
+            <button className="font-medium py-2 px-3 whitespace-nowrap">
               Stats
             </button>
           </Link>
@@ -137,7 +138,7 @@ export default function Scorecard({
       <div id="scorecard" className="tab-content cust-box-click-container">
         <div className="flex items-center gap-3 md:mb-4 mb-2 md:pb-0 pb-2 font-medium text-[14px] whitespace-nowrap overflow-auto">
           {
-          matchscorecard.map((scorecard:any, index: number) => (
+          matchscorecard?.map((scorecard:any, index: number) => (
             <button key={index}
             className={`cust-box-click-button ${openHeading === index ? "bg-[#081736] text-white" : "bg-[#ffffff] text-[#6A7586]" }  font-medium  px-5 py-1 rounded-full`}
             onClick={() => handleToggle(index)} >
@@ -156,7 +157,7 @@ export default function Scorecard({
                   <div className="">
                     <p className="mx-2 font-semibold ">
                       {" "}
-                      {matchscorecard[tabIndex].equations.runs}-{matchscorecard[tabIndex].equations.wickets} <span className="text-[#586577]">({matchscorecard[tabIndex].equations.overs})</span>
+                      {matchscorecard?.[tabIndex]?.equations?.runs}-{matchscorecard?.[tabIndex]?.equations?.wickets} <span className="text-[#586577]">({matchscorecard?.[tabIndex]?.equations?.overs})</span>
                     </p>
                   </div>
                 </div>
@@ -216,14 +217,14 @@ export default function Scorecard({
                       <tbody>
                         {/* Row 1 */}
                         
-                      {batsman.map((batsman:any, index: number) => (
+                      {batsman?.map((batsman:any, index: number) => (
                         <tr className="border-b" key={index}>
                           <td className="md:px-4 py-2 font-medium text-gray-800">
                             <Link href={"/player/"+urlStringEncode(batsman.name)+"/"+batsman.batsman_id} className='hover:text-[#0b59ff] flex gap-1 items-center'>
                               {" "}
                               {batsman.name}
                               {
-                                batsman.position === "striker"? (<Image src="/assets/img/home/bat.png" width={12} height={12} className="h-[13px]" alt="" />) : ` `
+                                batsman.position === "striker"? (<Image  loading="lazy"  src="/assets/img/home/bat.png" width={12} height={12} className="h-[13px]" alt="" />) : ` `
                               }
                               <p className="md:hidden text-[#909090] text-[11px] font-normal">
                               {batsman.how_out}
@@ -291,7 +292,7 @@ export default function Scorecard({
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-gray-200">
-                        {bowlers.map((bowlers:any, index: number) => (
+                        {bowlers?.map((bowlers:any, index: number) => (
                         <tr  key={index}>
                           <td className="px-4 py-3 font-medium text-gray-800">
                             <Link href={"/player/"+urlStringEncode(bowlers.name)+"/"+bowlers.bowler_id} className='hover:text-[#0b59ff]'>{bowlers.name} </Link>
@@ -324,7 +325,7 @@ export default function Scorecard({
                         </tr>
                       </thead>
                       <tbody>
-                      {fows.map((fows:any, index: number) => (
+                      {fows?.map((fows:any, index: number) => (
                         <tr className="border-b"  key={index}>
                           <td className="px-4 py-3 font-medium text-gray-800">
                             <Link href={"/player/"+urlStringEncode(fows.name)+"/"+fows.batsman_id} className='hover:text-[#0b59ff]'>  {fows.name} </Link>
@@ -348,7 +349,7 @@ export default function Scorecard({
                   <div>Batter 1</div>
                   <div>Batter 2</div>
                 </div>
-                {partnership.map((partnership:any, index: number, playerA_percent:number) => (
+                {partnership && partnership?.map((partnership:any, index: number, playerA_percent:number) => (
 
                    playerA_percent = ((partnership.batsmen[0].runs / (partnership.batsmen[0].runs+partnership.batsmen[1].runs)) * 100),
                   //  playerB_percent = ((partnership.batsmen[1].runs / (partnership.batsmen[0].runs+partnership.batsmen[1].runs)) * 100),
@@ -390,7 +391,7 @@ export default function Scorecard({
                 
               </div>
             </div>
-            {yetTobat.length > 0 && yetTobat !== undefined? (
+            {yetTobat?.length > 0 && yetTobat !== undefined? (
             <div className="lg:col-span-4 md:col-span-5">
               <div className="rounded-lg bg-[#ffffff]">
                 <div className="p-4">
@@ -399,11 +400,11 @@ export default function Scorecard({
                   </h3>
                   <div className="border-t-[1px] border-[#E4E9F0]" />
                   <div className="">
-                  {yetTobat.map((yetTobat:any, index: number) => (
+                  {yetTobat?.map((yetTobat:any, index: number) => (
                     <Link href={"/player/"+urlStringEncode(yetTobat.name)+"/"+yetTobat.player_id} className='hover:text-[#0b59ff]'  key={index}>
                       <div className="flex items-center space-x-3 py-3 border-b-[1px] border-border-gray-700">
                         <div>
-                          <Image src="/assets/img/player/1.png" width={40} height={40} alt="R sharma (c)" />
+                         <PlayerImage key={yetTobat?.player_id} player_id={yetTobat.player_id} width={40} height={40} className="rounded-lg" />
                         </div>
                         <div className="font-medium">
                           <h2 className="text-[15px]">{yetTobat.name} </h2>

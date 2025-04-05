@@ -16,6 +16,7 @@ interface Live {
   matchUrl: string | null;
 
   matchCommentary: any | null;
+  isPointTable: boolean;
 
   // matchLast:any | null;
 }
@@ -25,6 +26,7 @@ export default function Live({
   matchData,
   matchUrl,
   matchCommentary,
+  isPointTable
 }: // matchLast,
 Live) {
   const [activeTab, setActiveTab] = useState("tab1");
@@ -158,12 +160,14 @@ Live) {
               Squad
             </button>
           </Link>
-          <Link href={"/points-table/" + matchUrl + "/" + match_id}>
+          {isPointTable && (
+          <Link href={"/series/"+urlStringEncode(matchDetails?.competition?.title+"-"+matchDetails?.competition?.season)+"/"+matchDetails?.competition?.cid+"/points-table"}>
             <button className="font-medium py-2 px-3 whitespace-nowrap">
               Points Table
             </button>
           </Link>
-          <Link href={"/stats/" + matchUrl + "/" + match_id}>
+          )}
+          <Link href={"/series/"+urlStringEncode(matchDetails?.competition?.title+"-"+matchDetails?.competition?.season)+"/"+matchDetails?.competition?.cid+"/stats/most-run"}>
             <button className="font-medium py-2 px-3 whitespace-nowrap">
               Stats
             </button>
@@ -185,11 +189,12 @@ Live) {
                                                     ))+"/"+batsman?.[0]?.batsman_id}>
                         <div className="flex items-center gap-3">
                           <div>
-                            <Image
+                            <Image  loading="lazy" 
                               src="/assets/img/player/1.png"
                               width={40}
                               height={40}
                               alt="R sharma (c)"
+                              className="rounded-lg"
                             />
                           </div>
                           <div className="font-medium">
@@ -206,7 +211,7 @@ Live) {
                               </span>
                               {batsman?.[0]?.batsman_id ==
                               currPartnership?.batsmen?.[0]?.batsman_id ? (
-                                <Image
+                                <Image  loading="lazy" 
                                   src="/assets/img/home/bat.png"
                                   className="h-[14px]"
                                   width={14}
@@ -235,11 +240,12 @@ Live) {
                                                     ))+"/"+batsman?.[1]?.batsman_id}>
                         <div className="flex items-center justify-end flex-row-reverse gap-3">
                           <div>
-                            <Image
+                            <Image  loading="lazy" 
                               src="/assets/img/player/2.png"
                               width={40}
                               height={40}
                               alt="R sharma (c)"
+                              className="rounded-lg"
                             />
                           </div>
                           <div className="font-medium text-end">
@@ -256,7 +262,7 @@ Live) {
                               </span>
                               {batsman?.[0]?.batsman_id ==
                               currPartnership?.batsman?.[1]?.batsman_id ? (
-                                <Image
+                                <Image  loading="lazy" 
                                   src="/assets/img/home/bat.png"
                                   className="h-[14px]"
                                   width={14}
@@ -282,14 +288,14 @@ Live) {
                                                 ))+"/"+matchinfo?.bowlers?.[0]?.bowler_id}>
                     <div className="flex items-center gap-3">
                       <div className="relative">
-                        <Image
+                        <Image  loading="lazy" 
                           src="/assets/img/player/13.png"
                           className="h-[40px]"
                           width={40}
                           height={40}
                           alt="T Ahmed"
                         />
-                        <Image
+                        <Image  loading="lazy" 
                           src="/assets/img/player/ball.png"
                           className="absolute -bottom-1.5 -right-0.5 h-[13px] bg-white rounded-full p-[2px]"
                           width={13}
@@ -325,7 +331,7 @@ Live) {
                       Last Over:
                     </span>
                     <div className="flex gap-1">
-                      {lastOverRun.map((lastOver: any, index: number) => (
+                      {lastOverRun?.map((lastOver: any, index: number) => (
                         <span
                           className={`px-2 py-1 border rounded ${
                             lastOver.score == 6
@@ -352,7 +358,7 @@ Live) {
                       This Over:
                     </span>
                     <div className="flex gap-1">
-                      {thisOverRun.map((thisOver: any, index: number) => (
+                      {thisOverRun?.map((thisOver: any, index: number) => (
                         <span
                           className={`px-2 py-1 border rounded ${
                             thisOver.score == 6
@@ -476,11 +482,11 @@ Live) {
                         </div>
                         <div className="flex items-center gap-2">
                           <p className="py-1 px-4 bg-orange-500 rounded-md text-white">
-                            { (matchLiveData?.live_odds?.matchodds?.teama?.back !== null && matchLiveData?.live_odds?.matchodds?.teama?.back !== undefined && matchLiveData?.live_odds?.matchodds?.teama?.back !== "") ? matchLiveData?.live_odds?.matchodds?.teama?.back :
+                            { (matchLiveData?.live_odds?.matchodds?.teama?.back !== null && matchLiveData?.live_odds?.matchodds?.teama?.back !== undefined && matchLiveData?.live_odds?.matchodds?.teama?.back !== "") ? Math.round((matchLiveData?.live_odds?.matchodds?.teama?.back)*100-100) :
                               0}
                           </p>
                           <p className="py-1 px-4 bg-orange-500 rounded-md text-white">
-                            {(matchLiveData?.live_odds?.matchodds?.teama?.lay !== null && matchLiveData?.live_odds?.matchodds?.teama?.lay !== undefined && matchLiveData?.live_odds?.matchodds?.teama?.lay !== "") ? matchLiveData?.live_odds?.matchodds?.teama?.lay :
+                            {(matchLiveData?.live_odds?.matchodds?.teama?.lay !== null && matchLiveData?.live_odds?.matchodds?.teama?.lay !== undefined && matchLiveData?.live_odds?.matchodds?.teama?.lay !== "") ? Math.round((matchLiveData?.live_odds?.matchodds?.teama?.lay)*100-100) :
                               0}
                           </p>
                         </div>
@@ -523,7 +529,7 @@ Live) {
               </div>
             </div>
             <div className="cust-box-click-content">
-              {updatedCommentaries.map((comment: any, index: number) =>
+              {updatedCommentaries?.map((comment: any, index: number) =>
                 comment?.event === "overend" ? (
                   <div className="rounded-t-lg bg-white p-4 mt-4" key={index}>
                     <div className="flex md:flex-row flex-col justify-between md:items-center gap-2">
@@ -633,7 +639,7 @@ Live) {
                           
                           <div className="md:flex items-center justify-between">
                             <div className="flex items-center">
-                              <Image
+                              <Image  loading="lazy" 
                                 src="/assets/img/player/15.png"
                                 width={65}
                                 height={65}
@@ -698,7 +704,7 @@ Live) {
                          
                             
                         
-                        <Image
+                        <Image  loading="lazy" 
                           src="/assets/img/player/14.png"
                           width={65}
                           height={65}

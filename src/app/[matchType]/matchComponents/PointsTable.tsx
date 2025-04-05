@@ -11,6 +11,7 @@ interface PointsTable {
     matchUrl :string | null;
     seriesPointsTable: any | null;
     seriesPointsTableMatches: any | null;
+    featuredMatch: any | null;
 
   }
 export default function PointsTable({
@@ -18,7 +19,8 @@ export default function PointsTable({
     matchData,
     matchUrl,
     seriesPointsTable,
-    seriesPointsTableMatches
+    seriesPointsTableMatches,
+    featuredMatch
   }: PointsTable) {
 
     console.log("matchUC",seriesPointsTableMatches);
@@ -134,7 +136,7 @@ export default function PointsTable({
                     </button>
                 </div>
                 
-                {standings.map((rounds : any, index:number) => ( 
+                {standings?.map((rounds : any, index:number) => ( 
                 <div className="rounded-lg bg-[#ffffff] mb-2 p-4" key={index}>
                     <h3 className="text-1xl font-semibold mb-3 pl-[7px] border-l-[3px] border-[#229ED3]">
                         {rounds?.round?.name}
@@ -175,14 +177,14 @@ export default function PointsTable({
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-200">
-                                {rounds.standings.map((point : any, index:number) => ( 
+                                {rounds.standings?.map((point : any, index:number) => ( 
                                     <tr className="" key={index}>
                                         <td className="md:px-2 pl-[14px] py-3 w-[10px]">{index + 1}</td>
                                         <td className="md:px-2 pl-[14px] py-3 text-[#217AF7]">
                                             <Link href={"/team/"+urlStringEncode(point?.team.title)+"/"+point?.team.tid}>
                                                 <div className="flex items-center gap-[5px] w-[120px]">
                                                     <div>
-                                                        <Image
+                                                        <Image  loading="lazy" 
                                                             src={point?.team?.thumb_url}
                                                             className="h-[20px]"
                                                             width={20} height={20} alt={point?.team?.abbr}
@@ -204,7 +206,7 @@ export default function PointsTable({
                                         <td className="md:px-2 pl-[14px] py-3">{point?.netrr}</td>
                                         <td className="md:px-2 pl-[14px] py-3">
                                             <div className="ml-auto flex gap-1 items-center">
-                                                {point?.lastfivematchresult.split(",").map((item: string, index:number) => (
+                                                {point?.lastfivematchresult.split(",")?.map((item: string, index:number) => (
                                                 <span className={`${item === "W" ? "bg-[#13b76dbd]" : "bg-[#f63636c2]" } text-white text-[13px] px-[4px] py-[0px] rounded`} key={index}>
                                                     {item}
                                                 </span>
@@ -243,7 +245,7 @@ export default function PointsTable({
                                                             <Link href="/team/india/test">
                                                                 <div className="flex items-center space-x-2 font-medium w-[162px] md:w-full">
                                                                     <div className="flex items-center space-x-1">
-                                                                        <Image
+                                                                        <Image  loading="lazy" 
                                                                             src={match?.teama?.logo_url}
                                                                             className="h-[24px] rounded-full"
                                                                             width={25} height={25} alt={match?.teama?.short_name}
@@ -260,7 +262,7 @@ export default function PointsTable({
                                                             <Link href="/team/india/test">
                                                                 <div className="flex items-center space-x-2 font-medium w-[162px] md:w-full">
                                                                     <div className="flex items-center space-x-1">
-                                                                        <Image
+                                                                        <Image  loading="lazy" 
                                                                             src={match?.teamb?.logo_url}
                                                                             className="h-[24px]"
                                                                             width={25} height={25} alt={match?.teamb?.short_name}
@@ -417,7 +419,7 @@ export default function PointsTable({
                     <div className="flex gap-1 items-center justify-between">
                         <div className="flex gap-1 items-center">
                             <div className="col-span-4 relative">
-                                <Image src="/assets/img/home/trofi.png" className="h-[75px]" width={75} height={75} alt="1" />
+                                <Image  loading="lazy"  src="/assets/img/home/trofi.png" className="h-[75px]" width={75} height={75} alt="1" />
                             </div>
                             <div className="col-span-8 relative">
                                 <h3 className="font-semibold text-[19px] mb-1">
@@ -447,7 +449,7 @@ export default function PointsTable({
                     </div>
                 </div>
 
-                <WeeklySlider />
+                <WeeklySlider featuredMatch={featuredMatch} />
 
 
 
@@ -461,7 +463,7 @@ export default function PointsTable({
                         <Link href="/t20series">
                             <div className="bg-[#ffffff] text-[14px] rounded-lg px-4 flex items-center space-x-3 py-3 mb-2">
                                 <div>
-                                    <Image src="/assets/img/1.png" width={20} height={20} alt="1" />
+                                    <Image  loading="lazy"  src="/assets/img/1.png" width={20} height={20} alt="1" />
                                 </div>
                                 <div className="font-medium text-[#394351]">
                                     ICC World cup
@@ -471,7 +473,7 @@ export default function PointsTable({
                         <Link href="/t20series">
                             <div className="bg-[#ffffff] text-[14px] rounded-lg px-4 flex items-center space-x-3 py-3 mb-2 ">
                                 <div>
-                                    <Image src="/assets/img/2.png" width={20} height={20} alt="1" />
+                                    <Image  loading="lazy"  src="/assets/img/2.png" width={20} height={20} alt="1" />
                                 </div>
                                 <div className="font-medium text-[#394351]">
                                     ICC Champion Trophy
@@ -481,7 +483,7 @@ export default function PointsTable({
                         <Link href="/t20series">
                             <div className="bg-[#ffffff] text-[14px] rounded-lg px-4 flex items-center space-x-3 py-3 mb-2 ">
                                 <div>
-                                    <Image src="/assets/img/3.png" width={20} height={20} alt="1" />
+                                    <Image  loading="lazy"  src="/assets/img/3.png" width={20} height={20} alt="1" />
                                 </div>
                                 <div className="font-medium text-[#394351]">
                                     T20 World Cup
@@ -491,7 +493,7 @@ export default function PointsTable({
                         <Link href="/t20series">
                             <div className="bg-[#ffffff] text-[14px] rounded-lg px-4 flex items-center space-x-3 py-3 mb-2 ">
                                 <div>
-                                    <Image src="/assets/img/4.png" width={20} height={20} alt="1" />
+                                    <Image  loading="lazy"  src="/assets/img/4.png" width={20} height={20} alt="1" />
                                 </div>
                                 <div className="font-medium text-[#394351]">
                                     Indian Premium League
@@ -501,7 +503,7 @@ export default function PointsTable({
                         <Link href="/t20series">
                             <div className="bg-[#ffffff] text-[14px] rounded-lg px-4 flex items-center space-x-3 py-3 mb-2 ">
                                 <div>
-                                    <Image src="/assets/img/5.png" width={20} height={20} alt="1" />
+                                    <Image  loading="lazy"  src="/assets/img/5.png" width={20} height={20} alt="1" />
                                 </div>
                                 <div className="font-medium text-[#394351]">
                                     Pakistan Super League
@@ -511,7 +513,7 @@ export default function PointsTable({
                         <Link href="/t20series">
                             <div className="bg-[#ffffff] text-[14px] rounded-lg px-4 flex items-center space-x-3 py-3 mb-2 ">
                                 <div>
-                                    <Image src="/assets/img/6.png" width={20} height={20} alt="1" />
+                                    <Image  loading="lazy"  src="/assets/img/6.png" width={20} height={20} alt="1" />
                                 </div>
                                 <div className="font-medium text-[#394351]">
                                     Bangladesh Premium Leaguge
@@ -521,7 +523,7 @@ export default function PointsTable({
                         <Link href="/t20series">
                             <div className="bg-[#ffffff] text-[14px] rounded-lg px-4 flex items-center space-x-3 py-3 mb-2 ">
                                 <div>
-                                    <Image src="/assets/img/7.png" width={20} height={20} alt="1" />
+                                    <Image  loading="lazy"  src="/assets/img/7.png" width={20} height={20} alt="1" />
                                 </div>
                                 <div className="font-medium text-[#394351]">
                                     Big Bash Leaguge
@@ -531,7 +533,7 @@ export default function PointsTable({
                         <Link href="/t20series">
                             <div className="bg-[#ffffff] text-[14px] rounded-lg px-4 flex items-center space-x-3 py-3">
                                 <div>
-                                    <Image src="/assets/img/8.png" width={20} height={20} alt="1" />
+                                    <Image  loading="lazy"  src="/assets/img/8.png" width={20} height={20} alt="1" />
                                 </div>
                                 <div className="font-medium text-[#394351]">
                                     Super Smash

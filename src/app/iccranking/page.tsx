@@ -19,7 +19,7 @@ export default async function page(props: { params: Params }) {
 
   const liveSeriesData = await liveSeries();
 
-console.log(ranking);
+// console.log(data);
 
 
   return (

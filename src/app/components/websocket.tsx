@@ -1,11 +1,11 @@
 "use client";
 import React, { Component } from "react";
 import eventEmitter from "@/utils/eventEmitter";
-
 interface MatchData {
   matchId: string;
   matchOddsback: number;
   matchOddslay: number;
+  matchOddsTeam: string;
   matchRuns: string;
   matchOvers: string;
   matchWikets: string;
@@ -25,6 +25,7 @@ class MatchWebSocket extends Component<object, MatchData> { // Changed from {} t
       matchId: "",
       matchOddsback: 0,
       matchOddslay: 0,   
+      matchOddsTeam: "",   
       matchRuns: "",
       matchOvers: "",
       matchWikets: "", 
@@ -49,11 +50,17 @@ class MatchWebSocket extends Component<object, MatchData> { // Changed from {} t
       const data = JSON.parse(event.data).response;
       if(data?.ball_event !== undefined && data?.ball_event !== null && data?.ball_event !== '' && data?.ball_event !== Number){
         const ballelements = document.querySelectorAll(
-          `.ballEvent${this.state.matchId}`
+          `.ballEvent${data.match_id}`
         ); 
         ballelements.forEach((element) => {
-          element.innerHTML = data?.ball_event;
+          element.innerHTML =   data?.ball_event;
         });
+
+        eventEmitter.emit("ballEvent", {
+          matchId: data.match_id,
+          ballEvent: data.ball_event
+        });
+        // console.log(data.match_id+" live "+data?.ball_event +" id "+ data.match_id);
       //   const utterance = new SpeechSynthesisUtterance(data?.ball_event);
       // utterance.lang = "hi-IN";
       // window.speechSynthesis.speak(utterance);
@@ -65,15 +72,32 @@ class MatchWebSocket extends Component<object, MatchData> { // Changed from {} t
         data?.live?.live_inning?.batting_team_id !== undefined &&
         data?.live?.live_inning?.batting_team_id !== ""
       ) {
-        
+        const a = parseFloat(data?.live_odds?.matchodds?.teama?.back);
+        const b = parseFloat(data?.live_odds?.matchodds?.teamb?.back);
+        const lesserTeam = a < b 
+          ? { matchId: data?.match_id,team: data?.match_info?.teama?.short_name, ...data?.live_odds?.matchodds?.teama } 
+          : { matchId: data?.match_id,team: data?.match_info?.teamb?.short_name, ...data?.live_odds?.matchodds?.teamb };
+
+          eventEmitter.emit("oddsEvent", {
+            matchId: data.match_id,
+            oddsEvent: lesserTeam
+          });
+
         this.setState({
           matchId: data?.match_id,
-          matchOddsback: data?.live_odds?.matchodds?.teama.back
-            ? data.live_odds.matchodds.teama.back
+          // matchOddsback: data?.live_odds?.matchodds?.teama.back
+          //   ? data.live_odds.matchodds.teama.back
+          //   : 0,
+          // matchOddslay: data?.live_odds?.matchodds?.teama.lay
+          //   ? data.live_odds.matchodds.teama.lay
+          //   : 0,
+            matchOddsback: lesserTeam?.back
+            ? lesserTeam?.back
             : 0,
-          matchOddslay: data?.live_odds?.matchodds?.teama.lay
-            ? data.live_odds.matchodds.teama.lay
+          matchOddslay: lesserTeam?.lay
+            ? lesserTeam?.lay
             : 0,
+          matchOddsTeam: lesserTeam?.team,
           matchBattingTeam: data?.live?.live_inning?.batting_team_id,
           matchRuns: data?.live?.live_score?.runs,
           matchOvers: data?.live?.live_score?.overs,
@@ -111,7 +135,7 @@ class MatchWebSocket extends Component<object, MatchData> { // Changed from {} t
               <span className="text-[#909090] text-[13px]">
                 (${this.state.matchOvers})
               </span>
-              <Image src="/assets/img/home/bat.png" style="height:13px;" className="h-[13px]" alt="" />
+              <Image  loading="lazy"  src="/assets/img/home/bat.png" style="height:13px;" className="h-[13px]" alt="" />
       `;
     });
 
@@ -143,7 +167,7 @@ class MatchWebSocket extends Component<object, MatchData> { // Changed from {} t
     ); // Select elements with class `match-info`
 
     oddbackelements.forEach((element) => {
-      element.innerHTML = ` <p>${this.state.matchOddsback}</p>`;
+      element.innerHTML = ` <p>${this.state.matchOddsback > 0 ? Math.round((this.state.matchOddsback)*100-100) : 0}</p>`;
     });
 
     const oddlayelements = document.querySelectorAll(
@@ -151,7 +175,15 @@ class MatchWebSocket extends Component<object, MatchData> { // Changed from {} t
     ); // Select elements with class `match-info`
 
     oddlayelements.forEach((element) => {
-      element.innerHTML = ` <p>${this.state.matchOddslay}</p>`;
+      element.innerHTML = ` <p>${this.state.matchOddslay > 0 ? Math.round((this.state.matchOddslay)*100-100) : 0}</p>`;
+    });
+
+    const oddteamelements = document.querySelectorAll(
+      `.oddsTeam${this.state.matchId}`
+    ); // Select elements with class `match-info`
+
+    oddteamelements.forEach((element) => {
+      element.innerHTML = ` <p>${this.state.matchOddsTeam}</p>`;
     });
 
     // more info page 

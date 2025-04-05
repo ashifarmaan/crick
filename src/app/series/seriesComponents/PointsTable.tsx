@@ -4,14 +4,45 @@ import Image from "next/image";
 import Link from 'next/link';
 import WeeklySlider from "@/app/components/WeeklySlider";
 import { urlStringEncode } from '@/utils/utility';
+import PLSeries from "@/app/components/popularSeries";
 
 interface PointsTable {
     urlString: string; 
     seriesInfo: any;
+    featuredMatch:any;
   }
-  export default function PointsTable({urlString, seriesInfo} : PointsTable) {
+
+  async function fetchHtml(seriesId: number) {
+    if (!seriesId || seriesId === 0) return '';
+  
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/series/SeriesHtml`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${process.env.NEXT_PUBLIC_API_SECRET_TOKEN}`,
+        },
+        body: JSON.stringify({ cid: seriesId }),
+        cache: "no-store", // Prevents Next.js from caching the API response
+      });
+  
+      if (!response.ok) {
+        console.error(`Error: API returned ${response.status} for CID ${seriesId}`);
+        return '';
+      }
+  
+      const result = await response.json();
+      return result?.data?.[0] ?? [];
+    } catch (error) {
+      console.error("Error fetching matches:", error);
+      return '';
+    }
+  }
+  export default async function PointsTable({urlString, seriesInfo,featuredMatch} : PointsTable) {
 
     const standings = seriesInfo?.standing?.standings;
+
+    const pageHtml = await fetchHtml(seriesInfo?.cid);
     return (
 
 
@@ -54,7 +85,7 @@ interface PointsTable {
                             News
                         </button>
                     </Link>
-                    <Link href={urlString+"/stats"}>
+                    <Link href={urlString+"/stats/most-run"}>
                         <button
                             className="font-medium py-2 px-3 whitespace-nowrap" >
                             Stats
@@ -69,6 +100,10 @@ interface PointsTable {
                 <div className="md:grid grid-cols-12 gap-4">
                     <div className="lg:col-span-8 md:col-span-7">
                         <div className="rounded-lg bg-[#ffffff] p-4 mb-4">
+                        {pageHtml?.pointsTableHtml1 && typeof pageHtml?.pointsTableHtml1 === "string" ? (
+                                <div dangerouslySetInnerHTML={{ __html: pageHtml?.pointsTableHtml1 }} />
+                            ) : (
+                              <> 
                             <h3 className="text-1xl font-semibold mb-1">
                                 South Africa Women vs New Zealand Women, Final
                             </h3>
@@ -100,8 +135,10 @@ interface PointsTable {
                                     />
                                 </svg>
                             </button>
+                            </>
+                            )}
                         </div>
-                        {standings.map((rounds : any, index:number) => (
+                        {standings?.map((rounds : any, index:number) => (
                         <div className="rounded-lg bg-[#ffffff] mb-2 p-4"   key={index}>
                             <h3 className="text-1xl font-semibold mb-3 pl-[7px] border-l-[3px] border-[#229ED3]">
                             {rounds?.round?.name}
@@ -142,14 +179,14 @@ interface PointsTable {
                                             </tr>
                                         </thead>
                                         <tbody className="divide-y divide-gray-200">
-                                        {rounds.standings.map((point : any, index:number) => ( 
+                                        {rounds.standings?.map((point : any, index:number) => ( 
                                             <tr className="hover:bg-[#fffae5]" key={index}>
                                                 <td className="md:px-2 pl-[14px] py-3 w-[10px]">{index + 1}</td>
                                                 <td className="md:px-2 pl-[14px] py-3 text-[#217AF7]">
                                                     <Link href={"/team/"+urlStringEncode(point?.team.title)+"/"+point?.team.tid}>
                                                         <div className="flex items-center gap-[5px] w-[120px]">
                                                             <div>
-                                                                <Image
+                                                                <Image  loading="lazy" 
                                                                     src={point?.team?.thumb_url}
                                                                     className="h-[20px]"
                                                                     width={20} height={20} alt="1"
@@ -170,7 +207,7 @@ interface PointsTable {
                                                 <td className="md:px-2 pl-[14px] py-3">{point?.netrr}</td>
                                                 <td className="md:px-2 pl-[14px] py-3">
                                                     <div className="ml-auto flex gap-1 items-center">
-                                                    {point?.lastfivematchresult.split(",").map((item: string, index:number) => (
+                                                    {point?.lastfivematchresult.split(",")?.map((item: string, index:number) => (
                                                 <span className={`${item === "W" ? "bg-[#13b76dbd]" : "bg-[#f63636c2]" } text-white text-[13px] px-[4px] py-[0px] rounded`} key={index}>
                                                     {item}
                                                 </span>
@@ -229,6 +266,10 @@ interface PointsTable {
 
 
                         <div className="rounded-lg bg-[#ffffff] p-4 mb-4">
+                        {pageHtml?.pointsTableHtml2 && typeof pageHtml?.pointsTableHtml2 === "string" ? (
+                                <div dangerouslySetInnerHTML={{ __html: pageHtml?.pointsTableHtml2 }} />
+                            ) : (
+                              <> 
                             <h3 className="text-1xl font-semibold mb-1">
                                 India vs Zimbabwe 2024
                             </h3>
@@ -259,6 +300,8 @@ interface PointsTable {
                                     />
                                 </svg>
                             </button>
+                            </>
+                            )}
                         </div>
 
                         <div className="rounded-lg bg-[#ffffff] p-4 mb-4">
@@ -312,7 +355,7 @@ interface PointsTable {
                             <div className="flex gap-1 items-center justify-between">
                                 <div className="flex gap-1 items-center">
                                     <div className="col-span-4 relative">
-                                        <Image src="/assets/img/home/trofi.png" className="h-[75px]" width={75} height={75} alt="1" />
+                                        <Image  loading="lazy"  src="/assets/img/home/trofi.png" className="h-[75px]" width={75} height={75} alt="1" />
                                     </div>
                                     <div className="col-span-8 relative">
                                         <h3 className="font-semibold text-[19px] mb-1">
@@ -342,101 +385,11 @@ interface PointsTable {
                             </div>
                         </div>
 
-                        <WeeklySlider />
+                        <WeeklySlider featuredMatch={featuredMatch} />
 
 
 
-                        <div className=" pb-2 my-4">
-                            <div className="py-2">
-                                <h3 className="text-1xl font-semibold pl-[3px] border-l-[3px] border-[#1a80f8]">
-                                    POPULAR</h3>
-
-                            </div>
-                            <div className="">
-                                <Link href="/t20series">
-                                    <div className="bg-[#ffffff] text-[14px] rounded-lg px-4 flex items-center space-x-3 py-3 mb-2">
-                                        <div>
-                                            <Image src="/assets/img/1.png" width={20} height={20} alt="1" />
-                                        </div>
-                                        <div className="font-medium text-[#394351]">
-                                            ICC World cup
-                                        </div>
-                                    </div>
-                                </Link>
-                                <Link href="/t20series">
-                                    <div className="bg-[#ffffff] text-[14px] rounded-lg px-4 flex items-center space-x-3 py-3 mb-2 ">
-                                        <div>
-                                            <Image src="/assets/img/2.png" width={20} height={20} alt="1" />
-                                        </div>
-                                        <div className="font-medium text-[#394351]">
-                                            ICC Champion Trophy
-                                        </div>
-                                    </div>
-                                </Link>
-                                <Link href="/t20series">
-                                    <div className="bg-[#ffffff] text-[14px] rounded-lg px-4 flex items-center space-x-3 py-3 mb-2 ">
-                                        <div>
-                                            <Image src="/assets/img/3.png" width={20} height={20} alt="1" />
-                                        </div>
-                                        <div className="font-medium text-[#394351]">
-                                            T20 World Cup
-                                        </div>
-                                    </div>
-                                </Link>
-                                <Link href="/t20series">
-                                    <div className="bg-[#ffffff] text-[14px] rounded-lg px-4 flex items-center space-x-3 py-3 mb-2 ">
-                                        <div>
-                                            <Image src="/assets/img/4.png" width={20} height={20} alt="1" />
-                                        </div>
-                                        <div className="font-medium text-[#394351]">
-                                            Indian Premium League
-                                        </div>
-                                    </div>
-                                </Link>
-                                <Link href="/t20series">
-                                    <div className="bg-[#ffffff] text-[14px] rounded-lg px-4 flex items-center space-x-3 py-3 mb-2 ">
-                                        <div>
-                                            <Image src="/assets/img/5.png" width={20} height={20} alt="1" />
-                                        </div>
-                                        <div className="font-medium text-[#394351]">
-                                            Pakistan Super League
-                                        </div>
-                                    </div>
-                                </Link>
-                                <Link href="/t20series">
-                                    <div className="bg-[#ffffff] text-[14px] rounded-lg px-4 flex items-center space-x-3 py-3 mb-2 ">
-                                        <div>
-                                            <Image src="/assets/img/6.png" width={20} height={20} alt="1" />
-                                        </div>
-                                        <div className="font-medium text-[#394351]">
-                                            Bangladesh Premium Leaguge
-                                        </div>
-                                    </div>
-                                </Link>
-                                <Link href="/t20series">
-                                    <div className="bg-[#ffffff] text-[14px] rounded-lg px-4 flex items-center space-x-3 py-3 mb-2 ">
-                                        <div>
-                                            <Image src="/assets/img/7.png" width={20} height={20} alt="1" />
-                                        </div>
-                                        <div className="font-medium text-[#394351]">
-                                            Big Bash Leaguge
-                                        </div>
-                                    </div>
-                                </Link>
-                                <Link href="/t20series">
-                                    <div className="bg-[#ffffff] text-[14px] rounded-lg px-4 flex items-center space-x-3 py-3">
-                                        <div>
-                                            <Image src="/assets/img/8.png" width={20} height={20} alt="1" />
-                                        </div>
-                                        <div className="font-medium text-[#394351]">
-                                            Super Smash
-                                        </div>
-                                    </div>
-                                </Link>
-
-                            </div>
-
-                        </div>
+                        <PLSeries/>
                     </div>
                 </div>
             </div>

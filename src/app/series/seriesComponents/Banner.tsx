@@ -18,11 +18,11 @@ export default function IplBanner({
   const [scrollPosition, setScrollPosition] = useState(0);
 
   // Default images array if seriesData is empty
-  const images = seriesData.map((item) => ({
+  const images = seriesData?.map((item) => ({
     url: `/series/${urlStringEncode(item.title + "-" + item.season)}/${
       item.cid
     }`,
-    src: "/assets/img/series/series-1.png",
+    src: item?.logo ? item?.logo : "/assets/img/series/series-1.png",
   }));
 
   // Get previous, current, and next series info
@@ -49,6 +49,9 @@ export default function IplBanner({
       )}/${result.previous.cid}`
     : "";
 
+    const nextImage = result?.next?.logo ? result?.next?.logo : "/assets/img/series/series-1.png";
+    const currentImage = result?.current?.logo ? result?.current?.logo : "/assets/img/series/series-1.png";
+console.log(result?.next?.logo);
   // Handle slider scrolling
   const handleScroll = (direction: "left" | "right") => {
     if (!sliderRef.current) return;
@@ -97,29 +100,29 @@ export default function IplBanner({
           )}
           {/* Content Section */}
           {/* Content Section full screen  */}
-          <div className="hidden md:flex flex-grow items-center justify-between px-6">
+          <div className="hidden md:flex flex-grow items-center justify-between px-6 ">
             {/* Left Section */}
             <div className="flex items-center space-x-4">
-              <Image
-                src="/assets/img/series/ipl.png"
+              <Image  loading="lazy" 
+                src={currentImage}
                 alt="Event Logo"
-                className="md:h-[70px] lg:h-[auto]"
+                className="md:h-[70px] lg:h-[100px] rounded-full"// border-[2px] border-[solid] border-color-[#7779a8]
                 width={100}
                 height={100}
               />
               <div>
                 <h2 className="lg:text-2xl md:text-[17px] font-semibold">
-                  {seriesInfo.title} {seriesInfo.season}
+                  {seriesInfo?.title} {seriesInfo?.season}
                 </h2>
                 <p className="lg:text-sm md:text-[14px] text-gray-300 mb-2">
-                  {seriesInfo.game_format} - {seriesInfo.total_matches} Matches
-                  - {seriesInfo.total_teams} Teams |{" "}
-                  {seriesInfo.datestart
-                    ? format(new Date(seriesInfo.datestart), "dd MMMM")
+                  {seriesInfo?.game_format} - {seriesInfo?.total_matches} Matches
+                  - {seriesInfo?.total_teams} Teams |{" "}
+                  {seriesInfo?.datestart
+                    ? format(new Date(seriesInfo?.datestart), "dd MMMM")
                     : ""}{" "}
                   to{" "}
-                  {seriesInfo.dateend
-                    ? format(new Date(seriesInfo.dateend), "dd MMMM")
+                  {seriesInfo?.dateend
+                    ? format(new Date(seriesInfo?.dateend), "dd MMMM")
                     : ""}
                 </p>
                 <select className="border border-gray-500 rounded px-2 bg-[#0e2149] hidden">
@@ -137,13 +140,13 @@ export default function IplBanner({
                   <br />
                   {result?.next?.season}
                 </p>
-                <div className="flex items-center justify-center bg-green-600 w-12 h-12">
-                  <Image
-                    src="/assets/img/vs-img.png"
+                <div className="flex items-center justify-center w-12 h-12 rounded-full">
+                  <Image  loading="lazy" 
+                    src={nextImage}
                     width={40}
                     height={40}
-                    alt="BAN vs IND"
-                    className=""
+                    alt="Series Logo"
+                    className="rounded-full w-12 h-12 "
                   />
                 </div>
               </div>
@@ -193,14 +196,14 @@ export default function IplBanner({
                   ref={sliderRef}
                   className="flex gap-3 transition-transform duration-300 overflow-x-hidden"
                 >
-                  {images.map((image: any, index: number) => (
+                  {images?.map((image: any, index: number) => (
                     <div key={index} className="flex-none w-1/5">
                       <Link
                         href={image.url}
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        <Image
+                        <Image  loading="lazy" 
                           src={image.src}
                           alt={`series-${index + 1}`}
                           width={70}
@@ -247,17 +250,17 @@ export default function IplBanner({
             </div>
             <div className="px-4 mt-5">
               <h2 className="text-[17px] font-semibold">
-                {seriesInfo.title} {seriesInfo.season}
+                {seriesInfo?.title} {seriesInfo?.season}
               </h2>
               <p className="text-[13px] text-gray-300 mb-2">
-                {seriesInfo.game_format} - {seriesInfo.total_matches} Matches -{" "}
-                {seriesInfo.total_teams} Teams |{" "}
-                {seriesInfo.datestart
-                  ? format(new Date(seriesInfo.datestart), "dd MMMM")
+                {seriesInfo?.game_format} - {seriesInfo?.total_matches} Matches -{" "}
+                {seriesInfo?.total_teams} Teams |{" "}
+                {seriesInfo?.datestart
+                  ? format(new Date(seriesInfo?.datestart), "dd MMMM")
                   : ""}{" "}
                 to{" "}
-                {seriesInfo.dateend
-                  ? format(new Date(seriesInfo.dateend), "dd MMMM")
+                {seriesInfo?.dateend
+                  ? format(new Date(seriesInfo?.dateend), "dd MMMM")
                   : ""}
               </p>
 

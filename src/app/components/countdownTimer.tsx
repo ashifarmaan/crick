@@ -7,27 +7,32 @@ const CountdownTimer = ({ targetTime }: { targetTime: string }) => {
   const [timeLeft, setTimeLeft] = useState<{ hours: number; minutes: number; seconds: number; isFinished: boolean } | null>(null);
 
   useEffect(() => {
-    const hasRefreshed = sessionStorage.getItem("hasRefreshed");
     const timer = setInterval(() => {
       const updatedTimeLeft = getTimeLeft(targetTime);
       setTimeLeft(updatedTimeLeft);
-    //   console.log("timeLeft",hasRefreshed);
-      // 🔄 Refresh page when time is up
-      if (updatedTimeLeft.isFinished && !hasRefreshed) {
-        sessionStorage.setItem("hasRefreshed", "true");
-        clearInterval(timer); // Stop the timer
-        window.location.reload(); // Refresh the page
+
+      if (updatedTimeLeft.isFinished) {
+        const hasRefreshed = sessionStorage.getItem("hasRefreshed");
+
+        if (!hasRefreshed) {
+          sessionStorage.setItem("hasRefreshed", "true");
+          clearInterval(timer);
+          // window.location.reload();
+        }
       }
     }, 1000);
 
     return () => clearInterval(timer);
   }, [targetTime]);
 
-  
-
+  // Reset "hasRefreshed" only when the countdown restarts
   useEffect(() => {
-    sessionStorage.removeItem("hasRefreshed");
-  }, []);
+    const updatedTimeLeft = getTimeLeft(targetTime);
+
+    if (!updatedTimeLeft.isFinished) {
+      sessionStorage.removeItem("hasRefreshed"); // Remove only if new countdown starts
+    }
+  }, [targetTime]); // Runs only when the target time changes
 
   if (!timeLeft) return null;
 

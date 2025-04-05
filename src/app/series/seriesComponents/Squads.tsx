@@ -3,17 +3,19 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { urlStringEncode} from "@/utils/utility";
+import PlayerImage from "@/app/components/PlayerImage";
 
 interface Squad {
   urlString: string;
   teamPlayers: any;
   seriesInfo: any;
+  isPointTable:boolean;
 }
-export default function Squad({ urlString, teamPlayers, seriesInfo }: Squad) {
+export default function Squad({ urlString, teamPlayers, seriesInfo,isPointTable }: Squad) {
   const [activeTab, setActiveTab] = useState("tab0");
   const seriesName = seriesInfo?.abbr;
   const seriesFormat = seriesInfo?.game_format;
-console.log("seriesFormat", seriesFormat);
+  const uniqueFormats: any[] = [...new Set(seriesInfo?.rounds.map((round:any) => round.match_format))];
   return (
     <section className="lg:w-[1000px] mx-auto md:mb-0 mb-4 px-2 lg:px-0">
       <div id="tabs" className="my-4">
@@ -33,17 +35,19 @@ console.log("seriesFormat", seriesFormat);
               Squads
             </button>
           </Link>
+          {isPointTable &&
           <Link href={urlString + "/points-table"}>
             <button className="font-medium py-2 px-3 whitespace-nowrap">
               Points Table
             </button>
           </Link>
+          }
           <Link href={urlString + "/news"}>
             <button className="font-medium py-2 px-3 whitespace-nowrap">
               News
             </button>
           </Link>
-          <Link href={urlString + "/stats"}>
+          <Link href={urlString + "/stats/most-run"}>
             <button className="font-medium py-2 px-3 whitespace-nowrap">
               Stats
             </button>
@@ -71,7 +75,7 @@ console.log("seriesFormat", seriesFormat);
                     }`}
                     onClick={() => setActiveTab("tab" + index)}
                   >
-                    <Image
+                    <Image  loading="lazy" 
                       src={teamslist?.team?.logo_url}
                       className="mr-3"
                       width={20}
@@ -87,11 +91,12 @@ console.log("seriesFormat", seriesFormat);
 
           <div className="lg:col-span-8 md:col-span-7">
           {teamPlayers?.map((teamslist: any, index: number) => (
+            
             activeTab === "tab"+index && (
               <div id="south-team" className="team-content " key={index}>
                 <div className="max-w-7xl mx-auto bg-white rounded-lg p-6">
                   <div className="flex items-center space-x-4 mb-6">
-                    <Image
+                    <Image  loading="lazy" 
                       src={teamslist?.team.logo_url}
                       width={45}
                       height={45}
@@ -101,7 +106,7 @@ console.log("seriesFormat", seriesFormat);
                     <h1 className="text-[16px] font-semibold text-gray-800">
                       {teamslist?.team.abbr}{" "}
                       <span className="text-gray-500">
-                        ({teamslist?.players?.[seriesFormat].length} players)
+                        ({uniqueFormats.flatMap((format) => teamslist?.players[format] ?? [])?.length} players)
                       </span>
                     </h1>
                   </div>
@@ -112,7 +117,7 @@ console.log("seriesFormat", seriesFormat);
                         Batsman
                       </h2>
                       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                        {teamslist?.players?.[seriesFormat].map((squads: any, index: number) => (
+                        {uniqueFormats.flatMap((format) => teamslist?.players[format] ?? [])?.map((squads: any, index: number) => (
                             (squads.playing_role === 'bat' || squads.playing_role === 'wk') &&
                           <Link
                             href={
@@ -125,14 +130,9 @@ console.log("seriesFormat", seriesFormat);
                           >
                             <div className="text-center p-4 rounded-md border-[1px] border-[##E2E2E2]">
                               <div className="relative">
-                                <Image
-                                  src="/assets/img/player/g-7.png"
-                                  width={80}
-                                  height={80}
-                                  alt={squads.short_name}
-                                  className="w-16 h-16 mx-auto rounded-full mb-2"
-                                />
-                                <Image
+                                 <PlayerImage key={squads?.pid} player_id={ squads?.pid} height={80} width={80} className="w-16 h-16 mx-auto rounded-full mb-2" />
+                                
+                                <Image  loading="lazy" 
                                   src="/assets/img/player/bat.png"
                                   className="h-[27px] absolute right-2 bottom-0 bg-white rounded-full p-[4px]"
                                   width={27}
@@ -163,7 +163,7 @@ console.log("seriesFormat", seriesFormat);
                         Bowler
                       </h2>
                       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                      {teamslist?.players?.[seriesFormat].map((bowler: any, index: number) => (
+                      {uniqueFormats.flatMap((format) => teamslist?.players[format] ?? [])?.map((bowler: any, index: number) => (
                             bowler.playing_role === 'bowl' &&
                           <Link
                             href={
@@ -176,14 +176,8 @@ console.log("seriesFormat", seriesFormat);
                           >
                             <div className="text-center p-4 rounded-md border-[1px] border-[##E2E2E2]">
                               <div className="relative">
-                                <Image
-                                  src="/assets/img/player/g-11.png"
-                                  width={80}
-                                  height={80}
-                                  alt={bowler.short_name}
-                                  className="w-16 h-16 mx-auto rounded-full mb-2"
-                                />
-                                <Image
+                              <PlayerImage key={bowler?.pid} player_id={ bowler?.pid} height={80} width={80} className="w-16 h-16 mx-auto rounded-full mb-2" />
+                                <Image  loading="lazy" 
                                   src="/assets/img/player/ball.png"
                                   className="h-[24px] absolute right-2 bottom-0 bg-white rounded-full p-[4px]"
                                   width={24}
@@ -206,7 +200,7 @@ console.log("seriesFormat", seriesFormat);
                         All-Rounder
                       </h2>
                       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                      {teamslist?.players?.[seriesFormat].map((allrounder: any, index: number) => (
+                      {uniqueFormats.flatMap((format) => teamslist?.players[format] ?? [])?.map((allrounder: any, index: number) => (
                         allrounder.playing_role === 'all' &&
                           <Link
                             href={
@@ -219,14 +213,8 @@ console.log("seriesFormat", seriesFormat);
                           >
                             <div className="text-center p-4 rounded-md border-[1px] border-[##E2E2E2]">
                               <div className="relative">
-                                <Image
-                                  src="/assets/img/player/g-15.png"
-                                  width={80}
-                                  height={80}
-                                  alt={allrounder.short_name}
-                                  className="w-16 h-16 mx-auto rounded-full mb-2"
-                                />
-                                <Image
+                              <PlayerImage key={allrounder?.pid}  player_id={ allrounder?.pid} height={80} width={80} className="w-16 h-16 mx-auto rounded-full mb-2" />
+                                <Image  loading="lazy" 
                                   src="/assets/img/player/bat-ball.png"
                                   className="h-[27px] absolute right-2 bottom-0 bg-white rounded-full p-[4px]"
                                   width={27}

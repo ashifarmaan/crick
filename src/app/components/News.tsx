@@ -55,9 +55,9 @@ const News = () => {
                   <button className={`font-medium py-2 px-3 whitespace-nowrap ${activeTab === 'ipl' ? 'bg-[#1A80F8] text-white rounded-md' : ''}  `} onClick={() => handleTabClick('ipl')}>
                     IPL 2025
                   </button>
-                  <button className={`font-medium py-2 px-3 whitespace-nowrap ${activeTab === 'dailyquiz2' ? 'bg-[#1A80F8] text-white rounded-md' : ''}  `}  onClick={() => handleTabClick('dailyquiz2')}>
+                  {/* <button className={`font-medium py-2 px-3 whitespace-nowrap ${activeTab === 'dailyquiz2' ? 'bg-[#1A80F8] text-white rounded-md' : ''}  `}  onClick={() => handleTabClick('dailyquiz2')}>
                     Daily Quiz
-                  </button>
+                  </button> */}
                   <button className={`font-medium py-2 px-3 whitespace-nowrap ${activeTab === 'pointstable2' ? 'bg-[#1A80F8] text-white rounded-md' : ''}  `}  onClick={() => handleTabClick('pointstable2')}>
                     Points Table
                   </button>
@@ -69,11 +69,11 @@ const News = () => {
               <div className="tab-content-container">
                 <div id="news" className={`tab-content ${activeTab === 'news' ? '' : ''}`}>
                   <div className="rounded-lg py-4 px-4 bg-[#ffffff] mb-4">
-                  {news.slice(0,1).map((post: any, index:number) => (
+                  {news.slice(0,1)?.map((post: any, index:number) => (
                     <div className="lg:grid grid-cols-12 gap-4" key={index}>
                       <div className="col-span-6 ">
                       {post._embedded?.["wp:featuredmedia"]?.[0]?.source_url && (
-                        <Image
+                        <Image  loading="lazy" 
                           src={post._embedded["wp:featuredmedia"]?.[0]?.source_url}
                           width={300}
                           height={300}
@@ -129,6 +129,9 @@ const News = () => {
                         >
                             
                         </h3>
+                        <h4 className="text-[12px] font-semibold mb-2"  dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(truncateText(post?.title.rendered,20))}} >
+                              
+                              </h4>
                         <p className="text-gray-500 font-normal"  dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post?.uagb_excerpt)}} >
                        
                         </p>
@@ -156,7 +159,7 @@ const News = () => {
                     ))}
 
                     <div className="lg:grid grid-cols-12 gap-4">
-                    {news.slice(1,7).map((post: any, index:number) => ( 
+                    {news.slice(1,7)?.map((post: any, index:number) => ( 
                         
                       <div className="col-span-6" key={index}>
                                              
@@ -165,7 +168,7 @@ const News = () => {
                         <Link href={post?.link}>
                           <div className="flex gap-3 my-5">
                           {post._embedded["wp:featuredmedia"]?.[0]?.media_details.sizes.thumbnail.source_url && (
-                            <Image
+                            <Image  loading="lazy" 
                               src={post._embedded["wp:featuredmedia"]?.[0].media_details.sizes.thumbnail.source_url}
                               width={90}
                               height={90}
@@ -176,7 +179,7 @@ const News = () => {
                               <h4 className="text-[12px] font-semibold mb-2"  dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(truncateText(post?.title.rendered,20))}} >
                               
                               </h4>
-                              <p className="text-[12px] text-gray-500 flex items-center">
+                              <p className="text-[11px] text-gray-500 flex items-center">
                                 By{" "}
                                 <span className="ml-2 pr-[1px]">
                                   <svg

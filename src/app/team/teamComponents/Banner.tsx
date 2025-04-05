@@ -12,7 +12,7 @@ export default function Banner({ teamDetails }: Banner) {
       <div className="rounded-lg bg-[#ffffff] p-4 mb-4">
         <Link href="#">
           <div className="flex items-center gap-2 mb-2">
-            <Image
+            <Image  loading="lazy" 
               src={teamDetails?.logo_url}
               className="h-[30px]"
               width={30}

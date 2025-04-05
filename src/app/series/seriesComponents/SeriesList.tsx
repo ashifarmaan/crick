@@ -13,7 +13,7 @@ interface SeriesList {
 export default function SeriesList({ tournamentsList }: SeriesList) {
   const uniqueTypes = [
     ...new Set(
-      tournamentsList.map(
+      tournamentsList?.map(
         (tournament: { category: any }) => tournament.category
       )
     ),
@@ -21,7 +21,7 @@ export default function SeriesList({ tournamentsList }: SeriesList) {
   const [filter, setFilter] = useState(uniqueTypes[0]);
   const statusTypes = [
     ...new Set(
-      tournamentsList.map(
+      tournamentsList?.map(
         (tournament: { status: any }) => tournament.status
       )
     ),
@@ -45,7 +45,7 @@ export default function SeriesList({ tournamentsList }: SeriesList) {
                                dark:[&::-webkit-scrollbar-track]:bg-neutral-700 
                                  dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500"
               >
-                {uniqueTypes.map((item: any) => (
+                {uniqueTypes?.map((item: any) => (
                   <button
                     key={item}
                     className={`font-medium py-2 px-5 whitespace-nowrap ${
@@ -66,7 +66,7 @@ export default function SeriesList({ tournamentsList }: SeriesList) {
                                dark:[&::-webkit-scrollbar-track]:bg-neutral-700 
                                  dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500"
               >
-                {["All", ...statusTypes].map((item: any) => (
+                {["All", ...statusTypes]?.map((item: any) => (
                   <button
                     key={item}
                     className={`font-medium py-2 px-5 whitespace-nowrap ${
@@ -83,7 +83,7 @@ export default function SeriesList({ tournamentsList }: SeriesList) {
             <div className="lg:col-span-8 md:col-span-7">
               <div className="upcomingMatch"></div>
             </div>
-            {seriesList.map((series: any, index: number) => (
+            {seriesList?.map((series: any, index: number) => (
               <div className="lg:col-span-8 md:col-span-7" key={index}>
                 <div className="rounded-lg bg-[#ffffff] my-4 p-4">
                   <div>
@@ -115,7 +115,7 @@ export default function SeriesList({ tournamentsList }: SeriesList) {
                               </p>
                               <div className="flex items-center space-x-2 font-medium w-[162px] md:w-full mb-4">
                                 <div className="flex items-center space-x-2">
-                                  <Image
+                                  <Image  loading="lazy" 
                                     src="/assets/img/series/ipl.png"
                                     className="h-[30px] rounded-full"
                                     width={30}

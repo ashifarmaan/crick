@@ -1,5 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
+import { urlStringEncode} from "@/utils/utility";
 
 interface Live {
     match_id: number;
@@ -9,6 +10,7 @@ interface Live {
     matchUrl: string | null;
   
     matchCommentary: any | null;
+    isPointTable: boolean;
   
     // matchLast:any | null;
   }
@@ -18,6 +20,7 @@ interface Live {
     matchData,
     matchUrl,
     matchCommentary,
+    isPointTable
   }: // matchLast,
   Live) {
   return (
@@ -44,12 +47,14 @@ interface Live {
               Squad
             </button>
           </Link>
-          <Link href={"/points-table/" + matchUrl + "/" + match_id}>
+          {isPointTable && (
+          <Link href={"/series/"+urlStringEncode(matchData?.match_info?.competition?.title+"-"+matchData?.match_info?.competition?.season)+"/"+matchData?.match_info?.competition?.cid+"/points-table"}>
             <button className="font-medium py-2 px-3 whitespace-nowrap">
               Points Table
             </button>
           </Link>
-          <Link href={"/stats/" + matchUrl + "/" + match_id}>
+          )}
+          <Link href={"/series/"+urlStringEncode(matchData?.match_info?.competition?.title+"-"+matchData?.match_info?.competition?.season)+"/"+matchData?.match_info?.competition?.cid+"/stats/most-run"}>
             <button className="font-medium py-2 px-3 whitespace-nowrap">
               Stats
             </button>

@@ -20,7 +20,7 @@ const PhoneMenu = ({ data }: HeaderProps) => {
 
   let items = [];
   if(data){
-     items = data.map((item: any) => ({
+     items = data?.map((item: any) => ({
       href: "/series/"+urlStringEncode(item.title+"-"+item.season)+"/"+item.cid,
       imgSrc: "/assets/img/series/series-1.png",
       alt: item.abbr,
@@ -62,7 +62,7 @@ const PhoneMenu = ({ data }: HeaderProps) => {
       <div className="md:hidden sticky bottom-0 bg-[#0e2149] text-white text-1xl py-2 flex justify-around items-center">
          <Link
           href="/"
-          className="block flex flex-col items-center py-[4px] px-[9px] bg-[#ffffffdb] text-black rounded-lg font-semibold"
+          className="block flex-col items-center py-[4px] px-[9px] bg-[#ffffffdb] text-black rounded-lg font-semibold"
         >
           <span>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
@@ -75,7 +75,7 @@ const PhoneMenu = ({ data }: HeaderProps) => {
           </span>
           <span>Home</span>
          </Link>
-         <Link href="#" className="block flex flex-col items-center">
+         <Link href="#" className="block flex-col items-center">
           <span>
             <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
               <g id="schedule-icon" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd" fillOpacity="0.87">
@@ -90,7 +90,7 @@ const PhoneMenu = ({ data }: HeaderProps) => {
           </span>
           Fixtures
          </Link>
-         <Link href={items[0].href} className="block flex flex-col items-center">
+         <Link href={items[0].href} className="block flex-col items-center">
           <span>
             <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
               <g id="cup-icon" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
@@ -105,7 +105,7 @@ const PhoneMenu = ({ data }: HeaderProps) => {
           </span>
           Series
          </Link>
-         <Link href="#" className="block flex flex-col items-center">
+         <Link href="#" className="block flex-col items-center">
           <span>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
               <path
@@ -121,7 +121,7 @@ const PhoneMenu = ({ data }: HeaderProps) => {
          <Link
           href="#"
           onClick={openNav}
-          className="block flex flex-col items-center"
+          className="block flex-col items-center"
         >
           <span>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">

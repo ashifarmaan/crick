@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import Image from 'next/image';
 import Link from 'next/link'
 import { urlStringEncode } from "@/utils/utility";
+import PlayerImage from "@/app/components/PlayerImage";
 
 interface Team {
     ranking: any | null;
@@ -42,7 +43,7 @@ interface Team {
         rankData = ranking?.[arrayName]?.['all-rounders']?.[arrayType];
     }
       
-    console.log('Team',rankData);
+    // console.log('Team',rankData);
   
   
     return (
@@ -104,7 +105,7 @@ interface Team {
               </div>
 
               <div className="flex gap-4 items-center my-2 py-2 overflow-auto">
-              {Object.keys(rankDetails).map((key, index: number) => (
+              {Object.keys(rankDetails)?.map((key, index: number) => (
                 <Link href={"/iccranking/"+iccRankingName+"/"+iccRankingType+"/"+key} key={index}>
                     <button
                   className={`cust-box-click-button font-medium px-7 py-1 rounded-full whitespace-nowrap ${iccRankingTap === key ? 'bg-[#081736] text-white' : 'bg-[#ffffff] text-[#6A7586]'
@@ -129,7 +130,7 @@ interface Team {
                           {iccRankingTap?.toUpperCase() ?? ""}
                         </h3>
                         <div className="border-t-[1px] border-[#E4E9F0]" />
-                        {rankData?.slice(0,1).map((rankDetails:any, index: number ) => (
+                        {rankData?.slice(0,1)?.map((rankDetails:any, index: number ) => (
                         <div
                           className="flex items-center rounded-lg justify-between text-white mt-3 p-4"
                           style={{
@@ -138,11 +139,8 @@ interface Team {
                             {iccRankingType !=='team' ?
                           <Link href={"/player/"+urlStringEncode(rankDetails.player)+"/"+rankDetails.pid}>
                           <div className="flex items-center">
-                            <Image
-                              src="/assets/img/player/r-1.png"
-                              width={48} height={48} alt="Player"
-                              className="w-12 h-12 rounded-lg mr-3"
-                            />
+                           
+                            <PlayerImage key={rankDetails?.pid} player_id={ rankDetails.pid} height={48} width={48} className="w-12 h-12 rounded-lg mr-3" />
                             <div>
                               <h3 className="text-[14px] font-normal">{rankDetails.player}</h3>
                             </div>
@@ -151,7 +149,7 @@ interface Team {
                           :
                           <Link href={"/team/"+urlStringEncode(rankDetails.team)+"/"+rankDetails.tid}>
                           <div className="flex items-center">
-                            <Image
+                            <Image  loading="lazy" 
                               src={rankDetails.logo_url}
                               width={48} height={48} alt="Player"
                               className="w-12 h-12 rounded-lg mr-3"
@@ -182,7 +180,7 @@ interface Team {
                               </tr>
                             </thead>
                             <tbody>
-                            {rankData?.slice(1, visibleCount).map((rankDetails:any, index: number ) => (
+                            {rankData?.slice(1, visibleCount)?.map((rankDetails:any, index: number ) => (
 
 
                               <tr key={index}>

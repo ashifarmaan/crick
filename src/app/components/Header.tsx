@@ -31,9 +31,10 @@ const Header = ({ data }: HeaderProps) => {
   // ];
   let items = [];
 if(data){
-   items = data.map((item: any) => ({
+   items = data?.map((item: any) => ({
     href: "/series/"+urlStringEncode(item.title+"-"+item.season)+"/"+item.cid,
-    imgSrc: "/assets/img/series/series-1.png",
+    imgSrc: item?.logo ? item?.logo : "/assets/img/series/series-1.png",
+    // imgSrc: "/assets/img/series/"+item.title+".png",
     alt: item.abbr,
     label: item.abbr,
   }));
@@ -60,24 +61,24 @@ if(data){
   return (
     <>
 
-      <div className='md:hidden flex items-center justify-between py-2 px-2 bg-[#3793ff] text-white' >
+      <div className='md:hidden hidden items-center justify-between py-2 px-2 bg-[#3793ff] text-white' >
 
         <p> Uc Cricket is better on App, Get now! </p>
         <button className='border-[1px] border-white px-4 rounded-full py-1'>Use App</button>
 
       </div>
-
+{/* fixed top-0 left-0 w-full shadow-md z-50 */}
       <header className="bg-[#081736] lg:px-0 px-3">
         <div className="lg:w-[1000px] w-full mx-auto text-white py-5 flex items-center justify-between">
           <div>
             <Link href="/">
-              <Image className="h-[2.375rem]" src="/assets/img/logo.png" alt="" width={150} height={50} />
+              <Image priority  className="h-[2.375rem]" src="/assets/img/logo.png" alt="" width={150} height={50} />
             </Link>
           </div>
           {/* Toggle Button for Mobile */}
           <button
             id="menu-toggle"
-            className="lg:hidden text-white focus:outline-none"
+            className="lg:hidden text-white focus:outline-none hidden"
           >
             <svg
               className="w-6 h-6"
@@ -209,13 +210,13 @@ if(data){
               >
                 {items
                   .slice(currentIndex, currentIndex + itemsPerPage)
-                  .map((item:any, index:number) => (
+                  ?.map((item:any, index:number) => (
                     <Link href={item.href || "#"} key={index}>
                       <div className="flex-shrink-0 w-[125px] flex items-center flex-col">
-                        <Image 
+                        <Image  loading="lazy"  
                           src={item.imgSrc}
                           alt={item.alt}
-                          className="rounded-lg w-[80px]"
+                          className="rounded-full w-[80px] h-[80px] border-2 border-[#3A7BD5] shadow-[0px_0px_10px_rgba(0,0,255,0.6)]"
                           width={80} height={80}
                         />
                         <p className="mt-2 text-center">{item.label}</p>

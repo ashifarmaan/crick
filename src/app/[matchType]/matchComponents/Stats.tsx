@@ -11,12 +11,14 @@ interface Stats {
     matchUrl :string | null;
 
     matchTitle :string | null;
+    isPointTable: boolean;
   }
 export default async function Stats({
     match_id,
     matchData,
     matchUrl,
-    matchTitle
+    matchTitle,
+    isPointTable
   }: Stats) {
 
     const cid = matchData?.match_info?.competition?.cid;
@@ -91,6 +93,7 @@ export default async function Stats({
               Squad
             </button>
           </Link>
+          {isPointTable && (
           <Link href={"/points-table/"+matchUrl+"/"+ match_id}>
             <button
               className="font-medium py-2 px-3 whitespace-nowrap"
@@ -98,6 +101,7 @@ export default async function Stats({
               Points Table
             </button>
           </Link>
+          )}
           <Link href={"/stats/"+matchUrl+"/"+ match_id}>
             <button
               className="font-medium py-2 px-3 whitespace-nowrap bg-[#1A80F8] text-white rounded-md"
@@ -271,7 +275,7 @@ export default async function Stats({
                                                     </tr>
                                                 </thead>
                                                 <tbody className="divide-y divide-gray-200">
-                                                    {matchStats.map((stats:any, index:number) => (
+                                                    {matchStats?.map((stats:any, index:number) => (
                                                     <tr key={index}>
                                                         <td className="md:px-2 pl-[14px] py-3 w-[10px]">{index+1}</td>
                                                         <td className="md:px-2 py-3 text-[#217AF7]">
@@ -329,7 +333,7 @@ export default async function Stats({
                                                     </tr>
                                                 </thead>
                                                 <tbody className="divide-y divide-gray-200">
-                                                    {matchStats.map((stats:any, index:number) => (
+                                                    {matchStats?.map((stats:any, index:number) => (
                                                     <tr key={index}>
                                                         <td className="md:px-2 pl-[14px] py-3 w-[10px]">{index+1}</td>
                                                         <td className="md:px-2 py-3 text-[#217AF7]">

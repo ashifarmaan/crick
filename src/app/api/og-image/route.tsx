@@ -10,8 +10,8 @@ export async function GET(request: Request) {
         (
             <div
                 style={{
-                    width: 1200,
-                    height: 630,
+                    width: 600,
+                    height: 330,
                     backgroundColor: "#1A202C",
                     display: "flex",
                     alignItems: "center",
@@ -29,6 +29,10 @@ export async function GET(request: Request) {
         {
             width: 1200,
             height: 630,
+            headers: {
+                "Content-Type": "image/webp", // Set WebP format
+                "Cache-Control": "public, max-age=86400", // Cache for 1 day
+              },
         }
     );
 }

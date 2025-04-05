@@ -1,16 +1,24 @@
 "use client"
 
 
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import Image from "next/image";
 import eventEmitter from "@/utils/eventEmitter";
 import { format, isSameDay  } from "date-fns";
 import CountdownTimer from "../../components/countdownTimer";
+import { motion } from 'framer-motion';
+import Link from "next/link";
 
 interface Banner {
     matchData: any | null; 
     match_id : number;
   }
+
+  interface BallEventData  {
+    matchId: number;
+    ballEvent: string;
+  }
+
 export default function Banner({matchData, match_id } : Banner) {
     
 
@@ -45,7 +53,25 @@ export default function Banner({matchData, match_id } : Banner) {
       ? teambovers.split(" & ")
       : [teambovers, ""];
 
-    console.log("banner",liveMatch?.match_info?.teama);
+    // console.log("banner",liveMatch?.match_info?.teama);
+
+    const [ballEvent, setBallEvent] = useState('');
+  
+    useEffect(() => {
+      const handler = (data: BallEventData ) => {
+        if (data.matchId === match_id) {
+          setBallEvent(data.ballEvent);
+        }
+      };
+      
+      eventEmitter.on("ballEvent", handler);
+      
+      // Proper cleanup function that returns void
+      return () => {
+        eventEmitter.off("ballEvent", handler);
+      };
+    }, [match_id]);
+      
     return (
         <>
           {liveMatch?.match_info?.status_str == "Completed" ? (
@@ -70,6 +96,7 @@ export default function Banner({matchData, match_id } : Banner) {
                       width={20}
                       height={20}
                       alt=""
+                        loading="lazy"
                     />
                     { liveMatch?.match_info?.date_start_ist ? format(new Date(liveMatch?.match_info?.date_start_ist), "dd MMM yyyy") :""}
                   </div>
@@ -86,6 +113,7 @@ export default function Banner({matchData, match_id } : Banner) {
                         width={30}
                         height={30}
                         alt="ind"
+                        loading="lazy"
                       />
                     ):("")}
                       <div className="flex md:flex-col md:items-start items-center md:gap-0 gap-2">
@@ -136,6 +164,7 @@ export default function Banner({matchData, match_id } : Banner) {
                         width={40}
                         height={40}
                         alt=""
+                        loading="lazy"
                       />
                     </div>
                     <div className="flex gap-2 flex-row-reverse md:flex-row  items-center text-[#8192B4] font-normal w-full justify-end">
@@ -184,6 +213,7 @@ export default function Banner({matchData, match_id } : Banner) {
                         width={30}
                         height={30}
                         alt="ban"
+                        loading="lazy"
                       />
                       ) : (
                         ""
@@ -195,18 +225,9 @@ export default function Banner({matchData, match_id } : Banner) {
             </section>
           ) : liveMatch?.match_info?.status_str == "Live" ? (
             <section className="bg-[#0E2149] border-[1px] border-[#E4E9F01A] lg:px-0 px-3">
-              <div className="lg:w-[1000px] mx-auto">
+              <div className="lg:w-[1000px] mx-auto lg:block hidden hover:shadow-lg">
                 <div className="md:flex justify-between items-center md:py-0 py-4">
-                  <div className="flex items-center text-1xl text-[#FE4848] font-bold uppercase relative">
-                    <Image
-                      src="/assets/img/home/blinking-dot.gif"
-                      className="h-[20px]"
-                      width={20}
-                      height={20}
-                      alt=""
-                    />
-                    {liveMatch?.match_info?.status_str}
-                  </div>
+                  
                   <div className="text-[#8192B4] font-normal  text-1xl md:text-center md:mx-0 my-3">
                     {liveMatch?.match_info?.short_title},&nbsp;
                     <span className="font-semibold text-[#b9b9b9]">
@@ -214,17 +235,29 @@ export default function Banner({matchData, match_id } : Banner) {
                        {liveMatch?.match_info?.subtitle}
                     </span>
                   </div>
-                  <div className="flex text-[#8192B4] text-1xl font-normal md:justify-start">
-                    <Image
-                      src="/assets/img/clander.png"
-                      className="mr-2"
-                      width={20}
-                      height={20}
-                      alt=""
-                    />
-                    {liveMatch?.match_info?.date_start_ist ? format(new Date(liveMatch?.match_info?.date_start_ist), "dd MMM yyyy") :""}
-                  </div>
+                 
                 </div>
+              </div>
+              <div className="lg:hidden rounded-lg p-4 performance-section relative hover:shadow-lg">
+              
+                    <span className="flex items-center font-semibold text-[#b9b9b9] ">
+                      <Link href="/">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5 mr-2 text-gray-400 group-hover:text-gray-600 transition-colors"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                      </Link>
+                    {liveMatch?.match_info?.short_title},&nbsp; {" "}
+                       {liveMatch?.match_info?.subtitle}
+                    </span>
               </div>
               <div className="border-t-[1px] border-[#E4E9F01A]">
                 <div className="lg:w-[1000px] mx-auto md:py-9 tracking-[1px]">
@@ -237,6 +270,7 @@ export default function Banner({matchData, match_id } : Banner) {
                         width={30}
                         height={30}
                         alt="ind"
+                        loading="lazy"
                       />
                       ) : (
                         ""
@@ -281,14 +315,27 @@ export default function Banner({matchData, match_id } : Banner) {
                       </div>
                     </div>
                     <div className="text-[#8192B4] font-normal w-full text-center md:my-0 my-4">
-                      <p
-                        className={
-                          "text-[#FFBD71] lg:text-[20px] text-[16px] ballEvent" +
-                          match_id
-                        }
-                      >
-                        {liveMatch?.live?.status_note}
-                      </p>
+                    
+                        {/* {liveMatch?.live?.status_note} */}
+                        <motion.div
+                          key={ballEvent}
+                          initial={{ scale: 0, opacity: 0, rotate: -15 }}
+                          animate={{
+                            scale: 1,
+                            opacity: 1,
+                            rotate: 0,
+                          }}
+                          transition={{
+                            type: "spring",
+                            stiffness: 500,
+                            damping: 15,
+                            color: { duration: 1.5, repeat: Infinity }
+                          }}
+                          className={`text-[#FFBD71] lg:text-[20px] text-[16px] font-bold`}
+                        >
+                          {ballEvent.toUpperCase() === 'FOUR' ? 4 : ballEvent.toUpperCase() === 'SIX' ? 6 : ballEvent.toUpperCase() === 'DOT' ? 0 : ballEvent}
+                        </motion.div>
+                        
                     </div>
                     <div className="flex gap-2 flex-row-reverse md:flex-row  items-center text-[#8192B4] font-normal w-full justify-end">
                       <div className="flex md:flex-col md:items-end items-center md:gap-0 gap-2">
@@ -336,6 +383,7 @@ export default function Banner({matchData, match_id } : Banner) {
                         width={30}
                         height={30}
                         alt="ban"
+                        loading="lazy"
                       />
                       ) : (
                         ""
@@ -346,29 +394,20 @@ export default function Banner({matchData, match_id } : Banner) {
                   <div className="md:hidden block bg-[white] p-4 rounded-md mb-4">
                     <div>
                       <div>
-                        <div className="flex items-center text-[14px] text-[#FE4848] font-semibold  relative">
-                          <Image
-                            src="/assets/img/home/blinking-dot.gif"
-                            className="h-[15px]"
-                            width={30}
-                            height={30}
-                            alt=""
-                          />
-                          {liveMatch?.match_info?.status_str}
-                        </div>
-    
+                            
                         <div className="flex items-center justify-between">
                           <div className="flex gap-2 flex-row  uppercase items-center w-full">
-                            <Image
-                              className="lg:h-[42px] lg:w-[42px] h-[40px] w-[40px]"
-                              src="/assets/img/flg-1.png"
+                           <Image 
+                              className="lg:h-[42px] lg:w-[42px] h-[40px] w-[40px]"                              
+                              src={[liveMatch?.match_info?.teama,liveMatch?.match_info?.teamb].find(team => team?.team_id === liveMatch?.live?.live_inning?.batting_team_id)?.logo_url || null}
                               width={30}
                               height={30}
-                              alt="ind"
+                              alt="teams"
+                        loading="lazy"
                             />
                             <div className="flex flex-col items-start gap-0">
                               <p className="text-[14px] font-semibold uppercase">
-                                {liveMatch?.live?.team_batting}
+                                {[liveMatch?.match_info?.teama,liveMatch?.match_info?.teamb].find(team => team?.team_id === liveMatch?.live?.live_inning?.batting_team_id)?.short_name || null}
                               </p>
                               <p className="lg:text-[18px] text-[18px] font-semibold">
                                 {liveMatch?.live?.live_score?.runs}/
@@ -383,12 +422,24 @@ export default function Banner({matchData, match_id } : Banner) {
                           <div className="border-r-[1px] border-[#e5e5e5] h-[60px]"></div>
     
                           <div className="w-full text-center">
-                            <h2
-                              className={
-                                "text-[24px] font-semibold text-[#342df2] ballEvent" +
-                                match_id
-                              }
-                            ></h2>
+                             <motion.div
+                            key={ballEvent}
+                            initial={{ scale: 0, opacity: 0, rotate: -15 }}
+                            animate={{
+                              scale: 1,
+                              opacity: 1,
+                              rotate: 0,
+                            }}
+                            transition={{
+                              type: "spring",
+                              stiffness: 500,
+                              damping: 15,
+                              color: { duration: 1.5, repeat: Infinity }
+                            }}
+                            className={`text-[24px] text-[#342df2] font-bold`}
+                          >
+                            {ballEvent === 'four' ? 4 : ballEvent === 'six' ? 6 : ballEvent === 'dot' ? 0 : ballEvent}
+                          </motion.div>
                           </div>
                         </div>
     
@@ -426,6 +477,7 @@ export default function Banner({matchData, match_id } : Banner) {
                       width={20}
                       height={10}
                       alt=""
+                        loading="lazy"
                     />
                     {liveMatch?.match_info?.date_start_ist ? format(new Date(liveMatch?.match_info?.date_start_ist), "dd MMM yyyy") :""}
                   </div>
@@ -442,6 +494,7 @@ export default function Banner({matchData, match_id } : Banner) {
                         width={30}
                         height={30}
                         alt={liveMatch?.match_info?.teama?.short_name}
+                        loading="lazy"
                       />
                       ) : (
                       "")}
@@ -475,6 +528,7 @@ export default function Banner({matchData, match_id } : Banner) {
                         width={30}
                         height={30}
                         alt={liveMatch?.match_info?.teamb?.short_name}
+                        loading="lazy"
                       />
                       ) : (
                       ""

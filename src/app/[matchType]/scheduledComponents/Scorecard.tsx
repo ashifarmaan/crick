@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from 'next/link';
+import { urlStringEncode} from "@/utils/utility";
 interface Scorecard {
     match_id: number;
   
@@ -10,13 +11,15 @@ interface Scorecard {
     matchStates:any | null;
   
     matchUrl :string | null;
+    isPointTable: boolean;
   }
   export default function Scorecard({
     match_id,
     matchData,
     // matchLast,
     matchStates,
-    matchUrl
+    matchUrl,
+    isPointTable
   }: Scorecard) {
   return (
     <section className="lg:w-[1000px] mx-auto md:mb-0 mb-4 px-2 lg:px-0">
@@ -51,17 +54,15 @@ interface Scorecard {
               Squad
             </button>
           </Link>
-          <Link href={"/points-table/"+matchUrl+"/"+ match_id}>
-            <button
-              className="font-medium py-2 px-3 whitespace-nowrap"
-            >
+          {isPointTable && (
+          <Link href={"/series/"+urlStringEncode(matchData?.match_info?.competition?.title+"-"+matchData?.match_info?.competition?.season)+"/"+matchData?.match_info?.competition?.cid+"/points-table"}>
+            <button className="font-medium py-2 px-3 whitespace-nowrap">
               Points Table
             </button>
           </Link>
-          <Link href={"/stats/"+matchUrl+"/"+ match_id}>
-            <button
-              className="font-medium py-2 px-3 whitespace-nowrap"
-            >
+          )}
+          <Link href={"/series/"+urlStringEncode(matchData?.match_info?.competition?.title+"-"+matchData?.match_info?.competition?.season)+"/"+matchData?.match_info?.competition?.cid+"/stats/most-run"}>
+            <button className="font-medium py-2 px-3 whitespace-nowrap">
               Stats
             </button>
           </Link>

@@ -7,10 +7,10 @@ import Image from "next/image";
 import { format } from "date-fns";
 import { urlStringEncode } from "@/utils/utility";
 
-// interface H2h {
-//   newsFeeds: any | null;
-// }
-export default function H2h() {
+interface H2h {
+    featuredMatch: any | null;
+}
+export default function H2h({featuredMatch}:H2h) {
   const [activeTab, setActiveTab] = useState("test");
   const [show, setShow] = useState(false);
 
@@ -39,7 +39,7 @@ export default function H2h() {
               <p>Loading...</p>
           ) : (
               <ul>
-                  {news.map((post: any) => (
+                  {news?.map((post: any) => (
                       <li key={post.id} className="mb-6 border-b pb-4">
                           {/* Featured Image */}
                           {post._embedded?.["wp:featuredmedia"]?.[0]?.source_url && (
@@ -72,7 +72,7 @@ export default function H2h() {
                   <div className="lg:w-[1000px] mx-auto md:py-8 tracking-[1px]">
                       <div className="flex py-8 justify-between items-center">
                           <div className="flex flex-col md:flex-row text-[#FF912C] font-bold uppercase  md:items-center items-start ">
-                              <Image
+                              <Image  loading="lazy" 
                                   className="md:h-[42px] md:w-[42px] h-[30px] w-[30px]"
                                   src="/assets/img/flg-1.png"
                                   width={20}
@@ -91,7 +91,7 @@ export default function H2h() {
                               <p className="text-[#BDCCECA8] md:block hidden md:text-[19px] text-[14px] md:mx-3 mx-0 font-semibold uppercase">
                                   BAN
                               </p>
-                              <Image
+                              <Image  loading="lazy" 
                                   src="/assets/img/ban.png"
                                   className="md:h-[42px] md:w-[42px] h-[30px] w-[30px]"
                                   width={20}
@@ -162,7 +162,7 @@ export default function H2h() {
                                           <div className="w-full relative">
                                               <div className="border border-gray-300 rounded-md p-2 text-gray-700 md:w-[70%] w-full cursor-pointer">
                                                   <span id="selected1" className="flex items-center">
-                                                      <Image
+                                                      <Image  loading="lazy" 
                                                           src="/assets/img/in.png"
                                                           width={30}
                                                           height={30}
@@ -181,7 +181,7 @@ export default function H2h() {
                                               <div className="relative flex justify-end">
                                                   <div className="border border-gray-300 rounded-md p-2 text-gray-700 md:w-[70%] w-full cursor-pointer">
                                                       <span id="selected2" className="flex items-center">
-                                                          <Image
+                                                          <Image  loading="lazy" 
                                                               src="/assets/img/bd.png"
                                                               width={30}
                                                               height={30}
@@ -398,7 +398,7 @@ export default function H2h() {
                                                   <a href="#">
                                                       <div className="flex space-x-2 ">
                                                           <div className="flex items-center space-x-1 flex-col">
-                                                              <Image
+                                                              <Image  loading="lazy" 
                                                                   src="/assets/img/flag/b-8.png"
                                                                   className="h-[30px] rounded-full"
                                                                   width={30}
@@ -422,7 +422,7 @@ export default function H2h() {
                                                               <p className="text-[#909090]">(20.0 overs)</p>
                                                           </div>
                                                           <div className="flex items-center space-x-1 flex-col font-medium">
-                                                              <Image
+                                                              <Image  loading="lazy" 
                                                                   src="/assets/img/flag/b-10.png"
                                                                   className="h-[30px] rounded-full"
                                                                   width={30}
@@ -458,7 +458,7 @@ export default function H2h() {
                                                   <a href="#">
                                                       <div className="flex space-x-2 ">
                                                           <div className="flex items-center space-x-1 flex-col">
-                                                              <Image
+                                                              <Image  loading="lazy" 
                                                                   src="/assets/img/flag/b-8.png"
                                                                   className="h-[30px] rounded-full"
                                                                   width={30}
@@ -482,7 +482,7 @@ export default function H2h() {
                                                               <p className="text-[#909090]">(20.0 overs)</p>
                                                           </div>
                                                           <div className="flex items-center space-x-1 flex-col font-medium">
-                                                              <Image
+                                                              <Image  loading="lazy" 
                                                                   src="/assets/img/flag/b-10.png"
                                                                   className="h-[30px] rounded-full"
                                                                   width={30}
@@ -518,7 +518,7 @@ export default function H2h() {
                                                   <a href="#">
                                                       <div className="flex space-x-2 ">
                                                           <div className="flex items-center space-x-1 flex-col">
-                                                              <Image
+                                                              <Image  loading="lazy" 
                                                                   src="/assets/img/flag/b-8.png"
                                                                   className="h-[30px] rounded-full"
                                                                   width={30}
@@ -542,7 +542,7 @@ export default function H2h() {
                                                               <p className="text-[#909090]">(20.0 overs)</p>
                                                           </div>
                                                           <div className="flex items-center space-x-1 flex-col font-medium">
-                                                              <Image
+                                                              <Image  loading="lazy" 
                                                                   src="/assets/img/flag/b-10.png"
                                                                   className="h-[30px] rounded-full"
                                                                   width={30}
@@ -578,7 +578,7 @@ export default function H2h() {
                                                   <a href="#">
                                                       <div className="flex space-x-2 ">
                                                           <div className="flex items-center space-x-1 flex-col">
-                                                              <Image
+                                                              <Image  loading="lazy" 
                                                                   src="/assets/img/flag/b-8.png"
                                                                   className="h-[30px] rounded-full"
                                                                   width={30}
@@ -602,7 +602,7 @@ export default function H2h() {
                                                               <p className="text-[#909090]">(20.0 overs)</p>
                                                           </div>
                                                           <div className="flex items-center space-x-1 flex-col font-medium">
-                                                              <Image
+                                                              <Image  loading="lazy" 
                                                                   src="/assets/img/flag/b-10.png"
                                                                   className="h-[30px] rounded-full"
                                                                   width={30}
@@ -642,7 +642,7 @@ export default function H2h() {
                                                           <a href="#">
                                                               <div className="flex space-x-2 ">
                                                                   <div className="flex items-center space-x-1 flex-col">
-                                                                      <Image
+                                                                      <Image  loading="lazy" 
                                                                           src="/assets/img/flag/b-8.png"
                                                                           className="h-[30px] rounded-full"
                                                                           width={30}
@@ -674,7 +674,7 @@ export default function H2h() {
                                                                       </p>
                                                                   </div>
                                                                   <div className="flex items-center space-x-1 flex-col font-medium">
-                                                                      <Image
+                                                                      <Image  loading="lazy" 
                                                                           src="/assets/img/flag/b-10.png"
                                                                           className="h-[30px] rounded-full"
                                                                           width={30}
@@ -712,7 +712,7 @@ export default function H2h() {
                                                           <a href="#">
                                                               <div className="flex space-x-2 ">
                                                                   <div className="flex items-center space-x-1 flex-col">
-                                                                      <Image
+                                                                      <Image  loading="lazy" 
                                                                           src="/assets/img/flag/b-8.png"
                                                                           className="h-[30px] rounded-full"
                                                                           width={30}
@@ -744,7 +744,7 @@ export default function H2h() {
                                                                       </p>
                                                                   </div>
                                                                   <div className="flex items-center space-x-1 flex-col font-medium">
-                                                                      <Image
+                                                                      <Image  loading="lazy" 
                                                                           src="/assets/img/flag/b-10.png"
                                                                           className="h-[30px] rounded-full"
                                                                           width={30}
@@ -782,7 +782,7 @@ export default function H2h() {
                                                           <a href="#">
                                                               <div className="flex space-x-2 ">
                                                                   <div className="flex items-center space-x-1 flex-col">
-                                                                      <Image
+                                                                      <Image  loading="lazy" 
                                                                           src="/assets/img/flag/b-8.png"
                                                                           className="h-[30px] rounded-full"
                                                                           width={30}
@@ -814,7 +814,7 @@ export default function H2h() {
                                                                       </p>
                                                                   </div>
                                                                   <div className="flex items-center space-x-1 flex-col font-medium">
-                                                                      <Image
+                                                                      <Image  loading="lazy" 
                                                                           src="/assets/img/flag/b-10.png"
                                                                           className="h-[30px] rounded-full"
                                                                           width={30}
@@ -852,7 +852,7 @@ export default function H2h() {
                                                           <a href="#">
                                                               <div className="flex space-x-2 ">
                                                                   <div className="flex items-center space-x-1 flex-col">
-                                                                      <Image
+                                                                      <Image  loading="lazy" 
                                                                           src="/assets/img/flag/b-8.png"
                                                                           className="h-[30px] rounded-full"
                                                                           width={30}
@@ -884,7 +884,7 @@ export default function H2h() {
                                                                       </p>
                                                                   </div>
                                                                   <div className="flex items-center space-x-1 flex-col font-medium">
-                                                                      <Image
+                                                                      <Image  loading="lazy" 
                                                                           src="/assets/img/flag/b-10.png"
                                                                           className="h-[30px] rounded-full"
                                                                           width={30}
@@ -969,7 +969,7 @@ export default function H2h() {
                                   <div className="lg:grid grid-cols-12 gap-4 mt-4">
                                       {/* Main News Item */}
                                       <div className="col-span-6 border-r-[1px] border-[#E7F2F4] pr-[16px]">
-                                          <Image
+                                          <Image  loading="lazy" 
                                               src="/assets/img/team-1.png"
                                               alt="Main news"
                                               className="rounded-lg w-full h-48 object-cover mb-3"
@@ -990,7 +990,7 @@ export default function H2h() {
                                       <div className="col-span-6">
                                           {/* Single News Item */}
                                           <div className="flex gap-3 my-3">
-                                              <Image
+                                              <Image  loading="lazy" 
                                                   src="/assets/img/team-2.png"
                                                   alt="News thumbnail"
                                                   className="rounded-lg h-[77px]"
@@ -1044,7 +1044,7 @@ export default function H2h() {
                                           </div>
                                           <div className="border-t-[1px] border-[#E7F2F4]" />
                                           <div className="flex gap-3 my-3">
-                                              <Image
+                                              <Image  loading="lazy" 
                                                   src="/assets/img/team-3.png"
                                                   alt="News thumbnail"
                                                   className="rounded-lg h-[77px]"
@@ -1098,7 +1098,7 @@ export default function H2h() {
                                           </div>
                                           <div className="border-t-[1px] border-[#E7F2F4]" />
                                           <div className="flex gap-3 my-3">
-                                              <Image
+                                              <Image  loading="lazy" 
                                                   src="/assets/img/team-4.png"
                                                   alt="News thumbnail"
                                                   className="rounded-lg h-[77px]"
@@ -1159,7 +1159,7 @@ export default function H2h() {
                                   <div className="flex gap-1 items-center justify-between">
                                       <div className="flex gap-1 items-center">
                                           <div className="col-span-4 relative">
-                                              <Image
+                                              <Image  loading="lazy" 
                                                   src="/assets/img/home/trofi.png"
                                                   className="h-[75px]"
                                                   alt=""
@@ -1193,7 +1193,7 @@ export default function H2h() {
                                       </div>
                                   </div>
                               </div>
-                              <WeeklySlider />
+                              <WeeklySlider featuredMatch={featuredMatch}/>
                               <div className=" pb-2 my-4">
                                   <div className="py-2">
                                       <h3 className="text-1xl font-semibold pl-[3px] border-l-[3px] border-[#1a80f8]">
@@ -1204,7 +1204,7 @@ export default function H2h() {
                                       <a href="#">
                                           <div className="bg-[#ffffff] text-[14px] rounded-lg px-4 flex items-center space-x-3 py-3 mb-2">
                                               <div>
-                                                  <Image
+                                                  <Image  loading="lazy" 
                                                       src="/assets/img/1.png"
                                                       width={20}
                                                       height={20}
@@ -1218,7 +1218,7 @@ export default function H2h() {
                                       <a href="#">
                                           <div className="bg-[#ffffff] text-[14px] rounded-lg px-4 flex items-center space-x-3 py-3 mb-2 ">
                                               <div>
-                                                  <Image
+                                                  <Image  loading="lazy" 
                                                       src="/assets/img/2.png"
                                                       width={20}
                                                       height={20}
@@ -1232,7 +1232,7 @@ export default function H2h() {
                                       <a href="#">
                                           <div className="bg-[#ffffff] text-[14px] rounded-lg px-4 flex items-center space-x-3 py-3 mb-2 ">
                                               <div>
-                                                  <Image
+                                                  <Image  loading="lazy" 
                                                       src="/assets/img/3.png"
                                                       width={20}
                                                       height={20}
@@ -1246,7 +1246,7 @@ export default function H2h() {
                                       <a href="#">
                                           <div className="bg-[#ffffff] text-[14px] rounded-lg px-4 flex items-center space-x-3 py-3 mb-2 ">
                                               <div>
-                                                  <Image
+                                                  <Image  loading="lazy" 
                                                       src="/assets/img/4.png"
                                                       width={20}
                                                       height={20}
@@ -1260,7 +1260,7 @@ export default function H2h() {
                                       <a href="#">
                                           <div className="bg-[#ffffff] text-[14px] rounded-lg px-4 flex items-center space-x-3 py-3 mb-2 ">
                                               <div>
-                                                  <Image
+                                                  <Image  loading="lazy" 
                                                       src="/assets/img/5.png"
                                                       width={20}
                                                       height={20}
@@ -1274,7 +1274,7 @@ export default function H2h() {
                                       <a href="#">
                                           <div className="bg-[#ffffff] text-[14px] rounded-lg px-4 flex items-center space-x-3 py-3 mb-2 ">
                                               <div>
-                                                  <Image
+                                                  <Image  loading="lazy" 
                                                       src="/assets/img/6.png"
                                                       width={20}
                                                       height={20}
@@ -1288,7 +1288,7 @@ export default function H2h() {
                                       <a href="#">
                                           <div className="bg-[#ffffff] text-[14px] rounded-lg px-4 flex items-center space-x-3 py-3 mb-2 ">
                                               <div>
-                                                  <Image
+                                                  <Image  loading="lazy" 
                                                       src="/assets/img/7.png"
                                                       width={20}
                                                       height={20}
@@ -1302,7 +1302,7 @@ export default function H2h() {
                                       <a href="#">
                                           <div className="bg-[#ffffff] text-[14px] rounded-lg px-4 flex items-center space-x-3 py-3">
                                               <div>
-                                                  <Image
+                                                  <Image  loading="lazy" 
                                                       src="/assets/img/8.png"
                                                       width={20}
                                                       height={20}

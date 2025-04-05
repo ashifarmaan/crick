@@ -3,8 +3,10 @@
 import React from 'react'
 import Image from "next/image";
 import Link from 'next/link';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { urlStringEncode} from "@/utils/utility";
+import PlayerImage from "@/app/components/PlayerImage";
+
 
 interface Squads {
     match_id: number;
@@ -12,16 +14,18 @@ interface Squads {
     matchData:any | null;
 
     matchUrl :string | null;
+    isPointTable: boolean;
 
   }
 export default function Squads({
     match_id,
     matchData,
-    matchUrl
+    matchUrl,
+    isPointTable
   }: Squads) {
 
     match_id;
-
+    const matchDetails = matchData?.match_info;
     const [activeTab, setActiveTab] = useState("tab1");
     
     const teamADetails = matchData?.match_info?.teama;
@@ -32,38 +36,37 @@ export default function Squads({
     const teamASquad = matchData?.["match-playing11"]?.teama?.squads;
     const teamBSquad = matchData?.["match-playing11"]?.teamb?.squads;
 
-    const teamASquadBatsmen = teamASquad.filter(
+    const teamASquadBatsmen = teamASquad?.filter(
         (events: { role: string; }) =>
           events.role === "bat" || events.role === "wk"
       );
 
-    const teamASquadBowler = teamASquad.filter(
+    const teamASquadBowler = teamASquad?.filter(
         (events: { role: string; }) =>
           events.role === "bowl"
       );
 
-    const teamASquadAll = teamASquad.filter(
+    const teamASquadAll = teamASquad?.filter(
         (events: { role: string; }) =>
           events.role === "all"
       );
 
-      const teamBSquadBatsmen = teamBSquad.filter(
+      const teamBSquadBatsmen = teamBSquad?.filter(
         (events: { role: string; }) =>
           events.role === "bat" || events.role === "wk"
       );
 
-    const teamBSquadBowler = teamBSquad.filter(
+    const teamBSquadBowler = teamBSquad?.filter(
         (events: { role: string; }) =>
           events.role === "bowl"
       );
 
-    const teamBSquadAll = teamBSquad.filter(
+    const teamBSquadAll = teamBSquad?.filter(
         (events: { role: string; }) =>
           events.role === "all"
       );
 
-
-
+     
 
     return (
         <section className="lg:w-[1000px] mx-auto md:mb-0 mb-4 px-2 lg:px-0">
@@ -97,25 +100,23 @@ export default function Squads({
               Squad
             </button>
           </Link>
-          <Link href={"/points-table/"+matchUrl+"/"+ match_id}>
-            <button
-              className="font-medium py-2 px-3 whitespace-nowrap"
-            >
+          {isPointTable && (
+          <Link href={"/series/"+urlStringEncode(matchDetails?.competition?.title+"-"+matchDetails?.competition?.season)+"/"+matchDetails?.competition?.cid+"/points-table"}>
+            <button className="font-medium py-2 px-3 whitespace-nowrap">
               Points Table
             </button>
           </Link>
-          <Link href={"/stats/"+matchUrl+"/"+ match_id}>
-            <button
-              className="font-medium py-2 px-3 whitespace-nowrap"
-            >
+          )}
+          <Link href={"/series/"+urlStringEncode(matchDetails?.competition?.title+"-"+matchDetails?.competition?.season)+"/"+matchDetails?.competition?.cid+"/stats/most-run"}>
+            <button className="font-medium py-2 px-3 whitespace-nowrap">
               Stats
             </button>
           </Link>
         </div>
             </div>
 
-
-            <div id="squads" className="tab-content">
+            {teamADetails && teamBDetails &&
+                        <div id="squads" className="tab-content">
                 <div className="py-2 mb-2">
                     <h3 className="text-1xl font-semibold pl-[3px] border-l-[3px] border-[#1a80f8]">
                         {seriesName}
@@ -133,7 +134,7 @@ export default function Squads({
                                         }`}
                                     onClick={() => setActiveTab("tab1")}
                                 >
-                                    <Image
+                                    <Image  loading="lazy" 
                                         src={teamADetails.logo_url}
                                         className="mr-3"
                                         width={20} height={20} alt={teamADetails.name}
@@ -148,7 +149,7 @@ export default function Squads({
                                         }`}
                                     onClick={() => setActiveTab("tab2")}
                                 >
-                                    <Image
+                                    <Image  loading="lazy" 
                                         src={teamBDetails.logo_url}
                                         className="mr-3"
                                         width={20} height={20} alt={teamBDetails.name}
@@ -165,7 +166,7 @@ export default function Squads({
                             <div id="south-team" className="team-content ">
                                 <div className="max-w-7xl mx-auto bg-white rounded-lg p-6">
                                     <div className="flex items-center space-x-4 mb-6">
-                                        <Image
+                                        <Image  loading="lazy" 
                                             src={teamADetails.logo_url}
                                             width={45} height={45} alt={teamADetails.name}
                                             className="h-[45px] rounded-full"
@@ -183,16 +184,13 @@ export default function Squads({
                                                 Batsman
                                             </h2>
                                             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                                                {teamASquadBatsmen.map((squads:any, index:number) => (
+                                                {teamASquadBatsmen?.map((squads:any, index:number) => (
                                                 <Link href={"/player/"+urlStringEncode(squads?.name)+"/"+squads?.player_id}  key={index}>
                                                     <div className="text-center p-4 rounded-md border-[1px] border-[##E2E2E2]">
                                                         <div className="relative">
-                                                            <Image
-                                                                src="/assets/img/player/g-7.png"
-                                                                width={80} height={80} alt={squads.name}
-                                                                className="w-16 h-16 mx-auto rounded-full mb-2"
-                                                            />
-                                                            <Image
+                                                        <PlayerImage key={squads?.player_id} player_id={squads?.player_id} width={80} height={80} className="w-16 h-16 mx-auto rounded-full mb-2" />
+                                                       
+                                                            <Image  loading="lazy" 
                                                                 src="/assets/img/player/bat.png"
                                                                 className="h-[27px] absolute right-2 bottom-0 bg-white rounded-full p-[4px]"
                                                                 width={27} height={27} alt=""
@@ -214,16 +212,13 @@ export default function Squads({
                                                 Bowler
                                             </h2>
                                             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                                            {teamASquadBowler.map((bowler:any, index:number) => (
+                                            {teamASquadBowler?.map((bowler:any, index:number) => (
                                                 <Link href={"/player/"+urlStringEncode(bowler?.name)+"/"+bowler?.player_id}  key={index}>
                                                     <div className="text-center p-4 rounded-md border-[1px] border-[##E2E2E2]">
                                                         <div className="relative">
-                                                            <Image
-                                                                src="/assets/img/player/g-11.png"
-                                                                width={80} height={80} alt={bowler.name}
-                                                                className="w-16 h-16 mx-auto rounded-full mb-2"
-                                                            />
-                                                            <Image
+                                                        <PlayerImage key={bowler?.player_id} player_id={bowler?.player_id} width={80} height={80} className="w-16 h-16 mx-auto rounded-full mb-2" />
+                                                       
+                                                            <Image  loading="lazy" 
                                                                 src="/assets/img/player/ball.png"
                                                                 className="h-[24px] absolute right-2 bottom-0 bg-white rounded-full p-[4px]"
                                                                 width={24} height={24} alt=""
@@ -245,16 +240,12 @@ export default function Squads({
                                                 All-Rounder
                                             </h2>
                                             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                                            {teamASquadAll.map((allrounder:any, index:number) => (
+                                            {teamASquadAll?.map((allrounder:any, index:number) => (
                                                 <Link href={"/player/"+urlStringEncode(allrounder?.name)+"/"+allrounder?.player_id}  key={index}>
                                                     <div className="text-center p-4 rounded-md border-[1px] border-[##E2E2E2]">
                                                         <div className="relative">
-                                                            <Image
-                                                                src="/assets/img/player/g-15.png"
-                                                                width={80} height={80} alt={allrounder.name}
-                                                                className="w-16 h-16 mx-auto rounded-full mb-2"
-                                                            />
-                                                            <Image
+                                                        <PlayerImage key={allrounder?.player_id} player_id={allrounder?.player_id} width={80} height={80} className="w-16 h-16 mx-auto rounded-full mb-2" />
+                                                            <Image  loading="lazy" 
                                                                 src="/assets/img/player/bat-ball.png"
                                                                 className="h-[27px] absolute right-2 bottom-0 bg-white rounded-full p-[4px]"
                                                                 width={27} height={27} alt=""
@@ -279,7 +270,7 @@ export default function Squads({
                         <div id="south-team" className="team-content ">
                         <div className="max-w-7xl mx-auto bg-white rounded-lg p-6">
                             <div className="flex items-center space-x-4 mb-6">
-                                <Image
+                                <Image  loading="lazy" 
                                     src={teamBDetails.logo_url}
                                     width={45} height={45} alt={teamBDetails.name}
                                     className="h-[45px] rounded-full"
@@ -297,16 +288,12 @@ export default function Squads({
                                                 Batsman
                                             </h2>
                                             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                                                {teamBSquadBatsmen.map((squads:any, index:number) => (
+                                                {teamBSquadBatsmen?.map((squads:any, index:number) => (
                                                 <Link href={"/player/"+urlStringEncode(squads?.name)+"/"+squads?.player_id}  key={index}>
                                                     <div className="text-center p-4 rounded-md border-[1px] border-[##E2E2E2]">
                                                         <div className="relative">
-                                                            <Image
-                                                                src="/assets/img/player/g-7.png"
-                                                                width={80} height={80} alt={squads.name}
-                                                                className="w-16 h-16 mx-auto rounded-full mb-2"
-                                                            />
-                                                            <Image
+                                                        <PlayerImage key={squads?.player_id} player_id={squads?.player_id} width={80} height={80} className="w-16 h-16 mx-auto rounded-full mb-2" />
+                                                            <Image  loading="lazy" 
                                                                 src="/assets/img/player/bat.png"
                                                                 className="h-[27px] absolute right-2 bottom-0 bg-white rounded-full p-[4px]"
                                                                 width={27} height={27} alt=""
@@ -328,16 +315,12 @@ export default function Squads({
                                                 Bowler
                                             </h2>
                                             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                                            {teamBSquadBowler.map((bowler:any, index:number) => (
+                                            {teamBSquadBowler?.map((bowler:any, index:number) => (
                                                 <Link href={"/player/"+urlStringEncode(bowler?.name)+"/"+bowler?.player_id}  key={index}>
                                                     <div className="text-center p-4 rounded-md border-[1px] border-[##E2E2E2]">
                                                         <div className="relative">
-                                                            <Image
-                                                                src="/assets/img/player/g-11.png"
-                                                                width={80} height={80} alt={bowler.name}
-                                                                className="w-16 h-16 mx-auto rounded-full mb-2"
-                                                            />
-                                                            <Image
+                                                        <PlayerImage key={bowler?.player_id} player_id={bowler?.player_id} width={80} height={80} className="w-16 h-16 mx-auto rounded-full mb-2" />
+                                                            <Image  loading="lazy" 
                                                                 src="/assets/img/player/ball.png"
                                                                 className="h-[24px] absolute right-2 bottom-0 bg-white rounded-full p-[4px]"
                                                                 width={24} height={24} alt=""
@@ -359,16 +342,12 @@ export default function Squads({
                                                 All-Rounder
                                             </h2>
                                             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                                            {teamBSquadAll.map((allrounder:any, index:number) => (
+                                            {teamBSquadAll?.map((allrounder:any, index:number) => (
                                                 <Link href={"/player/"+urlStringEncode(allrounder.name)+"/"+allrounder.player_id}  key={index}>
                                                     <div className="text-center p-4 rounded-md border-[1px] border-[##E2E2E2]">
                                                         <div className="relative">
-                                                            <Image
-                                                                src="/assets/img/player/g-15.png"
-                                                                width={80} height={80} alt={allrounder.name}
-                                                                className="w-16 h-16 mx-auto rounded-full mb-2"
-                                                            />
-                                                            <Image
+                                                        <PlayerImage key={allrounder?.player_id} player_id={allrounder?.player_id} width={80} height={80} className="w-16 h-16 mx-auto rounded-full mb-2" />
+                                                            <Image  loading="lazy" 
                                                                 src="/assets/img/player/bat-ball.png"
                                                                 className="h-[27px] absolute right-2 bottom-0 bg-white rounded-full p-[4px]"
                                                                 width={27} height={27} alt=""
@@ -393,7 +372,7 @@ export default function Squads({
                     </div>
                 </div>
             </div>
-
+  }
 
         </section>
     )

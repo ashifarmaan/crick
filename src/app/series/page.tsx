@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import React from 'react'
 import Layout from "@/app/components/Layout";
 
@@ -10,7 +11,7 @@ import PointsTable from './seriesComponents/PointsTable';
 import News from './seriesComponents/News';
 import Stats from './seriesComponents/Stats';
 import SeriesList from './seriesComponents/SeriesList';
-import { liveSeries, seriesById, TournamentsList, AllSeriesList } from "@/controller/homeController";
+import { liveSeries, seriesById, AllSeriesList, FeaturedMatch } from "@/controller/homeController";
 import { SeriesKeyStats, SeriesMatches } from "@/controller/matchInfoController";
 import { TeamPlayers } from "@/controller/teamController";
 
@@ -24,9 +25,8 @@ export default async function page(props: { params: Params }) {
   const seriesTab = params?.seriesTap;
   const statsType = params?.seriesStatsType;
 
-    const liveSeriesData = await liveSeries();
-    const SeriesDetails = await seriesById(seriesId);
-    // const upcomingMatches = await seriesUpcomingMatches(seriesId);
+  const liveSeriesData = await liveSeries();
+  const SeriesDetails = await seriesById(seriesId);
   const urlString = "/series/"+seriesName+"/"+seriesId;
   const seriesKeystats =  await SeriesKeyStats(seriesId);
   const seriesMatches =  await SeriesMatches(seriesId);
@@ -35,7 +35,11 @@ export default async function page(props: { params: Params }) {
    
   const teamPlayers =  await TeamPlayers(teamIds);
   const tournamentsList = await AllSeriesList();
-   console.log('teamIds', params);
+  const featuredMatch = await FeaturedMatch();
+
+  const standings = SeriesDetails?.standing?.standings;
+  const isPointTable = Array.isArray(standings) && standings.length > 0;
+  //  console.log('teamIds', isPointTable);
 
   return (
     <Layout headerData={liveSeriesData}>
@@ -45,12 +49,12 @@ export default async function page(props: { params: Params }) {
             <>
           <Banner seriesData={liveSeriesData} seriesInfo={SeriesDetails}></Banner>
 
-          {seriesTab === ""  || seriesTab === undefined && <Overview  seriesInfo={SeriesDetails} seriesKeystats={seriesKeystats} urlString={urlString}/>}
-          {seriesTab === "schedule-results" && <ScheduleResults seriesMatches={seriesMatches} urlString={urlString} statsType={statsType}/>}
-          {seriesTab === "squads" && <Squads teamPlayers={teamPlayers}  seriesInfo={SeriesDetails} urlString={urlString}/>}
-          {seriesTab === "points-table" && <PointsTable seriesInfo={SeriesDetails} urlString={urlString} />}
-          {seriesTab === "news" && <News  urlString={urlString}/>}
-          {seriesTab === "stats" && <Stats seriesId={seriesId} urlString={urlString} statsType={statsType} />}
+          {seriesTab === ""  || seriesTab === undefined && <Overview  seriesInfo={SeriesDetails} seriesKeystats={seriesKeystats} urlString={urlString} featuredMatch={featuredMatch} isPointTable={isPointTable}/>}
+          {seriesTab === "schedule-results" && <ScheduleResults seriesId={seriesId} seriesMatches={seriesMatches} urlString={urlString} statsType={statsType} featuredMatch={featuredMatch} isPointTable={isPointTable}/>}
+          {seriesTab === "squads" && <Squads teamPlayers={teamPlayers}  seriesInfo={SeriesDetails} urlString={urlString} isPointTable={isPointTable}/>}
+          {seriesTab === "points-table" && <PointsTable seriesInfo={SeriesDetails} urlString={urlString} featuredMatch={featuredMatch}/>}
+          {seriesTab === "news" && <News  urlString={urlString} isPointTable={isPointTable}/>}
+          {seriesTab === "stats" && <Stats seriesId={seriesId} urlString={urlString} statsType={statsType} isPointTable={isPointTable}/>}
           
           </>
           )

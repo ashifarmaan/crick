@@ -192,13 +192,13 @@ const Footer = () => {
       <hr className="border-gray-700 my-6" />
       <div className="flex flex-col md:flex-row justify-between items-center md:mx-4 md:gap-10 lg:mx-0">
         <div className="text-center mb-4 md:mb-0">
-          <Image src="/assets/img/logo.png" className="h-[40px]" alt="" width={160} height={40}/>
+          <Image priority  src="/assets/img/logo.png" className="h-[40px]" alt="" width={160} height={40}/>
           <div className="flex space-x-4 mt-4">
             <a href="#">
-              <Image src="/assets/img/store-1.png" alt="Google Play" className="h-[35px]" width={100} height={35}/>
+              <Image priority src="/assets/img/store-1.png" alt="Google Play" className="h-[35px]" width={100} height={35}/>
             </a>
             <a href="#">
-              <Image src="/assets/img/store-2.png" alt="App Store" className="h-[35px]" width={100} height={35}/>
+              <Image priority  src="/assets/img/store-2.png" alt="App Store" className="h-[35px]" width={100} height={35}/>
             </a>
           </div>
         </div>

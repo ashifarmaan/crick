@@ -18,13 +18,20 @@ export default function Slider() {
   useEffect(() => {
     const fetchStories = async () => {
       try {
-        const response = await fetch("/api"); // Your API route
+        const response = await fetch("/api",{
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${process.env.NEXT_PUBLIC_API_SECRET_TOKEN}`,
+          },
+          cache: "no-store",
+        }); // Your API route
         const text = await response.text();
         const parser = new DOMParser();
         const xml = parser.parseFromString(text, "text/xml");
 
         const items = xml.querySelectorAll("item");
-        const storiesArray = Array.from(items).map((item) => {
+        const storiesArray = Array.from(items)?.map((item) => {
           const title = item.querySelector("title")?.textContent || "";
           const link = item.querySelector("link")?.textContent || "";
           const description = item.querySelector("description")?.textContent || "";
@@ -45,15 +52,8 @@ export default function Slider() {
     fetchStories();
   }, []);
 
-  console.log("yes",images);
+  // console.log("yes",images);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [currentStory, setCurrentStory] = useState(0);
-  const [progress, setProgress] = useState(0);
-
-
-
-
   const itemsPerPage = 4;
 
   const handleNext = () => {
@@ -87,7 +87,7 @@ export default function Slider() {
       >
         
 
-{images.map((image, index) => ( 
+{images?.map((image, index) => ( 
         
           <div
             key={index}
@@ -96,7 +96,7 @@ export default function Slider() {
            
           >
             <Link href={image.link}>
-            <Image src={image.image} alt={image.title} className="rounded-lg w-full" width={200} height={30} />
+            <Image  loading="lazy"  src={image.image} alt={image.title} className="rounded-lg w-full" width={200} height={30} />
             <p className="absolute bottom-[12px] text-white font-semibold text-center px-2 text-[14px] md:text-[13px]">{image.title}</p>
             </Link>
             </div>

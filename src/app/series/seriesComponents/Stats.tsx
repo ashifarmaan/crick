@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 import Link from 'next/link';
 import { MatcheStats } from "@/controller/matchInfoController";
 import { urlStringEncode } from "@/utils/utility";
@@ -7,9 +7,39 @@ interface Stats {
     urlString: string; 
     statsType :string | null;
     seriesId: number;
+    isPointTable:boolean;
   }
-  export default async function Stats({seriesId, urlString, statsType} : Stats) {
 
+  async function fetchHtml(seriesId: number) {
+    if (!seriesId || seriesId === 0) return '';
+  
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/series/SeriesHtml`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${process.env.NEXT_PUBLIC_API_SECRET_TOKEN}`,
+        },
+        body: JSON.stringify({ cid: seriesId }),
+        cache: "no-store", // Prevents Next.js from caching the API response
+      });
+  
+      if (!response.ok) {
+        console.error(`Error: API returned ${response.status} for CID ${seriesId}`);
+        return '';
+      }
+  
+      const result = await response.json();
+      return result?.data?.[0]?.statsHtml ?? '';
+    } catch (error) {
+      console.error("Error fetching matches:", error);
+      return '';
+    }
+  }
+
+  export default async function Stats({seriesId, urlString, statsType, isPointTable} : Stats) {
+
+     const pageHtml = await fetchHtml(seriesId);
 
     const renderStatus = () => {
         switch (statsType) {
@@ -47,11 +77,12 @@ interface Stats {
         };
         const statType = renderStatus();
         const statsMatch =  await MatcheStats(seriesId, statType);
-        const matchStats= statsMatch.stats;
+        const matchStats= statsMatch?.stats;
         // console.log("renderStatus",matchStats);
 
     return (
         <section className="lg:w-[1000px] mx-auto md:mb-0 mb-4 px-2 lg:px-0">
+           
             <div id="tabs" className="my-4">
                 <div className="flex text-1xl space-x-8 p-2 bg-[#ffffff] rounded-lg overflow-auto">
                     <Link href={urlString}>
@@ -75,6 +106,7 @@ interface Stats {
                             Squads
                         </button>
                     </Link>
+                    {isPointTable &&
                     <Link href={urlString+"/points-table"}>
                         <button
                             className="font-medium py-2 px-3 whitespace-nowrap"
@@ -82,6 +114,7 @@ interface Stats {
                             Points Table
                         </button>
                     </Link>
+                    }
                     <Link href={urlString+"/news"}>
                         <button
                             className="font-medium py-2 px-3 whitespace-nowrap"
@@ -89,7 +122,7 @@ interface Stats {
                             News
                         </button>
                     </Link>
-                    <Link href={urlString+"/stats"}>
+                    <Link href={urlString+"/stats/most-run"}>
                         <button
                             className="font-medium py-2 px-3 whitespace-nowrap bg-[#1A80F8] text-white rounded-md" >
                             Stats
@@ -97,7 +130,8 @@ interface Stats {
                     </Link>
                 </div>
             </div>
-
+            {matchStats !== undefined && matchStats!== null && matchStats !== '' ? (
+                <>
             <div id="stats">
                 <div className="md:grid grid-cols-12 gap-4">
                     <div className="lg:col-span-3 md:col-span-4">
@@ -261,7 +295,7 @@ interface Stats {
                                                     </tr>
                                                 </thead>
                                                 <tbody className="divide-y divide-gray-200">
-                                                {matchStats.map((stats:any, index:number) => (
+                                                {matchStats?.map((stats:any, index:number) => (
                                                     <tr key={index}>
                                                         <td className="md:px-2 pl-[14px] py-3 w-[10px]">{index+1}</td>
                                                         <td className="md:px-2 py-3 text-[#217AF7]">
@@ -318,7 +352,7 @@ interface Stats {
                                                     </tr>
                                                 </thead>
                                                 <tbody className="divide-y divide-gray-200">
-                                                    {matchStats.map((stats:any, index:number) => (
+                                                    {matchStats?.map((stats:any, index:number) => (
                                                     <tr key={index}>
                                                         <td className="md:px-2 pl-[14px] py-3 w-[10px]">{index+1}</td>
                                                         <td className="md:px-2 py-3 text-[#217AF7]">
@@ -351,20 +385,34 @@ interface Stats {
             <div className="rounded-lg py-4 px-4 bg-[#ffffff] mb-4">
                 <div className="lg:grid grid-cols-12 gap-4">
                     <div className="col-span-12">
-
+                    {pageHtml && typeof pageHtml === "string" ? (
+                                <div dangerouslySetInnerHTML={{ __html: pageHtml }} />
+                            ) : (
+                              <>                        
                         <h3 className="text-1xl font-semibold mb-1" style={{ lineHeight: "21px" }}>Live - Jagadeesan hits
                             a century; Haryana trounce
                         </h3>
                         <p className="text-gray-500 font-normal">
                             Lorem ipsum dolor, sit amet consectetur adipisicing elit. Alias dicta maiores esse adipisci autem nesciunt placeat saepe corporis explicabo, enim tenetur non laboriosam ipsam nihil est aut. Odit nostrum dicta maiores, ipsam vero hic, recusandae, fugit doloribus voluptas a at! Quae recusandae est reprehenderit ratione. Nam, cupiditate quibusdam ab aut eos corporis omnis, culpa dolorum eligendi ea inventore! A, quo modi excepturi neque similique aliquam saepe quis, aut alias pariatur eligendi enim expedita doloremque ex recusandae distinctio. Ut mollitia adipisci soluta consequatur! Quisquam sit nemo doloremque illo libero sapiente facere minima, impedit maxime ut porro eius adipisci asperiores? Sit, architecto.
                         </p>
-
+                                </>
+                            )}
                     </div>
                 </div>
 
 
             </div>
+            </>
+            ):(
+                <div className='bg-white p-4 rounded-md mb-8'>
+                <div className='text-[18px] text-center text-red-600 font-semibold'>
+                Records unavailable.
+                </div>
+                </div>
 
+            )}
         </section>
+
+
     )
 }

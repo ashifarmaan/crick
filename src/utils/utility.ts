@@ -1,5 +1,5 @@
 import React from 'react'
-import { TeamDetails } from "@/controller/teamController";
+import { TeamDetails, isIPLTeamDetails } from "@/controller/teamController";
 export function calculateRemainingOvers(maxOver: number, finishOver: number) {
     // Total balls in the match
     const totalBalls = maxOver * 6;
@@ -31,14 +31,15 @@ export  function urlStringEncode(str: string) {
   return formattedString;
 }
 
-export const getTeamDetailsByTid = async (teamId: number): Promise<string> => {
-  const data = await TeamDetails(teamId);
-  if(data?.logo_url !== null && data?.logo_url !=='' && data?.logo_url !== undefined){
-    return data?.logo_url;
-  }else{
-    return "/assets/img/flag/2.png";
-  }
-};
+// export const getTeamDetailsByTid = async (teamId: number): Promise<string> => {
+//   const data = await TeamDetails(teamId);
+//   if(data?.logo_url !== null && data?.logo_url !=='' && data?.logo_url !== undefined){
+//     return data?.logo_url;
+//   }else{
+//     return "/assets/img/flag/2.png";
+//   }
+// };
+
 
 export const truncateText = (text: string, wordLimit: number) => {
   return text.split(" ").slice(0, wordLimit).join(" ") + "...";

@@ -1,13 +1,27 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-  /* config options here */
-};
-
-module.exports = {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  // compress: true, // Enable compression
+  reactStrictMode: false,
   images: {
-    domains: ['images.entitysport.com','gcdnimages.entitysport.com','uccricket.live','fantasykhiladi.com'],
+    domains: [
+      "images.entitysport.com",
+      "gcdnimages.entitysport.com",
+      "uccricket.live",
+      "fantasykhiladi.com",
+      "flagcdn.com",
+    ],
+  },
+
+  webpack: (config: { optimization: { splitChunks: { chunks: string; minSize: number; maxSize: number; }; }; }, { isServer }: any) => {
+    if (!isServer) {
+      config.optimization.splitChunks = {
+        chunks: "all",
+        minSize: 20000,
+        maxSize: 200000,
+      };
+    }
+    return config;
   },
 };
 
-export default nextConfig;
+module.exports = nextConfig;

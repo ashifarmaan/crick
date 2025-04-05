@@ -4,6 +4,7 @@ import Link from "next/link";
 import React, { useState } from "react";
 import Image from "next/image";
 import { urlStringEncode} from "@/utils/utility";
+import PlayerImage from "@/app/components/PlayerImage";
 interface MatchInfo {
   match_id: number;
 
@@ -11,6 +12,7 @@ interface MatchInfo {
 
   matchLast: any | null;
   matchUrl: string | null;
+  isPointTable: boolean;
 }
 
 export default function MoreInfo({
@@ -18,6 +20,7 @@ export default function MoreInfo({
   matchData,
   matchLast,
   matchUrl,
+  isPointTable
 }: MatchInfo) {
   const teama_id = matchData?.match_info?.teama?.team_id;
   const teamb_id = matchData?.match_info?.teamb?.team_id;
@@ -59,7 +62,7 @@ export default function MoreInfo({
   let teamaWinMatch = 0;
   let teambWinMatch = 0;
   const matchPlayed = matchlistAB.length;
-  matchlistAB.map((items: { winning_team_id: any }) =>
+  matchlistAB?.map((items: { winning_team_id: any }) =>
     items.winning_team_id === teama_id
       ? teamaWinMatch++
       : items.winning_team_id === teamb_id
@@ -72,30 +75,37 @@ export default function MoreInfo({
   const teambWinper =
     teambWinMatch > 0 ? (teambWinMatch / matchPlayed) * 100 : 0;
 
-  const teamAScores = matchlistAB.map(
-    (match: { teama: { scores: string } }) => {
-      const score = match?.teama?.scores?.split("/")[0]; // Get the runs before "/"
-      return parseInt(score, 10); // Convert to a number
-    }
-  );
-  const highestScoreTeamA = teamAScores > 0 ? Math.max(...teamAScores) : 0;
-  const lowestScoreTeamA = teamAScores > 0 ? Math.min(...teamAScores) : 0;
+  let teamAScores: any = [];
+  if (Array.isArray(matchlistAB) && matchlistAB.length > 0) {
+    teamAScores = matchlistAB?.map(
+      (match: { teama: { scores: string } }) => {
+        const score = match?.teama?.scores?.split("/")[0]; // Get the runs before "/"
+        return parseInt(score, 10) || 0; // Convert to a number
+      }
+    );
+  }
+ 
+  const highestScoreTeamA = (teamAScores?.length ?? 0) > 0 ? Math.max(...teamAScores) : 0;
+  const lowestScoreTeamA =  (teamAScores?.length ?? 0) > 0 ? Math.min(...teamAScores) : 0;
   const averageScoreTeamA =
-    teamAScores > 0
+    teamAScores?.length > 0
       ? teamAScores.reduce((sum: any, score: any) => sum + score, 0) /
         teamAScores.length
       : 0;
 
-  const teamBScores = matchlistAB.map(
-    (match: { teamb: { scores: string } }) => {
-      const score = match?.teamb?.scores?.split("/")[0]; // Get the runs before "/"
-      return parseInt(score, 10); // Convert to a number
+  let teamBScores: any = [];
+      if (Array.isArray(matchlistAB) && matchlistAB.length > 0) {
+      teamBScores = matchlistAB?.map(
+        (match: { teamb: { scores: string } }) => {
+          const score = match?.teamb?.scores?.split("/")[0]; // Get the runs before "/"
+          return parseInt(score, 10) || 0; // Convert to a number
+        }
+      );
     }
-  );
-  const highestScoreTeamB = teamBScores > 0 ? Math.max(...teamBScores) : 0;
-  const lowestScoreTeamB = teamBScores > 0 ? Math.min(...teamBScores) : 0;
+  const highestScoreTeamB = (teamBScores?.length ?? 0) > 0 ? Math.max(...teamBScores) : 0;
+  const lowestScoreTeamB = (teamBScores?.length ?? 0) > 0 ? Math.min(...teamBScores) : 0;
   const averageScoreTeamB =
-    teamBScores > 0
+    teamBScores?.length > 0
       ? teamBScores.reduce((sum: any, score: any) => sum + score, 0) /
         teamBScores.length
       : 0;
@@ -103,13 +113,15 @@ export default function MoreInfo({
   let sameVenueteamaWinMatch = 0;
   let sameVenueteambWinMatch = 0;
   const sameVenuematchPlayed = matchlistSameVenue.length;
-  matchlistSameVenue.map((items: { winning_team_id: any }) =>
-    items.winning_team_id === teama_id
-      ? sameVenueteamaWinMatch++
-      : items.winning_team_id === teamb_id
-      ? sameVenueteambWinMatch++
-      : ""
-  );
+  if (Array.isArray(matchlistSameVenue) && matchlistSameVenue.length > 0) {
+    matchlistSameVenue?.map((items: { winning_team_id: any }) =>
+      items.winning_team_id === teama_id
+        ? sameVenueteamaWinMatch++
+        : items.winning_team_id === teamb_id
+        ? sameVenueteambWinMatch++
+        : ""
+    );
+  }
 
   const sameVenueteamaWinper =
     sameVenuematchPlayed > 0
@@ -120,34 +132,43 @@ export default function MoreInfo({
       ? (sameVenueteambWinMatch / sameVenuematchPlayed) * 100
       : 0;
 
-  const sameVenueteamAScores = matchlistSameVenue.map(
-    (match: { teama: { scores: string } }) => {
-      const score = match?.teama?.scores?.split("/")[0]; // Get the runs before "/"
-      return parseInt(score, 10); // Convert to a number
-    }
-  );
+  let sameVenueteamAScores : any = '';
+  if (Array.isArray(matchlistSameVenue) && matchlistSameVenue.length > 0) {
+     sameVenueteamAScores = matchlistSameVenue?.map(
+      (match: { teama: { scores: string } }) => {
+        const score = match?.teama?.scores?.split("/")[0]; // Get the runs before "/"
+        return parseInt(score, 10); // Convert to a number
+      }
+    );
+  }
+  
   const sameVenuehighestScoreTeamA =
-    sameVenueteamAScores > 0 ? Math.max(...sameVenueteamAScores) : 0;
+    (sameVenueteamAScores?.length ?? 0) > 0 ? Math.max(...sameVenueteamAScores) : 0;
   const sameVenuelowestScoreTeamA =
-    sameVenueteamAScores > 0 ? Math.min(...sameVenueteamAScores) : 0;
+    (sameVenueteamAScores?.length ?? 0) > 0 ? Math.min(...sameVenueteamAScores) : 0;
+
   const sameVenueaverageScoreTeamA =
-    sameVenueteamAScores > 0
+    sameVenueteamAScores?.length > 0
       ? sameVenueteamAScores.reduce((sum: any, score: any) => sum + score, 0) /
         sameVenueteamAScores.length
       : 0;
 
-  const sameVenueteamBScores = matchlistSameVenue.map(
-    (match: { teamb: { scores: string } }) => {
-      const score = match?.teamb?.scores?.split("/")[0]; // Get the runs before "/"
-      return parseInt(score, 10); // Convert to a number
-    }
-  );
+
+      let sameVenueteamBScores : any = '';
+  if (Array.isArray(matchlistSameVenue) && matchlistSameVenue.length > 0) {
+     sameVenueteamBScores = matchlistSameVenue?.map(
+      (match: { teamb: { scores: string } }) => {
+        const score = match?.teamb?.scores?.split("/")[0]; // Get the runs before "/"
+        return parseInt(score, 10); // Convert to a number
+      }
+    );
+  }
   const sameVenuehighestScoreTeamB =
-    sameVenueteamBScores > 0 ? Math.max(...sameVenueteamBScores) : 0;
+    (sameVenueteamBScores?.length ?? 0) > 0 ? Math.max(...sameVenueteamBScores) : 0;
   const sameVenuelowestScoreTeamB =
-    sameVenueteamBScores > 0 ? Math.min(...sameVenueteamBScores) : 0;
+    (sameVenueteamBScores?.length ?? 0) > 0 ? Math.min(...sameVenueteamBScores) : 0;
   const sameVenueaverageScoreTeamB =
-    sameVenueteamBScores > 0
+    sameVenueteamBScores?.length > 0
       ? sameVenueteamBScores.reduce((sum: any, score: any) => sum + score, 0) /
         sameVenueteamBScores.length
       : 0;
@@ -202,12 +223,14 @@ export default function MoreInfo({
               Squad
             </button>
           </Link>
-          <Link href={"/points-table/" + matchUrl + "/" + match_id}>
+          {isPointTable && (
+          <Link href={"/series/"+urlStringEncode(matchData?.match_info?.competition?.title+"-"+matchData?.match_info?.competition?.season)+"/"+matchData?.match_info?.competition?.cid+"/points-table"}>
             <button className="font-medium py-2 px-3 whitespace-nowrap">
               Points Table
             </button>
           </Link>
-          <Link href={"/stats/" + matchUrl + "/" + match_id}>
+          )}
+          <Link href={"/series/"+urlStringEncode(matchData?.match_info?.competition?.title+"-"+matchData?.match_info?.competition?.season)+"/"+matchData?.match_info?.competition?.cid+"/stats/most-run"}>
             <button className="font-medium py-2 px-3 whitespace-nowrap">
               Stats
             </button>
@@ -288,7 +311,7 @@ export default function MoreInfo({
                         <Link href="">
                           <div className="flex items-center space-x-3">
                             <div>
-                              <Image
+                              <Image  loading="lazy" 
                                 src={matchData?.match_info?.teama?.logo_url}
                                 className="h-[25px]"
                                 width={25}
@@ -371,7 +394,7 @@ export default function MoreInfo({
                                         <Link href="#">
                                           <div className="flex items-center space-x-2 font-medium w-[162px] md:w-full">
                                             <div className="flex items-center space-x-1">
-                                              <Image
+                                              <Image  loading="lazy" 
                                                 src={items.teama.logo_url}
                                                 className="h-[24px] rounded-full"
                                                 width={25}
@@ -397,7 +420,7 @@ export default function MoreInfo({
                                               <span className="text-[#909090]">
                                                 {items.teamb.short_name}
                                               </span>
-                                              <Image
+                                              <Image  loading="lazy" 
                                                 src={items.teamb.logo_url}
                                                 className="h-[24px]"
                                                 width={25}
@@ -439,316 +462,74 @@ export default function MoreInfo({
                           </div>
                           {/* responsive teame data  */}
                           <div className="lg:hidden block">
-                            <div className="flex justify-between items-center py-4 px-2 bg-[#f7faff] rounded-lg my-3 border-b-[1px] border-[#E4E9F0]">
+                          {matchlistA
+                                  .slice(0, 5)
+                                  .map((items: any, index: number) => (
+                            <div className="flex justify-between items-center py-4 px-2 bg-[#f7faff] rounded-lg my-3 border-b-[1px] border-[#E4E9F0]" key={index}>
                               <div className="">
                                 <Link href="#">
                                   <div className="flex items-center space-x-2 font-medium w-[162px] md:w-full mb-3">
                                     <div className="flex items-center space-x-1">
-                                      <Image
-                                        src="/assets/img/flag/18.png"
+                                      <Image  loading="lazy" 
+                                        src={items.teama.logo_url}
                                         className="h-[18px] rounded-full"
                                         width={25}
                                         height={25}
-                                        alt="aus"
+                                        alt={items.teama.short_name}
                                       />
                                       <span className="text-[#909090]">
-                                        AUS
+                                      {items.teama.short_name}
                                       </span>
                                     </div>
-                                    <p>274/10 &amp; 170/10</p>
+                                    <p>{items.teama.scores}</p>
                                   </div>
                                 </Link>
 
                                 <div>
                                   <div className="flex items-center space-x-2 font-medium w-[162px] md:w-full">
                                     <div className="flex items-center space-x-1">
-                                      <Image
-                                        src="/assets/img/flag/17.png"
+                                      <Image  loading="lazy" 
+                                        src={items.teamb.logo_url}
                                         className="h-[18px]"
                                         width={25}
                                         height={25}
-                                        alt="ind"
+                                        alt={items.teamb.short_name}
                                       />
                                       <span className="text-[#909090]">
-                                        IND
+                                      {items.teamb.short_name}
                                       </span>
                                     </div>
-                                    <p>274/10 &amp; 170/10</p>
+                                    <p>{items.teamb.scores}</p>
                                   </div>
                                 </div>
                               </div>
                               <div className="hidden md:block h-[35px] border-l-[1px] border-[#d0d3d7]"></div>
                               <div className="flex items-center space-x-4">
                                 <div className="text-right leading-6">
-                                  <p className="font-medium">2nd TEST</p>
+                                  <p className="font-medium"> {items.subtitle}</p>
                                   <p className="text-[#909090] font-normal">
-                                    AUS VS IND 2024
+                                  {items.short_title}
                                   </p>
                                 </div>
                                 <div>
                                   <div className="text-center">
-                                    <span className="bg-[#13b76dbd] text-white text-[13px] px-[6px] py-[3px] rounded">
-                                      W
-                                    </span>
+                                  {items.winning_team_id ===
+                                          teama_id ? (
+                                            <span className="bg-[#13b76dbd] text-white text-[13px] px-[6px] py-[3px] rounded">
+                                              W
+                                            </span>
+                                          ) : (
+                                            <span className="bg-[#f63636c2] text-white text-[13px] px-[7px] py-[3px] rounded">
+                                              L
+                                            </span>
+                                          )}
+                                           
                                   </div>
                                 </div>
                               </div>
                             </div>
-                            <div className="flex justify-between items-center py-4 px-2 bg-[#f7faff] rounded-lg my-3 border-b-[1px] border-[#E4E9F0]">
-                              <div className="">
-                                <div className="flex items-center space-x-2 font-medium w-[162px] md:w-full mb-3">
-                                  <div className="flex items-center space-x-1">
-                                    <Image
-                                      src="/assets/img/flag/18.png"
-                                      className="h-[18px] rounded-full"
-                                      width={25}
-                                      height={25}
-                                      alt="aus"
-                                    />
-                                    <span className="text-[#909090]">AUS</span>
-                                  </div>
-                                  <p>540/10 &amp; 220/10</p>
-                                </div>
-
-                                <div>
-                                  <div className="flex items-center space-x-2 font-medium w-[162px] md:w-full">
-                                    <div className="flex items-center space-x-1">
-                                      <Image
-                                        src="/assets/img/flag/17.png"
-                                        className="h-[18px]"
-                                        width={25}
-                                        height={25}
-                                        alt="ind"
-                                      />
-                                      <span className="text-[#909090]">
-                                        IND
-                                      </span>
-                                    </div>
-                                    <p>140/10 &amp; 420/10</p>
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="hidden md:block h-[35px] border-l-[1px] border-[#d0d3d7]"></div>
-                              <div className="flex items-center space-x-4">
-                                <div className="text-right leading-6">
-                                  <p className="font-medium">2nd TEST</p>
-                                  <p className="text-[#909090] font-normal">
-                                    AUS VS IND 2024
-                                  </p>
-                                </div>
-                                <div>
-                                  <div className="text-center">
-                                    <span className="bg-[#f63636c2] text-white text-[13px] px-[7px] py-[3px] rounded">
-                                      L
-                                    </span>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="flex justify-between items-center py-4 px-2 bg-[#f7faff] rounded-lg my-3 border-b-[1px] border-[#E4E9F0]">
-                              <div className="">
-                                <div className="flex items-center space-x-2 font-medium w-[162px] md:w-full mb-3">
-                                  <div className="flex items-center space-x-1">
-                                    <Image
-                                      src="/assets/img/flag/19.png"
-                                      className="h-[18px] rounded-full"
-                                      width={25}
-                                      height={25}
-                                      alt="aus"
-                                    />
-                                    <span className="text-[#909090]">PAK</span>
-                                  </div>
-                                  <p>274/10 &amp; 170/10</p>
-                                </div>
-
-                                <div>
-                                  <div className="flex items-center space-x-2 font-medium w-[162px] md:w-full">
-                                    <div className="flex items-center space-x-1">
-                                      <Image
-                                        src="/assets/img/flag/17.png"
-                                        className="h-[18px]"
-                                        width={25}
-                                        height={25}
-                                        alt="ind"
-                                      />
-                                      <span className="text-[#909090]">
-                                        IND
-                                      </span>
-                                    </div>
-                                    <p>250/10 &amp; 160/10</p>
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="hidden md:block h-[35px] border-l-[1px] border-[#d0d3d7]"></div>
-                              <div className="flex items-center space-x-4">
-                                <div className="text-right leading-6">
-                                  <p className="font-medium">2nd TEST</p>
-                                  <p className="text-[#909090] font-normal">
-                                    AUS VS IND 2024
-                                  </p>
-                                </div>
-                                <div>
-                                  <div className="text-center">
-                                    <span className="bg-[#f63636c2] text-white text-[13px] px-[7px] py-[3px] rounded">
-                                      L
-                                    </span>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="flex justify-between py-4 items-center px-2 bg-[#f7faff] rounded-lg my-3 border-b-[1px] border-[#E4E9F0]">
-                              <div className="">
-                                <div className="flex items-center space-x-2 font-medium w-[162px] md:w-full mb-3">
-                                  <div className="flex items-center space-x-1">
-                                    <Image
-                                      src="/assets/img/flag/19.png"
-                                      className="h-[18px] rounded-full"
-                                      width={25}
-                                      height={25}
-                                      alt="aus"
-                                    />
-                                    <span className="text-[#909090]">PAK</span>
-                                  </div>
-                                  <p>274/10 &amp; 170/10</p>
-                                </div>
-
-                                <div>
-                                  <div className="flex items-center space-x-2 font-medium w-[162px] md:w-full">
-                                    <div className="flex items-center space-x-1">
-                                      <Image
-                                        src="/assets/img/flag/17.png"
-                                        className="h-[18px]"
-                                        width={25}
-                                        height={25}
-                                        alt="ind"
-                                      />
-                                      <span className="text-[#909090]">
-                                        IND
-                                      </span>
-                                    </div>
-                                    <p>250/10 &amp; 160/10</p>
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="hidden md:block h-[35px] border-l-[1px] border-[#d0d3d7]"></div>
-                              <div className="flex items-center space-x-4">
-                                <div className="text-right leading-6">
-                                  <p className="font-medium">2nd TEST</p>
-                                  <p className="text-[#909090] font-normal">
-                                    AUS VS IND 2024
-                                  </p>
-                                </div>
-                                <div>
-                                  <div className="text-center">
-                                    <span className="bg-[#13b76dbd] text-white text-[13px] px-[6px] py-[3px] rounded">
-                                      W
-                                    </span>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="flex justify-between items-center py-4 px-2 bg-[#f7faff] rounded-lg my-3 border-b-[1px] border-[#E4E9F0]">
-                              <div className="">
-                                <div className="flex items-center space-x-2 font-medium w-[162px] md:w-full mb-3">
-                                  <div className="flex items-center space-x-1">
-                                    <Image
-                                      src="/assets/img/flag/19.png"
-                                      className="h-[18px] rounded-full"
-                                      width={25}
-                                      height={25}
-                                      alt="aus"
-                                    />
-                                    <span className="text-[#909090]">PAK</span>
-                                  </div>
-                                  <p>274/10 &amp; 170/10</p>
-                                </div>
-
-                                <div>
-                                  <div className="flex items-center space-x-2 font-medium w-[162px] md:w-full">
-                                    <div className="flex items-center space-x-1">
-                                      <Image
-                                        src="/assets/img/flag/17.png"
-                                        className="h-[18px]"
-                                        width={25}
-                                        height={25}
-                                        alt="ind"
-                                      />
-                                      <span className="text-[#909090]">
-                                        IND
-                                      </span>
-                                    </div>
-                                    <p>250/10 &amp; 160/10</p>
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="hidden md:block h-[35px] border-l-[1px] border-[#d0d3d7]"></div>
-                              <div className="flex items-center space-x-4">
-                                <div className="text-right leading-6">
-                                  <p className="font-medium">2nd TEST</p>
-                                  <p className="text-[#909090] font-normal">
-                                    AUS VS IND 2024
-                                  </p>
-                                </div>
-                                <div>
-                                  <div className="text-center">
-                                    <span className="bg-[#13b76dbd] text-white text-[13px] px-[6px] py-[3px] rounded">
-                                      W
-                                    </span>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="flex justify-between items-center py-4 px-2 bg-[#f7faff] rounded-lg my-3 border-b-[1px] border-[#E4E9F0]">
-                              <div className="">
-                                <div className="flex items-center space-x-2 font-medium w-[162px] md:w-full mb-3">
-                                  <div className="flex items-center space-x-1">
-                                    <Image
-                                      src="/assets/img/flag/19.png"
-                                      className="h-[18px] rounded-full"
-                                      width={25}
-                                      height={25}
-                                      alt="aus"
-                                    />
-                                    <span className="text-[#909090]">PAK</span>
-                                  </div>
-                                  <p>274/10 &amp; 170/10</p>
-                                </div>
-
-                                <div>
-                                  <div className="flex items-center space-x-2 font-medium w-[162px] md:w-full">
-                                    <div className="flex items-center space-x-1">
-                                      <Image
-                                        src="/assets/img/flag/17.png"
-                                        className="h-[18px]"
-                                        width={25}
-                                        height={25}
-                                        alt="ind"
-                                      />
-                                      <span className="text-[#909090]">
-                                        IND
-                                      </span>
-                                    </div>
-                                    <p>250/10 &amp; 160/10</p>
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="hidden md:block h-[35px] border-l-[1px] border-[#d0d3d7]"></div>
-                              <div className="flex items-center space-x-4">
-                                <div className="text-right leading-6">
-                                  <p className="font-medium">2nd TEST</p>
-                                  <p className="text-[#909090] font-normal">
-                                    AUS VS IND 2024
-                                  </p>
-                                </div>
-                                <div>
-                                  <div className="text-center">
-                                    <span className="bg-[#13b76dbd] text-white text-[13px] px-[6px] py-[3px] rounded">
-                                      W
-                                    </span>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
+                                  ))}
+                            
                           </div>
                         </div>
                       )}
@@ -763,7 +544,7 @@ export default function MoreInfo({
                           <Link href="">
                             <div className="flex items-center space-x-3">
                               <div>
-                                <Image
+                                <Image  loading="lazy" 
                                   src={matchData?.match_info?.teamb?.logo_url}
                                   width={25}
                                   height={25}
@@ -847,7 +628,7 @@ export default function MoreInfo({
                                         <Link href="#">
                                           <div className="flex items-center space-x-2 font-medium w-[162px] md:w-full">
                                             <div className="flex items-center space-x-1">
-                                              <Image
+                                              <Image  loading="lazy" 
                                                 src={items.teama.logo_url}
                                                 className="h-[24px] rounded-full"
                                                 width={25}
@@ -873,7 +654,7 @@ export default function MoreInfo({
                                               <span className="text-[#909090]">
                                                 {items.teamb.short_name}
                                               </span>
-                                              <Image
+                                              <Image  loading="lazy" 
                                                 src={items.teamb.logo_url}
                                                 className="h-[24px]"
                                                 width={25}
@@ -915,316 +696,73 @@ export default function MoreInfo({
                           </div>
                           {/* responsive teame data  */}
                           <div className="lg:hidden block">
-                            <div className="flex justify-between items-center py-4 px-2 bg-[#f7faff] rounded-lg my-3 border-b-[1px] border-[#E4E9F0]">
+                          {matchlistB
+                                  .slice(0, 5)
+                                  .map((items: any, index: number) => (
+                            <div className="flex justify-between items-center py-4 px-2 bg-[#f7faff] rounded-lg my-3 border-b-[1px] border-[#E4E9F0]" key={index}>
                               <div className="">
                                 <Link href="#">
                                   <div className="flex items-center space-x-2 font-medium w-[162px] md:w-full mb-3">
                                     <div className="flex items-center space-x-1">
-                                      <Image
-                                        src="/assets/img/flag/18.png"
+                                      <Image  loading="lazy" 
+                                        src={items.teama.logo_url}
                                         className="h-[18px] rounded-full"
                                         width={25}
                                         height={25}
-                                        alt="aus"
+                                        alt={items.teama.short_name}
                                       />
                                       <span className="text-[#909090]">
-                                        AUS
+                                      {items.teama.short_name}
                                       </span>
                                     </div>
-                                    <p>274/10 &amp; 170/10</p>
+                                    <p>{items.teama.scores}</p>
                                   </div>
                                 </Link>
 
                                 <div>
                                   <div className="flex items-center space-x-2 font-medium w-[162px] md:w-full">
                                     <div className="flex items-center space-x-1">
-                                      <Image
-                                        src="/assets/img/flag/17.png"
+                                      <Image  loading="lazy" 
+                                        src={items.teamb.logo_url}
                                         className="h-[18px]"
                                         width={25}
                                         height={25}
-                                        alt="ind"
+                                        alt={items.teamb.short_name}
                                       />
                                       <span className="text-[#909090]">
-                                        IND
+                                      {items.teamb.short_name}
                                       </span>
                                     </div>
-                                    <p>274/10 &amp; 170/10</p>
+                                    <p>{items.teamb.scores}</p>
                                   </div>
                                 </div>
                               </div>
                               <div className="hidden md:block h-[35px] border-l-[1px] border-[#d0d3d7]"></div>
                               <div className="flex items-center space-x-4">
                                 <div className="text-right leading-6">
-                                  <p className="font-medium">2nd TEST</p>
+                                  <p className="font-medium"> {items.subtitle}</p>
                                   <p className="text-[#909090] font-normal">
-                                    AUS VS IND 2024
+                                  {items.short_title}
                                   </p>
                                 </div>
                                 <div>
                                   <div className="text-center">
-                                    <span className="bg-[#13b76dbd] text-white text-[13px] px-[6px] py-[3px] rounded">
-                                      W
-                                    </span>
+                                  {items.winning_team_id ===
+                                          teamb_id ? (
+                                            <span className="bg-[#13b76dbd] text-white text-[13px] px-[6px] py-[3px] rounded">
+                                              W
+                                            </span>
+                                          ) : (
+                                            <span className="bg-[#f63636c2] text-white text-[13px] px-[7px] py-[3px] rounded">
+                                              L
+                                            </span>
+                                          )}
+                                           
                                   </div>
                                 </div>
                               </div>
                             </div>
-                            <div className="flex justify-between items-center py-4 px-2 bg-[#f7faff] rounded-lg my-3 border-b-[1px] border-[#E4E9F0]">
-                              <div className="">
-                                <div className="flex items-center space-x-2 font-medium w-[162px] md:w-full mb-3">
-                                  <div className="flex items-center space-x-1">
-                                    <Image
-                                      src="/assets/img/flag/18.png"
-                                      className="h-[18px] rounded-full"
-                                      width={25}
-                                      height={25}
-                                      alt="aus"
-                                    />
-                                    <span className="text-[#909090]">AUS</span>
-                                  </div>
-                                  <p>540/10 &amp; 220/10</p>
-                                </div>
-
-                                <div>
-                                  <div className="flex items-center space-x-2 font-medium w-[162px] md:w-full">
-                                    <div className="flex items-center space-x-1">
-                                      <Image
-                                        src="/assets/img/flag/17.png"
-                                        className="h-[18px]"
-                                        width={25}
-                                        height={25}
-                                        alt="ind"
-                                      />
-                                      <span className="text-[#909090]">
-                                        IND
-                                      </span>
-                                    </div>
-                                    <p>140/10 &amp; 420/10</p>
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="hidden md:block h-[35px] border-l-[1px] border-[#d0d3d7]"></div>
-                              <div className="flex items-center space-x-4">
-                                <div className="text-right leading-6">
-                                  <p className="font-medium">2nd TEST</p>
-                                  <p className="text-[#909090] font-normal">
-                                    AUS VS IND 2024
-                                  </p>
-                                </div>
-                                <div>
-                                  <div className="text-center">
-                                    <span className="bg-[#f63636c2] text-white text-[13px] px-[7px] py-[3px] rounded">
-                                      L
-                                    </span>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="flex justify-between items-center py-4 px-2 bg-[#f7faff] rounded-lg my-3 border-b-[1px] border-[#E4E9F0]">
-                              <div className="">
-                                <div className="flex items-center space-x-2 font-medium w-[162px] md:w-full mb-3">
-                                  <div className="flex items-center space-x-1">
-                                    <Image
-                                      src="/assets/img/flag/19.png"
-                                      className="h-[18px] rounded-full"
-                                      width={25}
-                                      height={25}
-                                      alt="aus"
-                                    />
-                                    <span className="text-[#909090]">PAK</span>
-                                  </div>
-                                  <p>274/10 &amp; 170/10</p>
-                                </div>
-
-                                <div>
-                                  <div className="flex items-center space-x-2 font-medium w-[162px] md:w-full">
-                                    <div className="flex items-center space-x-1">
-                                      <Image
-                                        src="/assets/img/flag/17.png"
-                                        className="h-[18px]"
-                                        width={25}
-                                        height={25}
-                                        alt="ind"
-                                      />
-                                      <span className="text-[#909090]">
-                                        IND
-                                      </span>
-                                    </div>
-                                    <p>250/10 &amp; 160/10</p>
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="hidden md:block h-[35px] border-l-[1px] border-[#d0d3d7]"></div>
-                              <div className="flex items-center space-x-4">
-                                <div className="text-right leading-6">
-                                  <p className="font-medium">2nd TEST</p>
-                                  <p className="text-[#909090] font-normal">
-                                    AUS VS IND 2024
-                                  </p>
-                                </div>
-                                <div>
-                                  <div className="text-center">
-                                    <span className="bg-[#f63636c2] text-white text-[13px] px-[7px] py-[3px] rounded">
-                                      L
-                                    </span>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="flex justify-between py-4 items-center px-2 bg-[#f7faff] rounded-lg my-3 border-b-[1px] border-[#E4E9F0]">
-                              <div className="">
-                                <div className="flex items-center space-x-2 font-medium w-[162px] md:w-full mb-3">
-                                  <div className="flex items-center space-x-1">
-                                    <Image
-                                      src="/assets/img/flag/19.png"
-                                      className="h-[18px] rounded-full"
-                                      width={25}
-                                      height={25}
-                                      alt="aus"
-                                    />
-                                    <span className="text-[#909090]">PAK</span>
-                                  </div>
-                                  <p>274/10 &amp; 170/10</p>
-                                </div>
-
-                                <div>
-                                  <div className="flex items-center space-x-2 font-medium w-[162px] md:w-full">
-                                    <div className="flex items-center space-x-1">
-                                      <Image
-                                        src="/assets/img/flag/17.png"
-                                        className="h-[18px]"
-                                        width={25}
-                                        height={25}
-                                        alt="ind"
-                                      />
-                                      <span className="text-[#909090]">
-                                        IND
-                                      </span>
-                                    </div>
-                                    <p>250/10 &amp; 160/10</p>
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="hidden md:block h-[35px] border-l-[1px] border-[#d0d3d7]"></div>
-                              <div className="flex items-center space-x-4">
-                                <div className="text-right leading-6">
-                                  <p className="font-medium">2nd TEST</p>
-                                  <p className="text-[#909090] font-normal">
-                                    AUS VS IND 2024
-                                  </p>
-                                </div>
-                                <div>
-                                  <div className="text-center">
-                                    <span className="bg-[#13b76dbd] text-white text-[13px] px-[6px] py-[3px] rounded">
-                                      W
-                                    </span>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="flex justify-between items-center py-4 px-2 bg-[#f7faff] rounded-lg my-3 border-b-[1px] border-[#E4E9F0]">
-                              <div className="">
-                                <div className="flex items-center space-x-2 font-medium w-[162px] md:w-full mb-3">
-                                  <div className="flex items-center space-x-1">
-                                    <Image
-                                      src="/assets/img/flag/19.png"
-                                      className="h-[18px] rounded-full"
-                                      width={25}
-                                      height={25}
-                                      alt="aus"
-                                    />
-                                    <span className="text-[#909090]">PAK</span>
-                                  </div>
-                                  <p>274/10 &amp; 170/10</p>
-                                </div>
-
-                                <div>
-                                  <div className="flex items-center space-x-2 font-medium w-[162px] md:w-full">
-                                    <div className="flex items-center space-x-1">
-                                      <Image
-                                        src="/assets/img/flag/17.png"
-                                        className="h-[18px]"
-                                        width={25}
-                                        height={25}
-                                        alt="ind"
-                                      />
-                                      <span className="text-[#909090]">
-                                        IND
-                                      </span>
-                                    </div>
-                                    <p>250/10 &amp; 160/10</p>
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="hidden md:block h-[35px] border-l-[1px] border-[#d0d3d7]"></div>
-                              <div className="flex items-center space-x-4">
-                                <div className="text-right leading-6">
-                                  <p className="font-medium">2nd TEST</p>
-                                  <p className="text-[#909090] font-normal">
-                                    AUS VS IND 2024
-                                  </p>
-                                </div>
-                                <div>
-                                  <div className="text-center">
-                                    <span className="bg-[#13b76dbd] text-white text-[13px] px-[6px] py-[3px] rounded">
-                                      W
-                                    </span>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="flex justify-between items-center py-4 px-2 bg-[#f7faff] rounded-lg my-3 border-b-[1px] border-[#E4E9F0]">
-                              <div className="">
-                                <div className="flex items-center space-x-2 font-medium w-[162px] md:w-full mb-3">
-                                  <div className="flex items-center space-x-1">
-                                    <Image
-                                      src="/assets/img/flag/19.png"
-                                      className="h-[18px] rounded-full"
-                                      width={25}
-                                      height={25}
-                                      alt="aus"
-                                    />
-                                    <span className="text-[#909090]">PAK</span>
-                                  </div>
-                                  <p>274/10 &amp; 170/10</p>
-                                </div>
-
-                                <div>
-                                  <div className="flex items-center space-x-2 font-medium w-[162px] md:w-full">
-                                    <div className="flex items-center space-x-1">
-                                      <Image
-                                        src="/assets/img/flag/17.png"
-                                        className="h-[18px]"
-                                        width={25}
-                                        height={25}
-                                        alt="ind"
-                                      />
-                                      <span className="text-[#909090]">
-                                        IND
-                                      </span>
-                                    </div>
-                                    <p>250/10 &amp; 160/10</p>
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="hidden md:block h-[35px] border-l-[1px] border-[#d0d3d7]"></div>
-                              <div className="flex items-center space-x-4">
-                                <div className="text-right leading-6">
-                                  <p className="font-medium">2nd TEST</p>
-                                  <p className="text-[#909090] font-normal">
-                                    AUS VS IND 2024
-                                  </p>
-                                </div>
-                                <div>
-                                  <div className="text-center">
-                                    <span className="bg-[#13b76dbd] text-white text-[13px] px-[6px] py-[3px] rounded">
-                                      W
-                                    </span>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
+                                  ))}
                           </div>
                         </div>
                       )}
@@ -1242,7 +780,7 @@ export default function MoreInfo({
                   <div className="py-4 text-1xl flex justify-between items-center">
                     <Link href="">
                       <div className="font-bold uppercase flex items-center">
-                        <Image
+                        <Image  loading="lazy" 
                           className="h-[30px]"
                           src={matchData?.match_info?.teama?.logo_url}
                           width={30}
@@ -1267,7 +805,7 @@ export default function MoreInfo({
                         <p className="mx-2 font-semibold uppercase">
                           {matchData?.match_info?.teamb?.short_name}
                         </p>
-                        <Image
+                        <Image  loading="lazy" 
                           className="h-[30px]"
                           src={matchData?.match_info?.teamb?.logo_url}
                           width={30}
@@ -1363,7 +901,7 @@ export default function MoreInfo({
                           <div className="py-4 flex justify-between items-center">
                             <Link href="">
                               <div className="font-bold flex items-center">
-                                <Image
+                                <Image  loading="lazy" 
                                   className="h-[30px]"
                                   src={matchData?.match_info?.teama?.logo_url}
                                   width={30}
@@ -1386,7 +924,7 @@ export default function MoreInfo({
                                     vs all teams
                                   </span>
                                 </p>
-                                <Image
+                                <Image  loading="lazy" 
                                   className="h-[30px]"
                                   src={matchData?.match_info?.teamb?.logo_url}
                                   width={30}
@@ -1418,7 +956,7 @@ export default function MoreInfo({
                           <div className="py-2 flex justify-between items-center">
                             <div className="font-medium text-[#586577] w-full">
                               <p className="mx-2 font-semibold text-[#439F76] uppercase">
-                                {teamaWinper}%
+                              {teamaWinper.toFixed(2)}%
                               </p>
                             </div>
                             <div className=" font-semibold text-center w-full">
@@ -1426,7 +964,7 @@ export default function MoreInfo({
                             </div>
                             <div className="font-medium text-right w-full">
                               <p className="text-[#586577] font-medium">
-                                {teambWinper}%
+                              {teambWinper.toFixed(2)}%
                               </p>
                             </div>
                           </div>
@@ -1434,7 +972,7 @@ export default function MoreInfo({
                           <div className="py-2 flex justify-between items-center">
                             <div className="font-medium text-[#586577] w-full">
                               <p className="mx-2 font-semibold uppercase text-[#439F76]">
-                                {averageScoreTeamA}
+                                {averageScoreTeamA.toFixed(2)}
                               </p>
                             </div>
                             <div className=" font-semibold text-center w-full">
@@ -1444,7 +982,7 @@ export default function MoreInfo({
                             </div>
                             <div className="font-medium text-right w-full">
                               <p className="text-[#586577] font-medium">
-                                {averageScoreTeamB}
+                                {averageScoreTeamB.toFixed(2)}
                               </p>
                             </div>
                           </div>
@@ -1500,7 +1038,7 @@ export default function MoreInfo({
                             <div className="py-4 flex justify-between items-center">
                               <Link href="">
                                 <div className="font-bold flex items-center">
-                                  <Image
+                                  <Image  loading="lazy" 
                                     className="h-[30px]"
                                     src={matchData?.match_info?.teama?.logo_url}
                                     width={30}
@@ -1525,7 +1063,7 @@ export default function MoreInfo({
                                       vs all teams
                                     </span>
                                   </p>
-                                  <Image
+                                  <Image  loading="lazy" 
                                     className="h-[30px]"
                                     src={matchData?.match_info?.teamb?.logo_url}
                                     width={30}
@@ -1577,7 +1115,7 @@ export default function MoreInfo({
                             <div className="py-2 flex justify-between items-center">
                               <div className="font-medium text-[#586577] w-full">
                                 <p className="mx-2 font-semibold uppercase text-[#439F76]">
-                                  {sameVenueaverageScoreTeamA}
+                                  {sameVenueaverageScoreTeamA.toFixed(2)}
                                 </p>
                               </div>
                               <div className=" font-semibold text-center w-full">
@@ -1587,7 +1125,7 @@ export default function MoreInfo({
                               </div>
                               <div className="font-medium text-right w-full">
                                 <p className="text-[#586577] font-medium">
-                                  {sameVenueaverageScoreTeamB}
+                                  {sameVenueaverageScoreTeamB.toFixed(2)}
                                 </p>
                               </div>
                             </div>
@@ -1644,7 +1182,7 @@ export default function MoreInfo({
                   <div className="flex lg:grid md:grid-cols-12 justify-between md:gap-4 items-center py-3">
                     <div className="col-span-3">
                       <div>
-                        <Image
+                        <Image  loading="lazy" 
                           src="/assets/img/weather.png"
                           className="md:h-[75px] h-[60px]"
                           width={75}
@@ -1669,7 +1207,7 @@ export default function MoreInfo({
                     <div className="col-span-3 text-[#616161] md:text-[13px] text-[11px]">
                       <div className="flex justify-between pb-1 items-center">
                         <div className="flex space-x-2 items-center">
-                          <Image
+                          <Image  loading="lazy" 
                             src="/assets/img/w-1.png"
                             className="h-[16px]"
                             width={15}
@@ -1686,7 +1224,7 @@ export default function MoreInfo({
                       </div>
                       <div className="flex justify-between pb-1 space-x-2 items-center">
                         <div className="flex space-x-2 items-center">
-                          <Image
+                          <Image  loading="lazy" 
                             src="/assets/img/w-2.png"
                             className="h-[16px]"
                             width={15}
@@ -1703,7 +1241,7 @@ export default function MoreInfo({
                       </div>
                       <div className="flex justify-between items-center">
                         <div className="flex space-x-2 items-center">
-                          <Image
+                          <Image  loading="lazy" 
                             src="/assets/img/wind.png"
                             className="h-[16px]"
                             width={15}
@@ -1722,7 +1260,7 @@ export default function MoreInfo({
                   </div>
                   <div className="border-t-[1px] border-[#E4E9F0]" />
                   <div className="flex space-x-2 pt-3 items-center">
-                    <Image
+                    <Image  loading="lazy" 
                       src="/assets/img/map.png"
                       width={15}
                       height={15}
@@ -1980,17 +1518,14 @@ export default function MoreInfo({
                     }`}
                   >
                     <div>
-                      {teama11Players.map((player:any) => (
+                      {teama11Players?.map((player:any) => (
                         <Link href={"/player/"+urlStringEncode(player?.name)+"/"+player?.player_id}  key={player.player_id}>
                           <div className="flex items-center space-x-3 py-3 border-b-[1px] border-border-gray-700">
                             <div>
-                              <Image
-                                src="/assets/img/player/1.png"
-                                width={40}
-                                height={40}
-                                alt={player.name}
-                              />
+                               <PlayerImage  key={player?.player_id} player_id={ player?.player_id} height={40} width={40} className="rounded-lg" />
+                                                              
                             </div>
+                            
                             <div className="font-medium">
                               <h2 className="text-[15px]">
                                 {" "}
@@ -2015,16 +1550,12 @@ export default function MoreInfo({
                     }`}
                   >
                     <div>
-                      {teamb11Players.map((player:any) => (
+                      {teamb11Players?.map((player:any) => (
                         <Link href={"/player/"+urlStringEncode(player?.name)+"/"+player?.player_id}  key={player.player_id}>
                           <div className="flex items-center space-x-3 py-3 border-b-[1px] border-border-gray-700">
                             <div>
-                              <Image
-                                src="/assets/img/player/1.png"
-                                width={40}
-                                height={40}
-                                alt={player.name}
-                              />
+                            <PlayerImage  key={player?.player_id} player_id={ player?.player_id} height={40} width={40} className="rounded-lg" />
+                               
                             </div>
                             <div className="font-medium">
                               <h2 className="text-[15px]">

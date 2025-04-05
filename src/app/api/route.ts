@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    const response = await fetch("https://fantasykhiladi.com/web-stories/feed/", {
+    const response = await fetch("https://uccricket.live/web-stories/feed/", {
       headers: { "User-Agent": "Mozilla/5.0" }, // Avoids blocking by some servers
     });
 

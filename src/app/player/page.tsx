@@ -5,7 +5,7 @@ import Banner from './playerComponents/Banner';
 import Stats from './playerComponents/Stats';
 import News from './playerComponents/News';
 import Photos from './playerComponents/Photos';
-import { PlayerStats, PlayerAdvanceStats, Ranking } from "@/controller/playerController";
+import { PlayerStats, PlayerAdvanceStats, Ranking, PlayerProfile } from "@/controller/playerController";
 import { urlStringEncode} from "@/utils/utility";
 import { liveSeries } from "@/controller/homeController";
 
@@ -21,6 +21,7 @@ export default async function page(props: { params: Params }) {
 
   const playerStats = await PlayerStats(playerId);
   const playerAdvanceStats = await PlayerAdvanceStats(playerId);
+  const playerProfile = await PlayerProfile(playerId);
   const ranking = await Ranking();
   const urlString = urlStringEncode(playerStats?.player?.first_name)+"/"+playerStats?.player?.pid;
   const liveSeriesData = await liveSeries();
@@ -32,7 +33,7 @@ export default async function page(props: { params: Params }) {
 
             <Banner playerStats={playerStats}></Banner>
 
-            {playerTab === "" || playerTab === undefined && <Overview playerAdvanceStats={playerAdvanceStats} playerStats={playerStats}  urlString={urlString} ranking={ranking}/>}
+            {playerTab === "" || playerTab === undefined && <Overview playerAdvanceStats={playerAdvanceStats} playerStats={playerStats}  urlString={urlString} ranking={ranking} playerProfile={playerProfile}/>}
             {playerTab === "stats" && <Stats playerAdvanceStats={playerAdvanceStats}  urlString={urlString} />}
             {playerTab === "news" && <News  urlString={urlString}/>}
             {playerTab === "photos" && <Photos  urlString={urlString}/>}

@@ -1,10 +1,10 @@
-"use client"
-
+"use client";
 import React, { useState, useEffect } from 'react'
 import Image from 'next/image';
 import Link from 'next/link';
-import { getTeamDetailsByTid} from "@/utils/utility";
+// import { getTeamDetailsByTid} from "@/utils/utility";
 import { urlStringEncode } from '@/utils/utility';
+// import { TeamDetails } from "@/controller/teamController";
 interface Stats {
     urlString: string;
     playerAdvanceStats: any | null;
@@ -28,7 +28,17 @@ export default function Stats({urlString, playerAdvanceStats}: Stats) {
         const fetchAllLogos = async () => {
           for (const teamId of allTeamIds) {
             if (!teamLogos[teamId]) {
-              const logo = await getTeamDetailsByTid(teamId);
+                const res = await fetch(`/api/team/${teamId}`, {
+                    method: "GET",
+                    headers: {
+                      "Content-Type": "application/json",
+                      "Authorization": `Bearer ${process.env.NEXT_PUBLIC_API_SECRET_TOKEN}`,
+                    }
+                  });
+                const data = await res.json();
+                  
+                const logo =     data?.logo_url ? data.logo_url : "/assets/img/flag/2.png";
+            //   const logo = await getTeamDetailsByTid(teamId);
               setTeamLogos((prev) => ({ ...prev, [teamId]: logo }));
             }
           }
@@ -138,7 +148,7 @@ export default function Stats({urlString, playerAdvanceStats}: Stats) {
                                                                     <div className="flex space-x-1 w-[114px]">
                                                                         <div className="flex items-center space-x-1 flex-col">
                                                                         {teamLogos[teams.teamid] ? (
-                                                                            <Image
+                                                                            <Image  loading="lazy" 
                                                                                 src={teamLogos[teams.teamid]}
                                                                                 className="h-[20px] rounded-full"
                                                                                 width={20} height={20} alt="wiw"
@@ -205,7 +215,7 @@ export default function Stats({urlString, playerAdvanceStats}: Stats) {
                                                                     <div className="flex space-x-1 w-[114px]">
                                                                         <div className="flex items-center space-x-1 flex-col">
                                                                         {teamLogos[teams.teamid] ? (
-                                                                            <Image
+                                                                            <Image  loading="lazy" 
                                                                                 src={teamLogos[teams.teamid] }
                                                                                 className="h-[20px] rounded-full"
                                                                                 width={20} height={20} alt="wiw"
@@ -275,7 +285,7 @@ export default function Stats({urlString, playerAdvanceStats}: Stats) {
                                                                     <div className="flex space-x-1 w-[114px]">
                                                                         <div className="flex items-center space-x-1 flex-col">
                                                                         {teamLogos[teams.teamid] ? (
-                                                                            <Image
+                                                                            <Image  loading="lazy" 
                                                                                 src={teamLogos[teams.teamid]}
                                                                                 className="h-[20px] rounded-full"
                                                                                 width={20} height={20} alt="wiw"
@@ -342,7 +352,7 @@ export default function Stats({urlString, playerAdvanceStats}: Stats) {
                                                                     <div className="flex space-x-1 w-[114px]">
                                                                         <div className="flex items-center space-x-1 flex-col">
                                                                         {teamLogos[teams.teamid] ? (
-                                                                            <Image
+                                                                            <Image  loading="lazy" 
                                                                                 src={teamLogos[teams.teamid]}
                                                                                 className="h-[20px] rounded-full"
                                                                                 width={20} height={20} alt="wiw"
@@ -411,7 +421,7 @@ export default function Stats({urlString, playerAdvanceStats}: Stats) {
                                                                     <div className="flex space-x-1 w-[114px]">
                                                                         <div className="flex items-center space-x-1 flex-col">
                                                                         {teamLogos[teams.teamid] ? (
-                                                                            <Image
+                                                                            <Image  loading="lazy" 
                                                                                 src={teamLogos[teams.teamid]}
                                                                                 className="h-[20px] rounded-full"
                                                                                 width={20} height={20} alt="wiw"
@@ -478,7 +488,7 @@ export default function Stats({urlString, playerAdvanceStats}: Stats) {
                                                                     <div className="flex space-x-1 w-[114px]">
                                                                         <div className="flex items-center space-x-1 flex-col">
                                                                         {teamLogos[teams.teamid] ? (
-                                                                            <Image
+                                                                            <Image  loading="lazy" 
                                                                                 src={teamLogos[teams.teamid] }
                                                                                 className="h-[20px] rounded-full"
                                                                                 width={20} height={20} alt="wiw"

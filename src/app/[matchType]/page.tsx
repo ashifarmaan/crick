@@ -15,14 +15,14 @@ import ScorecardUpcoming from "./scheduledComponents/Scorecard";
 import MoreInfoUpcoming from "./scheduledComponents/MoreInfo";
 import { isSameDay, format } from "date-fns";
 import CountdownTimer from "../components/countdownTimer";
-import { liveSeries } from "@/controller/homeController";
+import { liveSeries,  FeaturedMatch, seriesById } from "@/controller/homeController";
 import {
   MatcheInfo,
   Last10Match,
   MatchStatistics,
   MatchCommentary,
   SeriesPointsTable,
-  SeriesPointsTableMatches,
+  SeriesPointsTableMatches
 } from "@/controller/matchInfoController";
 
 import ChatComponent from "../components/websocket";
@@ -100,7 +100,11 @@ export default async function page(props: { params: Params }) {
   const cid = liveMatch?.match_info?.competition?.cid;
   const seriesPointsTable = await SeriesPointsTable(cid);
   const seriesPointsTableMatches = await SeriesPointsTableMatches(Number(cid));
-
+  let featuredMatch = await FeaturedMatch();
+  const SeriesDetails = await seriesById(cid);
+  const standings = SeriesDetails?.standing?.standings;
+  const isPointTable = Array.isArray(standings) && standings.length > 0;
+  console.log('File',liveMatch);
   let matchCommentary = "";
   if (
     liveMatch?.match_info?.status_str !== "Scheduled" &&
@@ -147,6 +151,7 @@ export default async function page(props: { params: Params }) {
             matchData={liveMatch}
             matchLast={last10Match}
             matchUrl={matchTab}
+            isPointTable={isPointTable}
           />
         ) : matchType === "live-score" ? (
           <Live
@@ -154,6 +159,7 @@ export default async function page(props: { params: Params }) {
             matchData={liveMatch}
             matchUrl={matchTab}
             matchCommentary={matchCommentary}
+            isPointTable={isPointTable}
           />
         ) : matchType === "scorecard" ? (
           <Scorecard
@@ -161,12 +167,14 @@ export default async function page(props: { params: Params }) {
             matchData={liveMatch}
             matchStates={matchStatistics}
             matchUrl={matchTab}
+            isPointTable={isPointTable}
           />
         ) : matchType === "squad" ? (
           <Squads
             match_id={matchid}
             matchData={liveMatch}
             matchUrl={matchTab}
+            isPointTable={isPointTable}
           />
         ) : matchType === "stats" ? (
           <Stats
@@ -174,6 +182,7 @@ export default async function page(props: { params: Params }) {
             matchData={liveMatch}
             matchUrl={matchTab}
             matchTitle={matchTitle}
+            isPointTable={isPointTable}
           />
         ) : matchType === "points-table" ? (
           <PointsTable
@@ -182,6 +191,7 @@ export default async function page(props: { params: Params }) {
             matchUrl={matchTab}
             seriesPointsTable={seriesPointsTable}
             seriesPointsTableMatches={seriesPointsTableMatches}
+            featuredMatch={featuredMatch}
           />
         ) : null
       ) : matchType === "moreinfo" ? (
@@ -190,6 +200,7 @@ export default async function page(props: { params: Params }) {
           matchData={liveMatch}
           matchLast={last10Match}
           matchUrl={matchTab}
+          isPointTable={isPointTable}
         />
       ) : matchType === "live-score" ? (
         <LiveUpcoming
@@ -197,6 +208,7 @@ export default async function page(props: { params: Params }) {
           matchData={liveMatch}
           matchUrl={matchTab}
           matchCommentary={matchCommentary}
+          isPointTable={isPointTable}
         />
       ) : matchType === "scorecard" ? (
         <ScorecardUpcoming
@@ -204,15 +216,17 @@ export default async function page(props: { params: Params }) {
           matchData={liveMatch}
           matchStates={matchStatistics}
           matchUrl={matchTab}
+          isPointTable={isPointTable}
         />
       ) : matchType === "squad" ? (
-        <Squads match_id={matchid} matchData={liveMatch} matchUrl={matchTab} />
+        <Squads match_id={matchid} matchData={liveMatch} matchUrl={matchTab} isPointTable={isPointTable}/>
       ) : matchType === "stats" ? (
         <Stats
           match_id={matchid}
           matchData={liveMatch}
           matchUrl={matchTab}
           matchTitle={matchTitle}
+          isPointTable={isPointTable}
         />
       ) : matchType === "points-table" ? (
         <PointsTable
@@ -221,6 +235,7 @@ export default async function page(props: { params: Params }) {
           matchUrl={matchTab}
           seriesPointsTable={seriesPointsTable}
           seriesPointsTableMatches={seriesPointsTableMatches}
+          featuredMatch={featuredMatch}
         />
       ) : null}
     </Layout>
